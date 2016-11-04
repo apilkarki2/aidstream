@@ -1,6 +1,8 @@
 <?php namespace App\Services\XmlImporter\Mapper\V201;
 
-class Xml
+use App\Services\XmlImporter\Mapper\XmlMapper;
+
+class Xml extends XmlMapper
 {
 
 }

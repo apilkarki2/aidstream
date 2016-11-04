@@ -41,7 +41,7 @@ class Template
      * @param string $version
      * @return array
      */
-    public function loadFor($version = '2.02')
+    public function  loadFor($version = '2.02')
     {
         $this->template = json_decode($this->read($version), true);
     }

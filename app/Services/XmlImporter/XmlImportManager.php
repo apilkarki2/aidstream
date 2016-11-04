@@ -1,7 +1,7 @@
 <?php namespace App\Services\XmlImporter\XmlImportManager;
 
 use App\Services\XmlImporter\XmlServiceProvider;
-use App\Services\XmlImporter\Mapper\Xml as XmlMapper;
+use App\Services\XmlImporter\Mapper\XmlProcessor;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -23,22 +23,22 @@ class XmlImportManager
     protected $logger;
 
     /**
-     * @var XmlMapper
+     * @var XmlProcessor
      */
-    protected $xmlMapper;
+    protected $xmlProcessor;
 
     /**
      * XmlImportManager constructor.
      *
      * @param XmlServiceProvider $xmlServiceProvider
-     * @param XmlMapper          $xmlMapper
+     * @param XmlProcessor       $xmlProcessor
      * @param LoggerInterface    $logger
      */
-    public function __construct(XmlServiceProvider $xmlServiceProvider, XmlMapper $xmlMapper, LoggerInterface $logger)
+    public function __construct(XmlServiceProvider $xmlServiceProvider, XmlProcessor $xmlProcessor, LoggerInterface $logger)
     {
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->logger             = $logger;
-        $this->xmlMapper          = $xmlMapper;
+        $this->xmlProcessor       = $xmlProcessor;
     }
 
     /**
@@ -54,7 +54,7 @@ class XmlImportManager
             $version  = $this->xmlServiceProvider->version($contents);
             $xmlData  = $this->xmlServiceProvider->load($contents);
 
-            $this->xmlMapper->map($xmlData, $version);
+            $this->xmlProcessor->process($xmlData, $version);
 
             dd($xmlData);
 
