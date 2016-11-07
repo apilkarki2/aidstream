@@ -56,7 +56,6 @@ class XmlImportManager
 
             $this->xmlProcessor->process($xmlData, $version);
 
-            dd($xmlData);
 
             return true;
         } catch (Exception $exception) {

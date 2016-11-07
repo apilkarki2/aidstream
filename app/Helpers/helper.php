@@ -106,7 +106,15 @@ function getVal(array $arr, array $arguments, $default = "")
             if (isset($arr[$arguments[0]]) && is_array($arr[$arguments[0]])) {
                 $result = getVal($arr[$arguments[0]], array_slice($arguments, 1), $default);
 
-                return $result ? $result : $default;
+                if ((((gettype($result) === 'string')) && ($result != '')) || ((gettype($result) === 'integer'))) {
+                    return $result;
+                } elseif ($result) {
+                    return $result;
+                } else {
+                    return $default;
+                }
+
+//                return $result ? $result : $default;
             } else {
                 return $default;
             }
@@ -620,7 +628,7 @@ function getDisbursementOrganizationDetails(array  $disbursement, $type)
     $type         = getVal($organization, ['type']);
 
     $details = sprintf(
-            '<em>(Ref: %s , Activity id: %s , Type: %s)</em >;',
+        '<em>(Ref: %s , Activity id: %s , Type: %s)</em >;',
         checkIfEmpty($ref),
         checkIfEmpty($activity_id),
         checkIfEmpty($type)

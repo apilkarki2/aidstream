@@ -1,7 +1,9 @@
 <?php namespace App\Services\XmlImporter\Mapper\V103;
 
 use App\Services\XmlImporter\Mapper\V103\Activity\Activity;
+use App\Services\XmlImporter\Mapper\V103\Activity\Elements\Result;
 use App\Services\XmlImporter\Mapper\V103\Activity\Elements\Transaction;
+use App\Services\XmlImporter\Mapper\XmlHelper;
 use App\Services\XmlImporter\Mapper\XmlMapper;
 
 /**
@@ -10,6 +12,7 @@ use App\Services\XmlImporter\Mapper\XmlMapper;
  */
 class Xml extends XmlMapper
 {
+    use XmlHelper;
     /**
      * @var Activity
      */
@@ -31,15 +34,24 @@ class Xml extends XmlMapper
     protected $transactionElement;
 
     /**
+     * @var Result
+     */
+    protected $resultElement;
+
+
+    /**
      * @var array
      */
     protected $activityElements = [
         'reportingOrg',
+        'otherIdentifier',
         'iatiIdentifier',
         'title',
         'description',
         'activityStatus',
         'activityDate',
+        'activityScope',
+        'contactInfo',
         'participatingOrg',
         'recipientCountry',
         'recipientRegion',
@@ -49,37 +61,66 @@ class Xml extends XmlMapper
         'defaultFinanceType',
         'defaultAidType',
         'defaultTiedStatus',
-        'budget'
+        'budget',
+        'location',
+        'plannedDisbursement',
+        'countryBudgetItems',
+        'documentLink',
+        'policyMarker',
+        'conditions',
+        'legacyData',
+        'humanitarianScope',
+        'collaborationType',
+        'capitalSpend',
+        'relatedActivity'
     ];
 
     /**
      * Xml constructor.
      * @param Activity    $activity
      * @param Transaction $transaction
+     * @param Result      $result
      */
-    public function __construct(Activity $activity, Transaction $transaction)
+    public function __construct(Activity $activity, Transaction $transaction, Result $result)
     {
         $this->activity           = $activity;
         $this->transactionElement = $transaction;
+        $this->resultElement      = $result;
+
     }
 
     /**
      * Map raw Xml data into AidStream database compatible data for import.
      *
-     * @param array $xmlData
+     * @param array $activities
      * @param       $template
      * @return array
+     * @internal param array $xmlData
      */
-    public function map(array $xmlData, $template)
+    public function map(array $activities, $template)
     {
         $mappedData = [];
 
-        foreach ($xmlData as $index => $data) {
-            $mappedData[$index]['title'][]    = $this->activity->map($this->filter($data, 'iatiActivity'), $template);
-            $mappedData[$index]['transaction'][] = $this->transactionElement->map($this->filter($data, 'transaction'), $template);
+        foreach ($activities as $index => $activity) {
+            $mappedData[$index]                         = $this->activity->map($this->filter($activity, 'iatiActivity'), $template);
+            $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
+            $mappedData[$index]['transactions']         = $this->transactionElement->map($this->filter($activity, 'transaction'), $template);
+            $mappedData[$index]['result']               = $this->resultElement->map($this->filter($activity, 'result'), $template);
         }
 
         dd($mappedData);
+    }
+
+    protected function defaultFieldValues($activity, $template)
+    {
+        $defaultFieldValues                      = $template['default_field_values'];
+        $defaultFieldValues['default_currency']  = $this->attributes($activity, 'default-currency');
+        $defaultFieldValues['default_language']  = $this->attributes($activity, 'language');
+        $defaultFieldValues['default_hierarchy'] = $this->attributes($activity, 'hierarchy');
+        $defaultFieldValues['linked_data_uri']   = $this->attributes($activity, 'linked-data-uri');
+        $defaultFieldValues['humanitarian']      = $this->attributes($activity, 'humanitarian');
+
+        return $defaultFieldValues;
     }
 
     /**
@@ -93,6 +134,8 @@ class Xml extends XmlMapper
         foreach ($this->value($xmlData) as $subElement) {
             if ($elementName == 'transaction') {
                 $this->filterForTransactions($subElement, $elementName);
+            } elseif ($elementName == 'result') {
+                $this->filterForResults($subElement, $elementName);
             } elseif ($elementName == 'iatiActivity') {
                 $this->filterForActivity($subElement, $elementName);
             }
@@ -121,6 +164,17 @@ class Xml extends XmlMapper
      * @param $elementName
      */
     protected function filterForTransactions($subElement, $elementName)
+    {
+        if ($this->name($subElement) == $elementName) {
+            $this->{$elementName}[] = $subElement;
+        }
+    }
+
+    /**
+     * @param $subElement
+     * @param $elementName
+     */
+    protected function filterForResults($subElement, $elementName)
     {
         if ($this->name($subElement) == $elementName) {
             $this->{$elementName}[] = $subElement;

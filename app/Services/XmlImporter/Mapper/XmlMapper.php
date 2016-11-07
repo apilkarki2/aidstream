@@ -44,26 +44,26 @@ abstract class XmlMapper
      * @param null  $key
      * @return mixed|string
      */
-    protected function attributes(array $element, $key = null)
-    {
-        if (!$key) {
-            return getVal($element, ['attributes'], []);
-        }
-
-        $value = getVal($element, ['attributes'], []);
-
-        if ($value && ($key == 'language')) {
-            $code = array_first(
-                $value,
-                function () {
-                    return true;
-                }
-            );
-
-            return $code;
-        }
-
-        return '';
+//    protected function attributes(array $element, $key = null)
+//    {
+//        if (!$key) {
+//            return getVal($element, ['attributes'], []);
+//        }
+//
+//        $value = getVal($element, ['attributes'], []);
+//
+//        if ($value && ($key == 'language')) {
+//            $code = array_first(
+//                $value,
+//                function () {
+//                    return true;
+//                }
+//            );
+//
+//            return $code;
+//        }
+//
+//        return '';
 
 //            $c = array_last(
 //                explode(
@@ -79,5 +79,5 @@ abstract class XmlMapper
 //                    return true;
 //                }
 //            );
-    }
+//    }
 }

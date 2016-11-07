@@ -1,20 +1,18 @@
 <?php namespace App\Services\XmlImporter\Mapper\V103\Activity\Elements;
 
+use App\Services\XmlImporter\Mapper\XmlHelper;
+
 /**
  * Class Transaction
  * @package App\Services\XmlImporter\Mapper\V103\Activity\Elements
  */
 class Transaction
 {
+    use XmlHelper;
     /**
      * @var array
      */
     protected $transaction = [];
-
-    /**
-     * @var array
-     */
-    protected $template = [];
 
     /**
      * Map raw Xml Transaction data for import.
@@ -25,14 +23,12 @@ class Transaction
      */
     public function map(array $transactions, $template)
     {
-        $this->template = $template;
-
-        foreach ($transactions as $transaction) {
-            $this->reference($transaction);
-
+        foreach ($transactions as $index => $transaction) {
+            $this->transaction[$index] = $template['transaction'];
+            $this->reference($transaction, $index);
             foreach ($this->getValue($transaction) as $subElement) {
                 $fieldName = $this->name($subElement['name']);
-                $this->$fieldName($subElement);
+                $this->$fieldName($subElement, $index);
             }
         }
 
@@ -41,178 +37,156 @@ class Transaction
 
     /**
      * @param $element
+     * @param $index
      */
-    protected function reference($element)
+    protected function reference($element, $index)
     {
-        $this->transaction['reference'] = getVal($element['attributes'], ['ref']);
+        $this->transaction[$index]['reference'] = $this->attributes($element, 'ref');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function transactionType($subElement)
+    protected function transactionType($subElement, $index)
     {
-        $this->transaction['transaction_type'][0]['transaction_type_code'] = getVal($subElement['attributes'], ['code']);
+        $this->transaction[$index]['transaction_type'][0]['transaction_type_code'] = $this->attributes($subElement, 'code');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function transactionDate($subElement)
+    protected function transactionDate($subElement, $index)
     {
-        $this->transaction['transaction_date'][0]['date'] = getVal($subElement['attributes'], ['iso-date']);
+        $this->transaction[$index]['transaction_date'][0]['date'] = $this->attributes($subElement, 'iso-date');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function value($subElement)
+    protected function value($subElement, $index)
     {
-        $this->transaction['value'][0]['amount']   = getVal($subElement, ['value']);
-        $this->transaction['value'][0]['date']     = getVal($subElement['attributes'], ['value-date']);
-        $this->transaction['value'][0]['currency'] = getVal($subElement['attributes'], ['currency']);
+        $this->transaction[$index]['value'][0]['amount']   = $this->getValue($subElement);
+        $this->transaction[$index]['value'][0]['date']     = $this->attributes($subElement, 'value-date');
+        $this->transaction[$index]['value'][0]['currency'] = $this->attributes($subElement, 'currency');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function description($subElement)
+    protected function description($subElement, $index)
     {
-        $this->narrative($subElement, 'description');
+        $this->transaction[$index]['description'][0]['narrative'] = $this->narrative($subElement);
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function providerOrg($subElement)
+    protected function providerOrg($subElement, $index)
     {
-        $this->transaction['provider_organization'][0]['organization_identifier_code'] = getVal($subElement['attributes'], ['ref']);
-        $this->transaction['provider_organization'][0]['type']                         = getVal($subElement['attributes'], ['type']);
-        $this->transaction['provider_organization'][0]['provider_activity_id']         = getVal($subElement['attributes'], ['provider-activity-id']);
-        $this->narrative($subElement, 'provider_organization');
+        $this->transaction[$index]['provider_organization'][0]['organization_identifier_code'] = $this->attributes($subElement, 'ref');
+        $this->transaction[$index]['provider_organization'][0]['type']                         = $this->attributes($subElement, 'type');
+        $this->transaction[$index]['provider_organization'][0]['provider_activity_id']         = $this->attributes($subElement, 'provider-activity-id');
+        $this->transaction[$index]['provider_organization'][0]['narrative']                    = $this->narrative($subElement);
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function receiverOrg($subElement)
+    protected function receiverOrg($subElement, $index)
     {
-        $this->transaction['receiver_organization'][0]['organization_identifier_code'] = getVal($subElement['attributes'], ['ref']);
-        $this->transaction['receiver_organization'][0]['type']                         = getVal($subElement['attributes'], ['type']);
-        $this->transaction['receiver_organization'][0]['receiver_activity_id']         = getVal($subElement['attributes'], ['receiver-activity-id']);
-        $this->narrative($subElement, 'receiver_organization');
+        $this->transaction[$index]['receiver_organization'][0]['organization_identifier_code'] = $this->attributes($subElement, 'ref');
+        $this->transaction[$index]['receiver_organization'][0]['type']                         = $this->attributes($subElement, 'type');
+        $this->transaction[$index]['receiver_organization'][0]['receiver_activity_id']         = $this->attributes($subElement, 'receiver-activity-id');
+        $this->transaction[$index]['receiver_organization'][0]['narrative']                    = $this->narrative($subElement);
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function disbursementChannel($subElement)
+    protected function disbursementChannel($subElement, $index)
     {
-        $this->transaction['disbursement_channel'][0]['disbursement_channel_code'] = getVal($subElement['attributes'], ['code']);
+        $this->transaction[$index]['disbursement_channel'][0]['disbursement_channel_code'] = $this->attributes($subElement, 'code');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function sector($subElement)
+    protected function sector($subElement, $index)
     {
-        $this->transaction['sector'][0]['sector_vocabulary']    = ($vocabulary = getVal($subElement['attributes'], ['vocabulary']));
-        $this->transaction['sector'][0]['sector_code']          = ($vocabulary == 1) ? getVal($subElement['attributes'], ['code']) : "";
-        $this->transaction['sector'][0]['sector_category_code'] = ($vocabulary == 2) ? getVal($subElement['attributes'], ['code']) : "";
-        $this->transaction['sector'][0]['sector_text']          = ($vocabulary != 1 && $vocabulary != 2) ? getVal($subElement['attributes'], ['code']) : "";
-        $this->transaction['sector'][0]['vocabulary_uri']       = getVal($subElement['attributes'], ['vocabulary-uri']);
-        $this->narrative($subElement, 'sector');
+        $this->transaction[$index]['sector'][0]['sector_vocabulary']    = ($vocabulary = $this->attributes($subElement, 'vocabulary'));
+        $this->transaction[$index]['sector'][0]['sector_code']          = ($vocabulary == 1) ? $this->attributes($subElement, 'code') : "";
+        $this->transaction[$index]['sector'][0]['sector_category_code'] = ($vocabulary == 2) ? $this->attributes($subElement, 'code') : "";
+        $this->transaction[$index]['sector'][0]['sector_text']          = ($vocabulary != 1 && $vocabulary != 2) ? $this->attributes($subElement, 'code') : "";
+        $this->transaction[$index]['sector'][0]['vocabulary_uri']       = $this->attributes($subElement, 'vocabulary-uri');
+        $this->transaction[$index]['sector'][0]['narrative']            = $this->narrative($subElement);
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function recipientCountry($subElement)
+    protected function recipientCountry($subElement, $index)
     {
-        $this->transaction['recipient_country'][0]['country_code'] = getVal($subElement['attributes'], ['code']);
-        $this->narrative($subElement, 'recipient_country');
+        $this->transaction[$index]['recipient_country'][0]['country_code'] = $this->attributes($subElement, 'code');
+        $this->transaction[$index]['recipient_country'][0]['narrative']    = $this->narrative($subElement);
+
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function recipientRegion($subElement)
+    protected function recipientRegion($subElement, $index)
     {
-        $this->transaction['recipient_region'][0]['region_code']    = getVal($subElement['attributes'], ['code']);
-        $this->transaction['recipient_region'][0]['vocabulary']     = getVal($subElement['attributes'], ['vocabulary']);
-        $this->transaction['recipient_region'][0]['vocabulary_uri'] = getVal($subElement['attributes'], ['vocabulary-uri']);
-        $this->narrative($subElement, 'recipient_region');
+        $this->transaction[$index]['recipient_region'][0]['region_code']    = $this->attributes($subElement, 'code');
+        $this->transaction[$index]['recipient_region'][0]['vocabulary']     = $this->attributes($subElement, 'vocabulary');
+        $this->transaction[$index]['recipient_region'][0]['vocabulary_uri'] = $this->attributes($subElement, 'vocabulary-uri');
+        $this->transaction[$index]['recipient_region'][0]['narrative']      = $this->narrative($subElement);
+
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function flowType($subElement)
+    protected function flowType($subElement, $index)
     {
-        $this->transaction['flow_type'][0]['flow_type'] = getVal($subElement['attributes'], ['code']);
+        $this->transaction[$index]['flow_type'][0]['flow_type'] = $this->attributes($subElement['attributes'], 'code');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function financeType($subElement)
+    protected function financeType($subElement, $index)
     {
-        $this->transaction['finance_type'][0]['finance_type'] = getVal($subElement['attributes'], ['code']);
+        $this->transaction[$index]['finance_type'][0]['finance_type'] = $this->attributes($subElement, 'code');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function aidType($subElement)
+    protected function aidType($subElement, $index)
     {
-        $this->transaction['aid_type'][0]['aid_type'] = getVal($subElement['attributes'], ['code']);
+        $this->transaction[$index]['aid_type'][0]['aid_type'] = $this->attributes($subElement, 'code');
     }
 
     /**
      * @param $subElement
+     * @param $index
      */
-    protected function tiedStatus($subElement)
+    protected function tiedStatus($subElement, $index)
     {
-        $this->transaction['tied_status'][0]['tied_status_code'] = getVal($subElement['attributes'], ['code']);
-    }
-
-    /**
-     * @param      $element
-     * @param bool $snakeCase
-     * @return string
-     */
-    protected function name($element, $snakeCase = false)
-    {
-        if (is_array($element)) {
-            $camelCaseString = camel_case(str_replace('{}', '', $element['name']));
-
-            return $snakeCase ? snake_case($camelCaseString) : $camelCaseString;
-        }
-
-        $camelCaseString = camel_case(str_replace('{}', '', $element));
-
-        return $snakeCase ? snake_case($camelCaseString) : $camelCaseString;
-    }
-
-    /**
-     * @param $subElement
-     * @param $field
-     */
-    protected function narrative($subElement, $field)
-    {
-        if (is_array(getVal((array) $subElement, ['value'], []))) {
-            foreach (getVal((array) $subElement, ['value'], []) as $index => $value) {
-                $this->transaction[$field][0]['narrative'][$index] = [
-                    'narrative' => getVal($value, ['value']),
-                    'language'  => $this->getLanguage($value)
-                ];
-            }
-        } else {
-            $this->transaction[$field][0]['narrative'][0] = [
-                'narrative' => getVal($subElement, ['value']),
-                'language'  => $this->getLanguage($subElement)
-            ];
-        }
+        $this->transaction[$index]['tied_status'][0]['tied_status_code'] = $this->attributes($subElement, 'code');
     }
 
     /**
@@ -223,39 +197,4 @@ class Transaction
     {
         return getVal($element, ['value'], []);
     }
-
-    /**
-     * @param $value
-     * @return string
-     */
-    protected function getLanguage($value)
-    {
-        if (is_array($value)) {
-            foreach ($value['attributes'] as $key => $lang) {
-                return $lang;
-            }
-        }
-
-        return "";
-    }
-
-//    protected function attributes(array $element, $key = null)
-//    {
-//        if (!$key) {
-//            return getVal($element, ['attributes'], []);
-//        }
-//
-//        $value = getVal($element, ['attributes'], []);
-//
-//        if ($value && ($key == 'language')) {
-//            $code = array_first(
-//                $value,
-//                function () {
-//                    return true;
-//                }
-//            );
-//
-//            return $code;
-//        }
-//    }
 }

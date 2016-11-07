@@ -32,13 +32,12 @@ class XmlProcessor
      */
     public function __construct(Template $template)
     {
-        $this->template  = $template;
+        $this->template = $template;
     }
 
     public function process(array $xml, $version)
     {
         $this->xmlMapper = $this->initializeMapper($version);
-
         $this->xmlMapper->map($xml, $this->template->loadFor());
 
         dd($this->xmlMapper);
