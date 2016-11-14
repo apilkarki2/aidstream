@@ -1,18 +1,18 @@
-<?php namespace App\Services\XmlImporter\Mapper;
+<?php namespace App\Services\XmlImporter\Foundation\Support\Providers;
 
 
 /**
- * Class Template
- * @package App\Services\XmlImporter\Mapper
+ * Class TemplateServiceProvider
+ * @package App\Services\XmlImporter\Foundation\Support\Providers
  */
-class Template
+class TemplateServiceProvider
 {
     /**
      * Relative path for the template files.
      *
      * @var string
      */
-    protected $relativeTemplatePath = '/Services/XmlImporter/Templates';
+    protected $relativeTemplatePath = '/Services/XmlImporter/Foundation/Support/Templates';
 
     /**
      * Template for a specific Xml version.
@@ -24,6 +24,7 @@ class Template
     /**
      * Get the template for a specific Xml version.
      *
+     * @param null $key
      * @return null
      */
     public function get($key = null)

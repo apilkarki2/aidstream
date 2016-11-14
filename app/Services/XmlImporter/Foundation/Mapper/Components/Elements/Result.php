@@ -1,7 +1,6 @@
-<?php namespace App\Services\XmlImporter\Mapper\V103\Activity\Elements;
+<?php namespace App\Services\XmlImporter\Foundation\Mapper\Components\Elements;
 
-
-use App\Services\XmlImporter\Mapper\XmlHelper;
+use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 
 /**
  * Class Result
@@ -57,16 +56,21 @@ class Result
             $indicatorData[$index]['title'][0]['narrative']       = $this->value($indicator, 'title');
             $indicatorData[$index]['description'][0]['narrative'] = $this->value($indicator, 'description');
             $indicatorData[$index]['reference']                   = $this->reference($indicator, $indicatorTemplate);
-            $indicatorData[$index]['baseline'][0]                 = $this->baseline($indicator, $indicatorTemplate);
+            $indicatorData[$index]['baseline']                    = $this->baseline($indicator, $indicatorTemplate);
             $indicatorData[$index]['period']                      = $this->period($indicator, $indicatorTemplate);
         }
 
         return $indicatorData;
     }
 
+    /**
+     * @param $indicator
+     * @param $indicatorTemplate
+     * @return string
+     */
     protected function reference($indicator, $indicatorTemplate)
     {
-        $references    = $this->filterAttributes($indicator, 'reference', ['vocabulary', 'code', 'indicator-uri']);
+        $references    = $this->filterAttributes($indicator, 'reference', ['vocabulary', 'code', 'indicator_uri']);
         $referenceData = getVal($indicatorTemplate, [0, 'reference']);
         foreach ($references as $referenceIndex => $reference) {
             $referenceData[$referenceIndex] = $reference;
@@ -75,18 +79,28 @@ class Result
         return $referenceData;
     }
 
+    /**
+     * @param $indicator
+     * @param $indicatorTemplate
+     * @return string
+     */
     protected function baseline($indicator, $indicatorTemplate)
     {
-        $baseline            = getVal($indicatorTemplate, [0, 'baseline']);
-        $baselineAttributes  = $this->filterAttributes($indicator, 'baseline', ['year', 'value']);
-        $baseline['year']    = getVal($baselineAttributes, [0, 'year'], '');
-        $baseline['value']   = getVal($baselineAttributes, [0, 'value'], '');
-        $baselineValues      = getVal($this->filterValues($indicator, 'baseline'), [0, 'baseline', 0]);
-        $baseline['comment'] = $this->narrative($baselineValues);
+        $baseline                               = getVal($indicatorTemplate, [0, 'baseline']);
+        $baselineAttributes                     = $this->filterAttributes($indicator, 'baseline', ['year', 'value']);
+        $baseline[0]['year']                    = getVal($baselineAttributes, [0, 'year'], '');
+        $baseline[0]['value']                   = getVal($baselineAttributes, [0, 'value'], '');
+        $baselineValues                         = getVal($this->filterValues($indicator, 'baseline'), [0, 'baseline', 0]);
+        $baseline[0]['comment'][0]['narrative'] = $this->narrative($baselineValues);
 
         return $baseline;
     }
 
+    /**
+     * @param $indicator
+     * @param $indicatorTemplate
+     * @return string
+     */
     protected function period($indicator, $indicatorTemplate)
     {
         $periods     = $this->filterValues($indicator, 'period');
@@ -103,6 +117,11 @@ class Result
         return $periodsData;
     }
 
+    /**
+     * @param $period
+     * @param $periodTemplate
+     * @return string
+     */
     protected function target($period, $periodTemplate)
     {
         $targetData                 = getVal($periodTemplate, [0, 'target']);
@@ -115,6 +134,11 @@ class Result
         return $targetData;
     }
 
+    /**
+     * @param $period
+     * @param $periodTemplate
+     * @return string
+     */
     protected function actual($period, $periodTemplate)
     {
         $actualData                 = getVal($periodTemplate, [0, 'actual']);
@@ -127,6 +151,11 @@ class Result
         return $actualData;
     }
 
+    /**
+     * @param $data
+     * @param $template
+     * @return string
+     */
     protected function location($data, $template)
     {
         $locationData = getVal($template, [0, 'location'], []);
@@ -138,6 +167,11 @@ class Result
         return $locationData;
     }
 
+    /**
+     * @param $data
+     * @param $template
+     * @return string
+     */
     protected function dimension($data, $template)
     {
         $dimensionData = getVal($template, [0, 'dimension'], []);
@@ -150,6 +184,11 @@ class Result
         return $dimensionData;
     }
 
+    /**
+     * @param $data
+     * @param $template
+     * @return string
+     */
     protected function comment($data, $template)
     {
         $commentData = getVal($template, [0, 'comment'], []);

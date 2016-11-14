@@ -1,5 +1,4 @@
-<?php namespace App\Services\XmlImporter\Mapper;
-
+<?php namespace App\Services\XmlImporter\Foundation\Support\Helpers\Traits;
 
 /**
  * Class XmlHelper
@@ -9,6 +8,7 @@ trait XmlHelper
 {
     /**
      * Returns lat and long for location field.
+     *
      * @param $values
      * @return array
      */
@@ -32,6 +32,7 @@ trait XmlHelper
 
     /**
      * Filter the provided key and groups the values in array.
+     *
      * $values = data['value']
      * @param      $values
      * @param null $key
@@ -53,6 +54,7 @@ trait XmlHelper
 
     /**
      *  Filter the provided key, Convert the provided template to array and groups the attributes.
+     *
      * @param       $values
      * @param null  $key
      * @param array $template
@@ -66,6 +68,9 @@ trait XmlHelper
         foreach ($values as $value) {
             if ($this->name($value['name']) == $key) {
                 foreach ($value['attributes'] as $attributeKey => $attribute) {
+                    if ($attributeKey == 'indicator-uri') {
+                        $attributeKey = 'indicator_uri';
+                    }
                     $data[$index][$attributeKey] = $attribute;
                 }
                 $index ++;
@@ -77,6 +82,7 @@ trait XmlHelper
 
     /**
      * Converts the provided template into key empty value pairs.
+     *
      * @param array $template
      * @return array
      */
@@ -98,9 +104,10 @@ trait XmlHelper
 
     /**
      * Get the value from the array.
-     * If key is provided then the value is fetched from the value field of the data.
      * If key is provided then the $fields = $data['value'] else $fields = $data.
+     * If key is provided then the value is fetched from the value field of the data.
      * If the value is array then narrative is returned else only the value is returned.
+     *
      * @param array $fields
      * @param null  $key
      * @return array|mixed|string
@@ -125,9 +132,9 @@ trait XmlHelper
 
     /**
      * Returns the all narrative present in the provided $subElement.
+     *
      * @param $subElement
      * @return mixed
-     * @internal param $field
      */
     protected function narrative($subElement)
     {
@@ -135,7 +142,7 @@ trait XmlHelper
         if (is_array(getVal((array) $subElement, ['value'], []))) {
             foreach (getVal((array) $subElement, ['value'], []) as $index => $value) {
                 $field[$index] = [
-                    'narrative' => getVal($value, ['value'], ''),
+                    'narrative' => trim(getVal($value, ['value'], '')),
                     'language'  => $this->attributes($value, 'language')
                 ];
             }
@@ -143,7 +150,7 @@ trait XmlHelper
             return $field;
         } else {
             $field = [
-                'narrative' => getVal($subElement, ['value'], ''),
+                'narrative' => trim(getVal($subElement, ['value'], '')),
                 'language'  => $this->attributes($subElement, 'language')
             ];
 
@@ -152,6 +159,8 @@ trait XmlHelper
     }
 
     /**
+     * Get the name of the current Xml element.
+     *
      * @param      $element
      * @param bool $snakeCase
      * @return string
@@ -173,6 +182,7 @@ trait XmlHelper
      * Returns the attributes of the provided element.
      * If key is provided then the attribute equal to the key is returned.
      * If fieldName and key both are provided then the attributes inside value is returned.
+     *
      * @param array $element
      * @param null  $key
      * @param null  $fieldName
@@ -185,18 +195,44 @@ trait XmlHelper
         }
 
         if ($fieldName && $key) {
-            $value = "";
-            foreach ($element['value'] as $value) {
-                if ($fieldName == $this->name($value['name'])) {
-                    return $this->attributes($value, $key);
-                } else {
-                    $value = "";
-                }
-            }
-
-            return $value;
+            return $this->getSpecificAttribute($element, $fieldName, $key);
         }
 
+        return $this->getLanguageAttribute($element, $key);
+    }
+
+    /**
+     * Get specific attributes for Xml element.
+     *
+     * @param array $element
+     * @param       $fieldName
+     * @param       $key
+     * @return mixed|string
+     */
+    protected function getSpecificAttribute(array $element, $fieldName, $key)
+    {
+        $value = "";
+
+        foreach ($element['value'] as $value) {
+            if ($fieldName == $this->name($value['name'])) {
+                return $this->attributes($value, $key);
+            } else {
+                $value = "";
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get the Language attribute from a specific Xml element.
+     *
+     * @param array $element
+     * @param       $key
+     * @return string
+     */
+    protected function getLanguageAttribute(array $element, $key)
+    {
         $value = getVal($element, ['attributes'], []);
 
         if ($value) {
@@ -206,13 +242,6 @@ trait XmlHelper
                         return $item;
                     }
                 }
-//                $code = array_first(
-//                    $value,
-//                    function () {
-//                        return true;
-//                    }
-//                );
-
             }
 
             return getVal($element, ['attributes', $key], '');

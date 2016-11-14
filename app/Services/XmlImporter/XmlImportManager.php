@@ -1,10 +1,10 @@
 <?php namespace App\Services\XmlImporter\XmlImportManager;
 
-use App\Services\XmlImporter\XmlServiceProvider;
-use App\Services\XmlImporter\Mapper\XmlProcessor;
 use Exception;
 use Psr\Log\LoggerInterface;
+use App\Services\XmlImporter\Foundation\XmlProcessor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Services\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 
 /**
  * Class XmlImportManager
@@ -51,16 +51,26 @@ class XmlImportManager
     {
         try {
             $contents = file_get_contents($file);
-            $version  = $this->xmlServiceProvider->version($contents);
-            $xmlData  = $this->xmlServiceProvider->load($contents);
 
-            $this->xmlProcessor->process($xmlData, $version);
+//            if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
+                $version = $this->xmlServiceProvider->version($contents);
+                $xmlData = $this->xmlServiceProvider->load($contents);
 
+                $this->xmlProcessor->process($xmlData, $version);
 
-            return true;
+                return true;
+//            }
+
+//            return false;
         } catch (Exception $exception) {
             dd($exception);
-            $this->logger->error($exception->getMessage());
+            $this->logger->error(
+                $exception->getMessage(),
+                [
+                    'trace' => $exception->getTraceAsString(),
+                    'user'  => auth()->user()->getNameAttribute()
+                ]
+            );
 
             return null;
         }

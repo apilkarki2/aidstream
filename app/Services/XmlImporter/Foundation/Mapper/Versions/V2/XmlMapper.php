@@ -1,18 +1,18 @@
-<?php namespace App\Services\XmlImporter\Mapper\V103;
+<?php namespace App\Services\XmlImporter\Foundation\Mapper\Version\V2;
 
-use App\Services\XmlImporter\Mapper\V103\Activity\Activity;
-use App\Services\XmlImporter\Mapper\V103\Activity\Elements\Result;
-use App\Services\XmlImporter\Mapper\V103\Activity\Elements\Transaction;
-use App\Services\XmlImporter\Mapper\XmlHelper;
-use App\Services\XmlImporter\Mapper\XmlMapper;
+use App\Services\XmlImporter\Foundation\Mapper\Components\Activity;
+use App\Services\XmlImporter\Foundation\Mapper\Components\Elements\Result;
+use App\Services\XmlImporter\Foundation\Mapper\Components\Elements\Transaction;
+use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 
 /**
- * Class Xml
- * @package App\Services\XmlImporter\Mapper\V103
+ * Class XmlMapper
+ * @package App\Services\XmlImporter\Foundation\Mapper\Version\V2
  */
-class Xml extends XmlMapper
+class XmlMapper
 {
     use XmlHelper;
+
     /**
      * @var Activity
      */
@@ -38,14 +38,19 @@ class Xml extends XmlMapper
      */
     protected $resultElement;
 
+    /**
+     * @var array
+     */
+    protected $result = [];
+
 
     /**
      * @var array
      */
     protected $activityElements = [
-        'reportingOrg',
-        'otherIdentifier',
         'iatiIdentifier',
+        'otherIdentifier',
+        'reportingOrg',
         'title',
         'description',
         'activityStatus',
@@ -111,7 +116,14 @@ class Xml extends XmlMapper
         dd($mappedData);
     }
 
-    protected function defaultFieldValues($activity, $template)
+    /**
+     * Filter the default field values from the xml data.
+     *
+     * @param array $activity
+     * @param       $template
+     * @return mixed
+     */
+    protected function defaultFieldValues($activity = [], $template)
     {
         $defaultFieldValues                      = $template['default_field_values'];
         $defaultFieldValues['default_currency']  = $this->attributes($activity, 'default-currency');
