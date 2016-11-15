@@ -8,34 +8,42 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename'),
-    pngquant = require('imagemin-pngquant');
+    pngquant = require('imagemin-pngquant'),
+    purify = require('gulp-purifycss');
+
 
 var css_files = [
-    './public/css/bootstrap.min.css',
-    './public/css/flag-icon.css',
-    './public/css/jquery.datetimepicker.css',
-    './public/css/jquery.jscrollpane.css',
-    './public/css/jquery-ui-1.10.4.tooltip.css',
-    './public/css/leaflet.css',
-    './public/css/app.css'
+    './resources/assets/css/vendor/bootstrap.min.css',
+    './resources/assets/css/vendor/flag-icon.css',
+    './resources/assets/css/vendor/jquery.datetimepicker.css',
+    './resources/assets/css/vendor/jquery.jscrollpane.css',
+    './resources/assets/css/vendor/jquery-ui-1.10.4.tooltip.css',
+    './resources/assets/css/vendor/leaflet.css',
+    './resources/assets/css/vendor/select2.min.css',
+    './resources/assets/css/vendor/jquery.dataTables.min.css',
+    './resources/assets/css/vendor/intro.min.css',
+    './resources/assets/css/app.css'
 ];
 
 var css_style = [
-    './public/css/style.css'
+    './resources/assets/css/style.css'
 ];
 
 var js_files = [
-    './public/js/jquery.js',
-    './public/js/bootstrap.min.js',
-    './public/js/modernizr.js',
-    './public/js/jquery-ui-1.10.4.tooltip.js',
-    './public/js/jquery.cookie.js',
-    './public/js/jquery.mousewheel.js',
-    './public/js/jquery.jscrollpane.min.js',
-    './public/js/select2.min.js',
-    './public/js/jquery.datetimepicker.full.min.js',
-    './public/js/script.js',
-    './public/js/datatable.js'
+    './resources/assets/js/vendor/jquery.js',
+    './resources/assets/js/vendor/bootstrap.min.js',
+    './resources/assets/js/vendor/modernizr.js',
+    './resources/assets/js/vendor/jquery-ui-1.10.4.tooltip.js',
+    './resources/assets/js/vendor/jquery.cookie.js',
+    './resources/assets/js/vendor/jquery.mousewheel.js',
+    './resources/assets/js/vendor/jquery.jscrollpane.min.js',
+    './resources/assets/js/vendor/select2.min.js',
+    './resources/assets/js/vendor/jquery.datetimepicker.full.min.js',
+    './resources/assets/js/vendor/jquery.dataTables.min.js',
+    './resources/assets/js/vendor/ga.js',
+    './resources/assets/js/vendor/intro.min.js',
+    './resources/assets/js/vendor/jquery.validate.js',
+    './resources/assets/js/script.js'
 ];
 
 
@@ -43,12 +51,12 @@ var js_files = [
  * Compile files from _scss
  */
 gulp.task('sass', function () {
-    return gulp.src('./resources/assets/app.scss')
+    return gulp.src('./resources/assets/css/app.scss')
         .pipe(sourcemaps.init())
         .pipe(sass())
         .pipe(postcss([autoprefixer({browsers: ['last 30 versions', '> 1%', 'ie 8', 'ie 7']})]))
         .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest('./public/css'));
+        .pipe(gulp.dest('./resources/assets/css'));
 });
 
 /*
@@ -62,20 +70,28 @@ gulp.task('watch', function () {
     gulp.watch(['image-min']);
 });
 
-/*
- * Default task, running just `gulp` will compile the sass,
- */
-gulp.task('default', ['sass', 'watch']);
-
 gulp.task('css-main', function () {
     return gulp.src(css_files)
         .pipe(sourcemaps.init())
         .pipe(concat('main.css'))
-        .pipe(gulp.dest('./public/css'))
+        .pipe(minifyCss({compatibility: 'ie8'}))
         .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('./resources/assets/css'));
+});
+
+//remove unused css
+
+gulp.task('purify-css', function() {
+    return gulp.src('./resources/assets/css/main.min.css')
+        .pipe(purify(['./resources/views/**/*.blade.php','./public/js/*.js']))
         .pipe(minifyCss({compatibility: 'ie8'}))
         .pipe(gulp.dest('./public/css'));
 });
+
+/*
+ * Default task, running just `gulp` will compile the sass,
+ */
+gulp.task('default', ['sass', 'watch', 'css-main']);
 
 gulp.task('css-style', function () {
     return gulp.src(css_style)

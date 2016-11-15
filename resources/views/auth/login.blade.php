@@ -7,7 +7,7 @@
     <title>Aidstream - Login</title>
     <link rel="shotcut icon" type="image/png" sizes="32*32" href="{{ asset('/images/favicon.png') }}"/>
     <link href="{{ asset('/css/main.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/style.min.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -138,9 +138,10 @@
 @include('includes.footer')
         <!-- Scripts -->
 @if(env('APP_ENV') == 'local')
-    <script type="text/javascript" src="{{url('/js/jquery.js')}}"></script>
-    <script type="text/javascript" src="{{url('/js/bootstrap.min.js')}}"></script>
-    <script type="text/javascript" src="{{url('/js/jquery.cookie.js')}}"></script>
+    {{--<script type="text/javascript" src="{{url('/js/jquery.js')}}"></script>--}}
+    {{--<script type="text/javascript" src="{{url('/js/bootstrap.min.js')}}"></script>--}}
+    {{--<script type="text/javascript" src="{{url('/js/jquery.cookie.js')}}"></script>--}}
+    <script type="text/javascript" src="{{url('/js/main.min.js')}}"></script>
 @else
     <script type="text/javascript" src="{{url('/js/main.min.js')}}"></script>
     @endif
