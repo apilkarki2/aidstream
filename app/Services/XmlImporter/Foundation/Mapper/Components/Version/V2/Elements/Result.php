@@ -1,4 +1,4 @@
-<?php namespace App\Services\XmlImporter\Foundation\Mapper\Components\Elements;
+<?php namespace App\Services\XmlImporter\Foundation\Mapper\Components\Version\V2\Elements;
 
 use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Xml\XmlUploadRequest;
-use App\Services\XmlImporter\XmlImportManager\XmlImportManager;
+use App\Services\XmlImporter\XmlImportManager;
 
 /**
  * Class XmlImportController

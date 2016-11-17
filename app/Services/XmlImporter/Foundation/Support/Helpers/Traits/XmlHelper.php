@@ -81,7 +81,7 @@ trait XmlHelper
     }
 
     /**
-     * Converts the provided template into key empty value pairs.
+     * Converts the provided template into empty key => value pairs.
      *
      * @param array $template
      * @return array

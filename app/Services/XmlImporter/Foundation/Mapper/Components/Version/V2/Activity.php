@@ -1,4 +1,4 @@
-<?php namespace App\Services\XmlImporter\Foundation\Mapper\Components;
+<?php namespace App\Services\XmlImporter\Foundation\Mapper\Components\Version\V2;
 
 use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 
@@ -165,6 +165,11 @@ class Activity
      * @var int
      */
     protected $index = 0;
+
+    /**
+     * @var array
+     */
+    protected $emptyNarrative = [['narrative' => '', 'language' => '']];
 
     /**
      * @param array $activityData

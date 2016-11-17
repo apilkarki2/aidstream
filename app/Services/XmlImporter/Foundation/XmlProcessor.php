@@ -1,6 +1,6 @@
 <?php namespace App\Services\XmlImporter\Foundation;
 
-use App\Services\XmlImporter\Foundation\Support\Factory\Mapper as MapperFactory;
+use App\Services\XmlImporter\Foundation\Mapper\XmlMapper;
 use App\Services\XmlImporter\Foundation\Support\Providers\TemplateServiceProvider;
 
 /**
@@ -9,7 +9,7 @@ use App\Services\XmlImporter\Foundation\Support\Providers\TemplateServiceProvide
  */
 class XmlProcessor
 {
-    use MapperFactory;
+//    use MapperFactory;
 
     /**
      * @var TemplateServiceProvider
@@ -29,20 +29,24 @@ class XmlProcessor
     /**
      * Xml constructor.
      * @param TemplateServiceProvider $templateServiceProvider
+     * @param XmlMapper               $xmlMapper
      */
-    public function __construct(TemplateServiceProvider $templateServiceProvider)
+    public function __construct(TemplateServiceProvider $templateServiceProvider, XmlMapper $xmlMapper)
     {
         $this->templateServiceProvider = $templateServiceProvider;
+        $this->xmlMapper               = $xmlMapper;
     }
 
     /**
+     * Process the uploaded Xml data into AidStream compatible data format.
+     *
      * @param array $xml
      * @param       $version
      */
     public function process(array $xml, $version)
     {
-        $this->xmlMapper = $this->initializeMapper($version);
-        $this->xmlMapper->map($xml, $this->templateServiceProvider->loadFor());
+        $this->xmlMapper->assign($version)
+                        ->map($xml, $this->templateServiceProvider->loadFor($version));
 
         dd($this->xmlMapper);
     }

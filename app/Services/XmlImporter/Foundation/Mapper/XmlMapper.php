@@ -1,8 +1,6 @@
-<?php namespace App\Services\XmlImporter\Foundation\Mapper\Version\V2;
+<?php namespace App\Services\XmlImporter\Foundation\Mapper;
 
-use App\Services\XmlImporter\Foundation\Mapper\Components\Activity;
-use App\Services\XmlImporter\Foundation\Mapper\Components\Elements\Result;
-use App\Services\XmlImporter\Foundation\Mapper\Components\Elements\Transaction;
+use App\Services\XmlImporter\Foundation\Support\Factory\Mapper as MapperFactory;
 use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 
 /**
@@ -11,10 +9,10 @@ use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
  */
 class XmlMapper
 {
-    use XmlHelper;
+    use XmlHelper, MapperFactory;
 
     /**
-     * @var Activity
+     * @var
      */
     protected $activity;
 
@@ -29,12 +27,12 @@ class XmlMapper
     protected $transaction = [];
 
     /**
-     * @var Transaction
+     * @var
      */
     protected $transactionElement;
 
     /**
-     * @var Result
+     * @var
      */
     protected $resultElement;
 
@@ -42,7 +40,6 @@ class XmlMapper
      * @var array
      */
     protected $result = [];
-
 
     /**
      * @var array
@@ -82,16 +79,23 @@ class XmlMapper
 
     /**
      * Xml constructor.
-     * @param Activity    $activity
-     * @param Transaction $transaction
-     * @param Result      $result
      */
-    public function __construct(Activity $activity, Transaction $transaction, Result $result)
+    public function __construct()
     {
-        $this->activity           = $activity;
-        $this->transactionElement = $transaction;
-        $this->resultElement      = $result;
+        //
+    }
 
+    /**
+     * Assign a version to initialize the XmlMapper components.
+     *
+     * @param string $version
+     * @return $this
+     */
+    public function assign($version = '2.02')
+    {
+        $this->initComponents($version);
+
+        return $this;
     }
 
     /**

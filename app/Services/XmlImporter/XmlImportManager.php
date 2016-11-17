@@ -1,4 +1,4 @@
-<?php namespace App\Services\XmlImporter\XmlImportManager;
+<?php namespace App\Services\XmlImporter;
 
 use Exception;
 use Psr\Log\LoggerInterface;

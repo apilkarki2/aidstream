@@ -1,4 +1,4 @@
-<?php namespace App\Services\XmlImporter\Foundation\Mapper\Components\Elements;
+<?php namespace App\Services\XmlImporter\Foundation\Mapper\Components\Version\V2\Elements;
 
 use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 
@@ -9,6 +9,7 @@ use App\Services\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 class Transaction
 {
     use XmlHelper;
+
     /**
      * @var array
      */
@@ -30,6 +31,7 @@ class Transaction
 
             foreach ($this->getValue($transaction) as $subElement) {
                 $fieldName = $this->name($subElement['name']);
+
                 $this->$fieldName($subElement, $index);
             }
         }
@@ -198,7 +200,7 @@ class Transaction
 
     /**
      * @param array $element
-     * @return string
+     * @return array
      */
     protected function getValue(array $element)
     {
