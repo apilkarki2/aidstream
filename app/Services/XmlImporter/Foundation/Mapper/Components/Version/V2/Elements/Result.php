@@ -194,7 +194,7 @@ class Result
         $commentData = getVal($template, [0, 'comment'], []);
         $comments    = getVal($this->filterValues($data, 'comment'), [0, 'comment'], []);
         foreach ($comments as $index => $comment) {
-            $commentData[0]['narrative'][$index] = $this->narrative($comment);
+            $commentData[0]['narrative'][$index] = getVal($this->narrative($comment), [0]);
         }
 
         return $commentData;

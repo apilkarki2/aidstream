@@ -1,8 +1,12 @@
 <?php namespace App\Services\XmlImporter\Foundation\Support\Helpers\Traits;
 
+    /**
+     * Class XmlHelper
+     * @package App\Services\XmlImporter\Mapper
+     */
 /**
  * Class XmlHelper
- * @package App\Services\XmlImporter\Mapper
+ * @package App\Services\XmlImporter\Foundation\Support\Helpers\Traits
  */
 trait XmlHelper
 {
@@ -64,14 +68,13 @@ trait XmlHelper
     {
         $index = 0;
         $data  = $this->templateToArray($template);
-
         foreach ($values as $value) {
             if ($this->name($value['name']) == $key) {
-                foreach ($value['attributes'] as $attributeKey => $attribute) {
+                foreach (getVal($value, ['attributes'], []) as $attributeKey => $attribute) {
                     if ($attributeKey == 'indicator-uri') {
                         $attributeKey = 'indicator_uri';
                     }
-                    $data[$index][$attributeKey] = $attribute;
+                    (!array_key_exists($attributeKey, array_flip($template))) ?: $data[$index][$attributeKey] = $attribute;
                 }
                 $index ++;
             }
@@ -143,15 +146,15 @@ trait XmlHelper
             foreach (getVal((array) $subElement, ['value'], []) as $index => $value) {
                 $field[$index] = [
                     'narrative' => trim(getVal($value, ['value'], '')),
-                    'language'  => $this->attributes($value, 'language')
+                    'language'  => $this->attributes($value, 'lang')
                 ];
             }
 
             return $field;
         } else {
-            $field = [
+            $field[0] = [
                 'narrative' => trim(getVal($subElement, ['value'], '')),
-                'language'  => $this->attributes($subElement, 'language')
+                'language'  => $this->attributes($subElement, 'lang')
             ];
 
             return $field;
@@ -236,11 +239,9 @@ trait XmlHelper
         $value = getVal($element, ['attributes'], []);
 
         if ($value) {
-            if ($key == 'language') {
-                foreach ($value as $key => $item) {
-                    if ($key == $this->name($key)) {
-                        return $item;
-                    }
+            foreach ($value as $itemKey => $item) {
+                if ($key == substr($itemKey, - 4, 4)) {
+                    return $item;
                 }
             }
 
@@ -248,5 +249,31 @@ trait XmlHelper
         }
 
         return '';
+    }
+
+    /**
+     * Returns narratives of provided key. (Mostly for V1 XML)
+     * @param array $fields
+     * @param       $key
+     * @return array
+     */
+    protected function groupNarrative(array $fields, $key = null)
+    {
+        $narrative = [['narrative' => '', 'language' => '']];
+        $index     = 0;
+
+        if ($key) {
+            foreach ($fields as $field) {
+                if ($this->name($field['name']) == $key) {
+                    $narrative[$index] = getVal($this->narrative($field), [0]);
+                    $index ++;
+                }
+            }
+        } else {
+            $narrative = $this->narrative($fields);
+        }
+
+
+        return $narrative;
     }
 }
