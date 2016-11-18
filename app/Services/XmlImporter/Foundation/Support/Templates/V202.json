@@ -165,7 +165,7 @@
   "recipient_region": {
     "region_code": "",
     "region_vocabulary": "",
-    "vocabulary-uri": "",
+    "vocabulary_uri": "",
     "percentage": "",
     "narrative": [
       {
@@ -263,6 +263,7 @@
   },
   "transaction": {
     "reference": "",
+    "humanitarian": "",
     "transaction_type": [
       {
         "transaction_type_code": ""
