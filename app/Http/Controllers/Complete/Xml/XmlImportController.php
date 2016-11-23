@@ -43,17 +43,31 @@ class XmlImportController extends Controller
      */
     public function store(XmlUploadRequest $request)
     {
-        if (($result = $this->xmlImportManager->import($request->file('xml_file')))) {
+        $file = $request->file('xml_file');
 
+        if ($this->xmlImportManager->store($file)) {
+            $this->xmlImportManager->startImport($file->getClientOriginalName());
 
-            return redirect()->back()->withResponse(['type' => 'success', 'code' => ['message', ['message' => 'Xml successfully be imported.']]]);
+            return redirect()->route('xml-import.status');
         }
 
-        if (false == $result) {
-            return redirect()->back()->withResponse(['type' => 'warning', 'code' => ['message', ['message' => 'The uploaded Xml file contains malformed Xml contents.']]]);
-        }
+//        if (($result = $this->xmlImportManager->import($request->file('xml_file')))) {
+//            return redirect()->back()->withResponse(['type' => 'success', 'code' => ['message', ['message' => 'Xml successfully be imported.']]]);
+//        }
+//
+//        if (false == $result) {
+//            return redirect()->back()->withResponse(['type' => 'warning', 'code' => ['message', ['message' => 'The uploaded Xml file contains malformed Xml contents.']]]);
+//        }
+//
+//        return redirect()->back()->withResponse(['type' => 'warning', 'code' => ['message', ['message' => 'Xml could not be imported. Please try again later.']]]);
 
-        return redirect()->back()->withResponse(['type' => 'warning', 'code' => ['message', ['message' => 'Xml could not be imported. Please try again later.']]]);
+        $response = ['type' => 'danger', 'code' => ['message', ['message' => 'Something is not right.']]];
 
+        return redirect()->route('xml-import.index')->withResponse($response);
+    }
+
+    public function status()
+    {
+        return 'check';
     }
 }

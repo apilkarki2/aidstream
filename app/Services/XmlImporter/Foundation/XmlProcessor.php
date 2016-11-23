@@ -46,8 +46,8 @@ class XmlProcessor
     public function process(array $xml, $version)
     {
         $this->xmlMapper->assign($version)
-                        ->map($xml, $this->templateServiceProvider->loadFor($version));
+                        ->map($xml, $this->templateServiceProvider->load());
 
-        dd($this->xmlMapper);
+        dd($this->xmlMapper->data());
     }
 }

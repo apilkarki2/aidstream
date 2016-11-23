@@ -9,8 +9,13 @@ $router->group(
         ]);
 
         $router->post('xml-import', [
-            'as' => 'xml-import.store',
+            'as'   => 'xml-import.store',
             'uses' => 'XmlImportController@store'
+        ]);
+
+        $router->get('/xml-import/import-status', [
+            'as'   => 'xml-import.status',
+            'uses' => 'XmlImportController@status'
         ]);
     }
 );

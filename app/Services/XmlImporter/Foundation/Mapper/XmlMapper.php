@@ -44,6 +44,11 @@ class XmlMapper
     /**
      * @var array
      */
+    protected $data = [];
+
+    /**
+     * @var array
+     */
     protected $activityElements = [
         'iatiIdentifier',
         'otherIdentifier',
@@ -103,8 +108,7 @@ class XmlMapper
      *
      * @param array $activities
      * @param       $template
-     * @return array
-     * @internal param array $xmlData
+     * @return $this
      */
     public function map(array $activities, $template)
     {
@@ -117,7 +121,27 @@ class XmlMapper
             $mappedData[$index]['result']               = $this->resultElement->map($this->filter($activity, 'result'), $template);
         }
 
-        dd($mappedData);
+        $this->data = $mappedData;
+
+        return $this;
+    }
+
+    /**
+     * Get the mapped Xml data.
+     *
+     * @return array
+     */
+    public function data()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Store the mapped Xml data in a temporary json file.
+     */
+    public function keep()
+    {
+
     }
 
     /**

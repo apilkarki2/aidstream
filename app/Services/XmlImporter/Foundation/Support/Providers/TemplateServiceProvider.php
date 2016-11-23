@@ -42,7 +42,7 @@ class TemplateServiceProvider
      * @param string $version
      * @return array
      */
-    public function loadFor($version = '2.02')
+    public function load($version = '2.02')
     {
         return json_decode($this->read($version), true);
     }
