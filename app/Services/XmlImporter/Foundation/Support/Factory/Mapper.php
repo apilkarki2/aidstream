@@ -27,12 +27,13 @@ trait Mapper
     /**
      * Initialize XmlMapper components according to the Xml Version.
      *
-     * @param $version
      * @return mixed
      */
-    public function initComponents($version)
+    public function initComponents()
     {
-        list($this->activity, $this->transactionElement, $this->resultElement) = $this->getMapping($version);
+        $this->iatiActivity = null;
+
+        list($this->activity, $this->transactionElement, $this->resultElement) = $this->getMapping($this->version);
     }
 
     /**

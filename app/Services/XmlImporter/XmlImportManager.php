@@ -1,7 +1,12 @@
 <?php namespace App\Services\XmlImporter;
 
+use App\Core\V201\Repositories\Activity\ActivityRepository;
+use App\Core\V201\Repositories\Activity\Result;
+use App\Core\V201\Repositories\Activity\Transaction;
+use App\Core\V201\Repositories\Document;
 use App\Services\XmlImporter\Events\XmlWasUploaded;
 use Exception;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Facades\Event;
 use Psr\Log\LoggerInterface;
@@ -34,6 +39,8 @@ class XmlImportManager
      */
     protected $logger;
 
+    protected $filesystem;
+
     /**
      * XmlImportManager constructor.
      *
@@ -41,14 +48,21 @@ class XmlImportManager
      * @param XmlProcessor       $xmlProcessor
      * @param SessionManager     $sessionManager
      * @param LoggerInterface    $logger
+     * @param Filesystem         $filesystem
      */
-    public function __construct(XmlServiceProvider $xmlServiceProvider, XmlProcessor $xmlProcessor, SessionManager $sessionManager, LoggerInterface $logger)
-    {
+    public function __construct(
+        XmlServiceProvider $xmlServiceProvider,
+        XmlProcessor $xmlProcessor,
+        SessionManager $sessionManager,
+        LoggerInterface $logger,
+        Filesystem $filesystem
+    ) {
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->xmlProcessor       = $xmlProcessor;
         $this->sessionManager     = $sessionManager;
         $this->logger             = $logger;
-        $this->userId             = $this->getUserId();
+        $this->filesystem         = $filesystem;
+//        $this->userId             = $this->getUserId();
     }
 
     /**
@@ -68,7 +82,7 @@ class XmlImportManager
                 sprintf('Error uploading Xml file due to %s', $exception->getMessage()),
                 [
                     'trace' => $exception->getTraceAsString(),
-                    'user'  => $this->userId
+                    'user'  => auth()->user()->id
                 ]
             );
 
@@ -77,42 +91,55 @@ class XmlImportManager
 
     }
 
-    /**
-     * Import the Xml data.
-     *
-     * @param $filename
-     * @return bool|null
-     */
-    public function import($filename)
-    {
-        try {
-            $file     = $this->temporaryXmlStorage($filename);
-            $contents = file_get_contents($file);
-
+//    /**
+//     * Import the Xml data.
+//     *
+//     * @param $filename
+//     * @param $orgId
+//     * @return bool|null
+//     */
+//    public function import($filename, $orgId)
+//    {
+//        try {
+//            $file     = $this->temporaryXmlStorage($filename);
+//            $contents = file_get_contents($file);
 //            if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
-                $version = $this->xmlServiceProvider->version($contents);
-                $xmlData = $this->xmlServiceProvider->load($contents);
-
-                $this->xmlProcessor->process($xmlData, $version);
-
-                return true;
+//                $version          = $this->xmlServiceProvider->version($contents);
+//                $xmlData          = $this->xmlServiceProvider->load($contents);
+//                $mappedActivities = $this->xmlProcessor->process($xmlData, $version);
+//                $this->save($mappedActivities, $orgId);
+//
+//                return true;
+//            } else {
+//                $errors = libxml_get_errors();
+//                foreach ($errors as $error) {
+//                    dd($error);
+//                }
 //            }
-
+//
 //            return false;
-        } catch (Exception $exception) {
-            dd($exception);
-            $this->logger->error(
-                $exception->getMessage(),
-                [
-                    'trace' => $exception->getTraceAsString(),
-                    'user'  => auth()->user()->getNameAttribute()
-                ]
-            );
+//        } catch (Exception $exception) {
+//            $this->logger->error(
+//                $exception->getMessage(),
+//                [
+//                    'trace' => $exception->getTraceAsString(),
+//                    'user'  => auth()->user()->getNameAttribute()
+//                ]
+//            );
+//
+//            return null;
+//        }
+//    }
 
-            return null;
-        }
-
-    }
+//    protected function save($mappedActivities, $orgId)
+//    {
+//        foreach ($mappedActivities as $activity) {
+//            array_merge($activity, ['organization_id' => $orgId]);
+//            dd($activity);
+//            $activityId = $this->activityRepo->storeXMlActivities($activity);
+//        }
+//        dd($mappedActivities);
+//    }
 
     /**
      * Get the temporary storage path for the uploaded Xml file.
@@ -123,10 +150,10 @@ class XmlImportManager
     protected function temporaryXmlStorage($filename = null)
     {
         if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s/%s', self::UPLOADED_XML_STORAGE_PATH, session('org_id'), $this->userId)), $filename);
+            return sprintf('%s/%s', storage_path(sprintf('%s/%s/%s', self::UPLOADED_XML_STORAGE_PATH, session('org_id'), auth()->user()->id)), $filename);
         }
 
-        return storage_path(sprintf('%s/%s/%s/', self::UPLOADED_XML_STORAGE_PATH, session('org_id'), $this->userId));
+        return storage_path(sprintf('%s/%s/%s/', self::UPLOADED_XML_STORAGE_PATH, session('org_id'), auth()->user()->id));
     }
 
     /**
@@ -136,7 +163,9 @@ class XmlImportManager
      */
     protected function getUserId()
     {
-        return auth()->user()->id;
+        if (auth()->check()) {
+            return auth()->user()->id;
+        }
     }
 
     public function startImport($filename)
@@ -154,4 +183,24 @@ class XmlImportManager
     {
         Event::fire(new XmlWasUploaded($filename));
     }
+
+    public function loadJsonFile($filename)
+    {
+        $filePath = $this->temporaryXmlStorage($filename);
+        try {
+            return json_decode(file_get_contents($filePath), true);
+        } catch (Exception $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * Remove Temporarily Stored Xml file.
+     */
+    public function removeTemporaryXmlFolder()
+    {
+        $filePath = $this->temporaryXmlStorage();
+        $this->filesystem->deleteDirectory($filePath);
+    }
+
 }

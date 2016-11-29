@@ -17,6 +17,7 @@ use App\Services\RequestManager\Activity\ChangeActivityDefault as ChangeActivity
 use App\Services\RequestManager\ActivityElementValidator;
 use App\Services\SettingsManager;
 use App\Services\Twitter\TwitterAPI;
+use App\Services\Xml\Validator\XmlValidator;
 use App\User;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Facades\Gate;
@@ -100,6 +101,10 @@ class ActivityController extends Controller
      * @var TwitterAPI
      */
     protected $twitter;
+    /**
+     * @var XmlValidator
+     */
+    protected $xmlValidator;
 
     /**
      * @param SettingsManager              $settingsManager
@@ -116,6 +121,7 @@ class ActivityController extends Controller
      * @param Settings                     $settings
      * @param LoggerInterface              $loggerInterface
      * @param TwitterAPI                   $twitterAPI
+     * @param XmlValidator                 $xmlValidator
      */
     function __construct(
         SettingsManager $settingsManager,
@@ -131,7 +137,8 @@ class ActivityController extends Controller
         User $user,
         Settings $settings,
         LoggerInterface $loggerInterface,
-        TwitterAPI $twitterAPI
+        TwitterAPI $twitterAPI,
+        XmlValidator $xmlValidator
     ) {
         $this->middleware('auth');
         $this->settingsManager              = $settingsManager;
@@ -149,6 +156,7 @@ class ActivityController extends Controller
         $this->loggerInterface              = $loggerInterface;
         $this->twitter                      = $twitterAPI;
         $this->documentLinkManager          = $documentLinkManager;
+        $this->xmlValidator                 = $xmlValidator;
     }
 
     /**
@@ -212,7 +220,6 @@ class ActivityController extends Controller
     public function show($id)
     {
         $activityData = $this->activityManager->getActivityData($id);
-
         if ($activityData->activity_workflow == 3) {
             $filename                = $this->getPublishedActivityFilename($this->organization_id, $activityData);
             $activityPublishedStatus = $this->getPublishedActivityStatus($filename, $this->organization_id);
@@ -232,6 +239,33 @@ class ActivityController extends Controller
         $activityDataList['document_links'] = $activityDocumentLinks;
         $activityDataList['reporting_org']  = $activityData->organization->reporting_org;
 
+        $errors = [];
+        if ($activityData->imported_from_xml) {
+            $activityId = $activityData->id;
+//            $activityDataList['description'][1]['narrative'][0]['language'] = 'fr';
+//            $activityDataList['other_identifier'][0]['type']                = 'zpt';
+//            $activityDataList['activity_status'] = 123123;
+//            $activityDataList['activity_date'][0]['type']                     = '1';
+//            $activityDataList['activity_date'][0]['date']                     = '2018-02-18';
+//            $activityDataList['activity_d[ate'][1]['narrative'][0]['language'] = 'fr';
+//            $activityDataList['contact_info'][0]['email'][0]['email'] = 'asdasdasd';
+//            $activityDataList['recipient_country'][0]['country_code'] = 'asdasd';
+//            $activityDataList['recipient_country'][0]['percentage']   = '88';
+//            $activityDataList['recipient_region'][0]['region_code']   = '9990';
+//            $activityDataList['location'][0]['location_reach'][0]['code'] = '9990';
+//            $activityDataList['sector'][0]['percentage'] = '80';
+//            $activityDataList['country_budget_items'][0]['budget_item'][0]['percentage'] = '80';
+//            $activityDataList['humanitarian_scope'][0]['vocabulary'] = '80';
+//            $activityDataList['policy_marker'][0]['narrative'][0]['language'] = 'fr';
+//            $activityDataList['default_flow_type']= 'fr';
+//            $activityDataList['title'] = null;
+//            $activityDataList['transaction'][0]['transaction']['transaction_type'][0]['transaction_type_code'] = 'asdasdas';
+            $activityDataList['results'][0]['result']['type'] = 'asdasdas';
+            $errors                                           = $this->xmlValidator->init($activityDataList)
+                                                                                   ->validateActivity($activityId);
+            dd($activityDataList, $errors);
+        }
+
         if ($activityDataList['activity_workflow'] == 0) {
             $nextRoute = route('activity.complete', $id);
         } elseif ($activityDataList['activity_workflow'] == 1) {
@@ -240,7 +274,7 @@ class ActivityController extends Controller
             $nextRoute = route('activity.publish', $id);
         }
 
-        return view('Activity.show', compact('activityDataList', 'id', 'filename', 'activityPublishedStatus', 'message', 'nextRoute'));
+        return view('Activity.show', compact('activityDataList', 'id', 'filename', 'activityPublishedStatus', 'message', 'nextRoute', 'errors'));
     }
 
     /**
@@ -293,7 +327,7 @@ class ActivityController extends Controller
             if (empty($settings['registry_info'][0]['publisher_id']) && empty($settings['registry_info'][0]['api_id'])) {
                 $response = ['type' => 'warning', 'code' => ['settings_registry_info', ['name' => '']]];
 
-                return redirect()->to('/publishing-settings')->withResponse($response);
+                return redirect()->to(' / publishing - settings')->withResponse($response);
             }
             $xmlService->generateActivityXml(
                 $activityData,
@@ -356,7 +390,7 @@ class ActivityController extends Controller
                 );
 
                 if ($settings->publishing_type == "segmented") {
-                    $filename = explode('-', $publishedFile->filename);
+                    $filename = explode(' - ', $publishedFile->filename);
                     $code     = str_replace('.xml', '', end($filename));
                 }
 
@@ -364,7 +398,7 @@ class ActivityController extends Controller
                     $apiCall->package_create($data);
                     $this->activityManager->updatePublishToRegister($publishedFile->id);
                 } elseif ($publishedFile['published_to_register'] == 1) {
-//                    $package = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'] . '-' . $code : $settings['registry_info'][0]['publisher_id'] . '-activities';
+//                    $package = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'] . ' - ' . $code : $settings['registry_info'][0]['publisher_id'] . ' - activities';
                     $apiCall->package_update($data);
                 }
 
@@ -395,7 +429,7 @@ class ActivityController extends Controller
         $code         = "";
 
         if ($settings->publishing_type == "segmented") {
-            $filename = explode('-', $publishedFile->filename);
+            $filename = explode(' - ', $publishedFile->filename);
             $code     = str_replace('.xml', '', end($filename));
         }
 
@@ -407,15 +441,15 @@ class ActivityController extends Controller
             $key = "country";
         }
 
-        $title = ($settings->publishing_type == "segmented") ? $organization->name . ' Activity File-' . $code : $organization->name . ' Activity File';
-        $name  = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'] . '-' . $code : $settings['registry_info'][0]['publisher_id'] . '-activities';
+        $title = ($settings->publishing_type == "segmented") ? $organization->name . ' Activity File - ' . $code : $organization->name . ' Activity File';
+        $name  = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'] . ' - ' . $code : $settings['registry_info'][0]['publisher_id'] . ' - activities';
 
         $requiredData = [
             'title'          => $title,
             'name'           => $name,
             'author_email'   => $author_email,
             'owner_org'      => $settings['registry_info'][0]['publisher_id'],
-            'file_url'       => url(sprintf('files/xml/%s', $publishedFile->filename)),
+            'file_url'       => url(sprintf('files / xml /%s', $publishedFile->filename)),
             'geographicKey'  => $key,
             'geographicCode' => $code,
             'data_updated'   => $publishedFile->updated_at->toDateTimeString(),
@@ -439,7 +473,7 @@ class ActivityController extends Controller
                 'name'                 => $data['name'],
                 'author_email'         => $data['author_email'],
                 'owner_org'            => $data['owner_org'],
-                'license_id'           => 'other-open',
+                'license_id'           => 'other - open',
                 'resources'            => [
                     [
                         'format'   => config('xmlFiles.format'),
@@ -530,11 +564,8 @@ class ActivityController extends Controller
      * @param ChangeActivityDefaultRequest $changeActivityDefaultRequest
      * @return mixed
      */
-    public function updateActivityDefault(
-        $activityId,
-        Request $request,
-        ChangeActivityDefaultRequest $changeActivityDefaultRequest
-    ) {
+    public function updateActivityDefault($activityId, Request $request, ChangeActivityDefaultRequest $changeActivityDefaultRequest)
+    {
         $activityData = $this->activityManager->getActivityData($activityId);
 
         if (Gate::denies('ownership', $activityData)) {

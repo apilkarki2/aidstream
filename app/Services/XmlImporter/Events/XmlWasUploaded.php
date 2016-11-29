@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
  */
 class XmlWasUploaded extends Event
 {
-    use SerializesModels;
+//    use SerializesModels;
 
     /**
      * @var

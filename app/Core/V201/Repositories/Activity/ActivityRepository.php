@@ -337,20 +337,28 @@ class ActivityRepository
 
     /**
      * Set Default values for the imported csv activities.
-     * @param $csvDefaultFieldValues
+     * @param $defaultFieldValues
      * @return mixed
      */
-    protected function setDefaultFieldValues($csvDefaultFieldValues)
+    protected function setDefaultFieldValues($defaultFieldValues)
     {
         $settings                                          = $this->settings->where('organization_id', session('org_id'))->first();
         $settingsDefaultFieldValues                        = $settings->default_field_values;
-        $settingsDefaultFieldValues[0]['default_currency'] = (($currency = getVal((array) $csvDefaultFieldValues, [0, 'default_currency'])) == '')
+        $settingsDefaultFieldValues[0]['default_currency'] = (($currency = getVal((array) $defaultFieldValues, [0, 'default_currency'])) == '')
             ? getVal((array) $settingsDefaultFieldValues, [0, 'default_currency']) : $currency;
-        $settingsDefaultFieldValues[0]['default_language'] = (($language = getVal((array) $csvDefaultFieldValues, [0, 'default_language'])) == '')
+        $settingsDefaultFieldValues[0]['default_language'] = (($language = getVal((array) $defaultFieldValues, [0, 'default_language'])) == '')
             ? getVal((array) $settingsDefaultFieldValues, [0, 'default_language']) : $language;
-        $settingsDefaultFieldValues[0]['humanitarian']     = (($humanitarian = getVal((array) $csvDefaultFieldValues, [0, 'humanitarian'])) == '')
+        $settingsDefaultFieldValues[0]['humanitarian']     = (($humanitarian = getVal((array) $defaultFieldValues, [0, 'humanitarian'])) == '')
             ? getVal((array) $settingsDefaultFieldValues, [0, 'humanitarian']) : $humanitarian;
 
         return $settingsDefaultFieldValues;
+    }
+
+    public function importXmlActivities(array $mappedActivity)
+    {
+        $mappedActivity['default_field_values'] = $this->setDefaultFieldValues($mappedActivity['default_field_values']);
+        unset($mappedActivity['document_link']);
+
+        return $this->activity->create($mappedActivity);
     }
 }

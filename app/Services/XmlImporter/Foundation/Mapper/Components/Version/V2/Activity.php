@@ -176,16 +176,16 @@ class Activity
     protected $emptyNarrative = [['narrative' => '', 'language' => '']];
 
     /**
-     * @param array $activityData
+     * @param array $elementData
      * @param       $template
      * @return array
      */
-    public function map($activityData = [], $template)
+    public function map($elementData = [], $template)
     {
-        foreach ($activityData as $index => $activity) {
-            $elementName = $this->name($activity);
+        foreach ($elementData as $activityIndex => $element) {
+            $elementName = $this->name($element);
             $this->resetIndex($elementName);
-            $this->activity[$this->activityElements[$elementName]] = $this->$elementName($activity, $template);
+            $this->activity[$this->activityElements[$elementName]] = $this->$elementName($element, $template);
         }
 
         return $this->activity;
@@ -196,20 +196,20 @@ class Activity
      */
     protected function resetIndex($elementName)
     {
-        if (!array_key_exists($this->activityElements[$elementName], $this->activity)) {
+        if ((!array_key_exists($this->activityElements[$elementName], $this->activity))) {
             $this->index = 0;
         }
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function iatiIdentifier($activity, $template)
+    protected function iatiIdentifier($element, $template)
     {
         $this->identifier                         = $template['identifier'];
-        $this->identifier['iati_identifier_text'] = $this->value($activity);
+        $this->identifier['iati_identifier_text'] = $this->value($element);
         if ($this->orgRef) {
             $this->identifier['activity_identifier'] = substr($this->identifier['iati_identifier_text'], strlen($this->orgRef) + 1);
         }
@@ -218,229 +218,229 @@ class Activity
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function otherIdentifier($activity, $template)
+    protected function otherIdentifier($element, $template)
     {
         $this->otherIdentifier[$this->index]                              = $template['other_identifier'];
-        $this->otherIdentifier[$this->index]['reference']                 = $this->attributes($activity, 'ref');
-        $this->otherIdentifier[$this->index]['type']                      = $this->attributes($activity, 'type');
-        $this->otherIdentifier[$this->index]['owner_org'][0]['reference'] = $this->attributes($activity, 'ref', 'ownerOrg');
-        $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = (($narrative = $this->value($activity['value'], 'ownerOrg')) == '') ? $this->emptyNarrative : $narrative;
+        $this->otherIdentifier[$this->index]['reference']                 = $this->attributes($element, 'ref');
+        $this->otherIdentifier[$this->index]['type']                      = $this->attributes($element, 'type');
+        $this->otherIdentifier[$this->index]['owner_org'][0]['reference'] = $this->attributes($element, 'ref', 'ownerOrg');
+        $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = (($narrative = $this->value($element['value'], 'ownerOrg')) == '') ? $this->emptyNarrative : $narrative;
         $this->index ++;
 
         return $this->otherIdentifier;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function title($activity, $template)
+    protected function title($element, $template)
     {
-        foreach ($activity['value'] as $index => $value) {
+        foreach ($element['value'] as $index => $value) {
             $this->title = $template['title'];
-            $this->title = $this->narrative($activity);
+            $this->title = $this->narrative($element);
         }
 
         return $this->title;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function reportingOrg($activity, $template)
+    protected function reportingOrg($element, $template)
     {
         if (empty($this->identifier)) {
-            $this->orgRef = $this->attributes($activity, 'ref');
+            $this->orgRef = $this->attributes($element, 'ref');
         } else {
-            $this->identifier['activity_identifier'] = substr($this->identifier['iati_identifier_text'], strlen($this->attributes($activity, 'ref')) + 1);
+            $this->identifier['activity_identifier'] = substr($this->identifier['iati_identifier_text'], strlen($this->attributes($element, 'ref')) + 1);
         }
 
         return $this->identifier;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function description($activity, $template)
+    protected function description($element, $template)
     {
-        $type                             = $this->attributes($activity, 'type');
+        $type                             = $this->attributes($element, 'type');
         $descType                         = ($type == '') ? 1 : $type;
         $this->description[$type]['type'] = $descType;
 
         if (array_key_exists('narrative', $this->description[$type])) {
             $narrativeIndex = count($this->description[$type]['narrative']);
-            foreach ($this->narrative($activity) as $narrative) {
+            foreach ($this->narrative($element) as $narrative) {
                 $this->description[$type]['narrative'][$narrativeIndex] = $narrative;
                 $narrativeIndex ++;
             }
         } else {
-            $this->description[$type]['narrative'] = $this->narrative($activity);
+            $this->description[$type]['narrative'] = $this->narrative($element);
         }
 
         return $this->description;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function participatingOrg($activity, $template)
+    protected function participatingOrg($element, $template)
     {
         $this->participatingOrg[$this->index]                      = $template['participating_organization'];
-        $this->participatingOrg[$this->index]['organization_role'] = $this->attributes($activity, 'role');
-        $this->participatingOrg[$this->index]['identifier']        = $this->attributes($activity, 'ref');
-        $this->participatingOrg[$this->index]['organization_type'] = $this->attributes($activity, 'type');
-        $this->participatingOrg[$this->index]['activity_id']       = $this->attributes($activity, 'activity-id');
-        $this->participatingOrg[$this->index]['narrative']         = $this->narrative($activity);
+        $this->participatingOrg[$this->index]['organization_role'] = $this->attributes($element, 'role');
+        $this->participatingOrg[$this->index]['identifier']        = $this->attributes($element, 'ref');
+        $this->participatingOrg[$this->index]['organization_type'] = $this->attributes($element, 'type');
+        $this->participatingOrg[$this->index]['activity_id']       = $this->attributes($element, 'activity-id');
+        $this->participatingOrg[$this->index]['narrative']         = $this->narrative($element);
         $this->index ++;
 
         return $this->participatingOrg;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function activityStatus($activity, $template)
+    protected function activityStatus($element, $template)
     {
-        return $this->attributes($activity, 'code');
+        return $this->attributes($element, 'code');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function activityDate($activity, $template)
+    protected function activityDate($element, $template)
     {
         $this->activityDate[$this->index]              = $template['activity_date'];
-        $this->activityDate[$this->index]['date']      = $this->attributes($activity, 'iso-date');
-        $this->activityDate[$this->index]['type']      = $this->attributes($activity, 'type');
-        $this->activityDate[$this->index]['narrative'] = $this->narrative($activity);
+        $this->activityDate[$this->index]['date']      = $this->attributes($element, 'iso-date');
+        $this->activityDate[$this->index]['type']      = $this->attributes($element, 'type');
+        $this->activityDate[$this->index]['narrative'] = $this->narrative($element);
         $this->index ++;
 
         return $this->activityDate;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function activityScope($activity, $template)
+    protected function activityScope($element, $template)
     {
-        return $this->attributes($activity, 'code');
+        return $this->attributes($element, 'code');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function contactInfo($activity, $template)
+    protected function contactInfo($element, $template)
     {
         $this->contactInfo[$this->index]                                    = $template['contact_info'];
-        $this->contactInfo[$this->index]['type']                            = $this->attributes($activity, 'type');
-        $this->contactInfo[$this->index]['organization'][0]['narrative']    = $this->value(getVal($activity, ['value'], []), 'organisation');
-        $this->contactInfo[$this->index]['department'][0]['narrative']      = $this->value(getVal($activity, ['value'], []), 'department');
-        $this->contactInfo[$this->index]['person_name'][0]['narrative']     = $this->value(getVal($activity, ['value'], []), 'personName');
-        $this->contactInfo[$this->index]['job_title'][0]['narrative']       = $this->value(getVal($activity, ['value'], []), 'jobTitle');
-        $this->contactInfo[$this->index]['telephone']                       = $this->filterValues(getVal($activity, ['value'], []), 'telephone');
-        $this->contactInfo[$this->index]['email']                           = $this->filterValues(getVal($activity, ['value'], []), 'email');
-        $this->contactInfo[$this->index]['website']                         = $this->filterValues(getVal($activity, ['value'], []), 'website');
-        $this->contactInfo[$this->index]['mailing_address'][0]['narrative'] = $this->value(getVal($activity, ['value'], []), 'mailingAddress');
+        $this->contactInfo[$this->index]['type']                            = $this->attributes($element, 'type');
+        $this->contactInfo[$this->index]['organization'][0]['narrative']    = $this->value(getVal($element, ['value'], []), 'organisation');
+        $this->contactInfo[$this->index]['department'][0]['narrative']      = $this->value(getVal($element, ['value'], []), 'department');
+        $this->contactInfo[$this->index]['person_name'][0]['narrative']     = $this->value(getVal($element, ['value'], []), 'personName');
+        $this->contactInfo[$this->index]['job_title'][0]['narrative']       = $this->value(getVal($element, ['value'], []), 'jobTitle');
+        $this->contactInfo[$this->index]['telephone']                       = $this->filterValues(getVal($element, ['value'], []), 'telephone');
+        $this->contactInfo[$this->index]['email']                           = $this->filterValues(getVal($element, ['value'], []), 'email');
+        $this->contactInfo[$this->index]['website']                         = $this->filterValues(getVal($element, ['value'], []), 'website');
+        $this->contactInfo[$this->index]['mailing_address'][0]['narrative'] = $this->value(getVal($element, ['value'], []), 'mailingAddress');
         $this->index ++;
 
         return $this->contactInfo;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function sector($activity, $template)
+    protected function sector($element, $template)
     {
         $this->sector[$this->index]                         = $template['sector'];
-        $vocabulary                                         = $this->attributes($activity, 'vocabulary');
+        $vocabulary                                         = $this->attributes($element, 'vocabulary');
         $this->sector[$this->index]['sector_vocabulary']    = $vocabulary;
-        $this->sector[$this->index]['vocabulary_uri']       = $this->attributes($activity, 'vocabulary_uri');
-        $this->sector[$this->index]['sector_code']          = ($vocabulary == 1) ? $this->attributes($activity, 'code') : '';
-        $this->sector[$this->index]['sector_category_code'] = ($vocabulary == 2) ? $this->attributes($activity, 'code') : '';
-        $this->sector[$this->index]['sector_text']          = ($vocabulary != 1 && $vocabulary != 2) ? $this->attributes($activity, 'code') : '';
-        $this->sector[$this->index]['percentage']           = $this->attributes($activity, 'percentage');
-        $this->sector[$this->index]['narrative']            = $this->narrative($activity);
+        $this->sector[$this->index]['vocabulary_uri']       = $this->attributes($element, 'vocabulary_uri');
+        $this->sector[$this->index]['sector_code']          = ($vocabulary == 1) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['sector_category_code'] = ($vocabulary == 2) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['sector_text']          = ($vocabulary != 1 && $vocabulary != 2) ? $this->attributes($element, 'code') : '';
+        $this->sector[$this->index]['percentage']           = $this->attributes($element, 'percentage');
+        $this->sector[$this->index]['narrative']            = $this->narrative($element);
         $this->index ++;
 
         return $this->sector;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function defaultFlowType($activity, $template)
+    protected function defaultFlowType($element, $template)
     {
-        return $this->attributes($activity, 'code');
+        return $this->attributes($element, 'code');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function defaultFinanceType($activity, $template)
+    protected function defaultFinanceType($element, $template)
     {
-        return $this->attributes($activity, 'code');
+        return $this->attributes($element, 'code');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function defaultAidType($activity, $template)
+    protected function defaultAidType($element, $template)
     {
-        return $this->attributes($activity, 'code');
+        return $this->attributes($element, 'code');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function defaultTiedStatus($activity, $template)
+    protected function defaultTiedStatus($element, $template)
     {
-        return $this->attributes($activity, 'code');
+        return $this->attributes($element, 'code');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function budget($activity, $template)
+    protected function budget($element, $template)
     {
         $this->budget[$this->index]                            = $template['budget'];
-        $this->budget[$this->index]['budget_type']             = $this->attributes($activity, 'type');
-        $this->budget[$this->index]['status']                  = $this->attributes($activity, 'status');
-        $this->budget[$this->index]['period_start'][0]['date'] = $this->attributes($activity, 'iso-date', 'periodStart');
-        $this->budget[$this->index]['period_end'][0]['date']   = $this->attributes($activity, 'iso-date', 'periodEnd');
-        $this->budget[$this->index]['value'][0]['amount']      = $this->value(getVal($activity, ['value'], []), 'value');
-        $this->budget[$this->index]['value'][0]['currency']    = $this->attributes($activity, 'currency', 'value');
-        $this->budget[$this->index]['value'][0]['value_date']  = $this->attributes($activity, 'value-date', 'value');
+        $this->budget[$this->index]['budget_type']             = $this->attributes($element, 'type');
+        $this->budget[$this->index]['status']                  = $this->attributes($element, 'status');
+        $this->budget[$this->index]['period_start'][0]['date'] = $this->attributes($element, 'iso-date', 'periodStart');
+        $this->budget[$this->index]['period_end'][0]['date']   = $this->attributes($element, 'iso-date', 'periodEnd');
+        $this->budget[$this->index]['value'][0]['amount']      = $this->value(getVal($element, ['value'], []), 'value');
+        $this->budget[$this->index]['value'][0]['currency']    = $this->attributes($element, 'currency', 'value');
+        $this->budget[$this->index]['value'][0]['value_date']  = $this->attributes($element, 'value-date', 'value');
         $this->index ++;
 
         return $this->budget;
@@ -448,34 +448,34 @@ class Activity
 
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function recipientRegion($activity, $template)
+    protected function recipientRegion($element, $template)
     {
         $this->recipientRegion[$this->index]                      = $template['recipient_region'];
-        $this->recipientRegion[$this->index]['region_code']       = $this->attributes($activity, 'code');
-        $this->recipientRegion[$this->index]['region_vocabulary'] = $this->attributes($activity, 'vocabulary');
-        $this->recipientRegion[$this->index]['vocabulary_uri']    = $this->attributes($activity, 'vocabulary-uri');
-        $this->recipientRegion[$this->index]['percentage']        = $this->attributes($activity, 'percentage');
-        $this->recipientRegion[$this->index]['narrative']         = $this->narrative($activity);
+        $this->recipientRegion[$this->index]['region_code']       = $this->attributes($element, 'code');
+        $this->recipientRegion[$this->index]['region_vocabulary'] = $this->attributes($element, 'vocabulary');
+        $this->recipientRegion[$this->index]['vocabulary_uri']    = $this->attributes($element, 'vocabulary-uri');
+        $this->recipientRegion[$this->index]['percentage']        = $this->attributes($element, 'percentage');
+        $this->recipientRegion[$this->index]['narrative']         = $this->narrative($element);
         $this->index ++;
 
         return $this->recipientRegion;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function recipientCountry($activity, $template)
+    protected function recipientCountry($element, $template)
     {
         $this->recipientCountry[$this->index]                 = $template['recipient_country'];
-        $this->recipientCountry[$this->index]['country_code'] = $this->attributes($activity, 'code');
-        $this->recipientCountry[$this->index]['percentage']   = $this->attributes($activity, 'percentage');
-        $this->recipientCountry[$this->index]['narrative']    = $this->narrative($activity);
+        $this->recipientCountry[$this->index]['country_code'] = $this->attributes($element, 'code');
+        $this->recipientCountry[$this->index]['percentage']   = $this->attributes($element, 'percentage');
+        $this->recipientCountry[$this->index]['narrative']    = $this->narrative($element);
         $this->index ++;
 
         return $this->recipientCountry;
@@ -483,63 +483,63 @@ class Activity
 
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function location($activity, $template)
+    protected function location($element, $template)
     {
         $this->location[$this->index]                                         = $template['location'];
-        $this->location[$this->index]['reference']                            = $this->attributes($activity, 'ref');
-        $this->location[$this->index]['location_reach'][0]['code']            = $this->attributes($activity, 'code', 'locationReach');
-        $this->location[$this->index]['location_id'][0]['vocabulary']         = $this->attributes($activity, 'vocabulary', 'locationId');
-        $this->location[$this->index]['location_id'][0]['code']               = $this->attributes($activity, 'code', 'locationId');
-        $this->location[$this->index]['name'][0]['narrative']                 = (($name = $this->value(getVal($activity, ['value'], []), 'name')) == '') ? $this->emptyNarrative : $name;
+        $this->location[$this->index]['reference']                            = $this->attributes($element, 'ref');
+        $this->location[$this->index]['location_reach'][0]['code']            = $this->attributes($element, 'code', 'locationReach');
+        $this->location[$this->index]['location_id'][0]['vocabulary']         = $this->attributes($element, 'vocabulary', 'locationId');
+        $this->location[$this->index]['location_id'][0]['code']               = $this->attributes($element, 'code', 'locationId');
+        $this->location[$this->index]['name'][0]['narrative']                 = (($name = $this->value(getVal($element, ['value'], []), 'name')) == '') ? $this->emptyNarrative : $name;
         $this->location[$this->index]['location_description'][0]['narrative'] = (($locationDesc = $this->value(
-                getVal($activity, ['value'], []),
+                getVal($element, ['value'], []),
                 'description'
             )) == '') ? $this->emptyNarrative : $locationDesc;
-        $this->location[$this->index]['activity_description'][0]['narrative'] = (($activityDesc = $this->value(
-                getVal($activity, ['value'], []),
+        $this->location[$this->index]['activity_description'][0]['narrative'] = (($elementDesc = $this->value(
+                getVal($element, ['value'], []),
                 'activityDescription'
-            )) == '') ? $this->emptyNarrative : $activityDesc;
-        $this->location[$this->index]['administrative']                       = $this->filterAttributes(getVal($activity, ['value'], []), 'administrative', ['code', 'vocabulary', 'level']);
-        $this->location[$this->index]['point'][0]['srs_name']                 = $this->attributes($activity, 'srsName', 'point');
-        $this->location[$this->index]['point'][0]['position'][0]              = $this->latAndLong(getVal($activity, ['value'], []));
-        $this->location[$this->index]['exactness'][0]['code']                 = $this->attributes($activity, 'code', 'exactness');
-        $this->location[$this->index]['location_class'][0]['code']            = $this->attributes($activity, 'code', 'locationClass');
-        $this->location[$this->index]['feature_designation'][0]['code']       = $this->attributes($activity, 'code', 'featureDesignation');
+            )) == '') ? $this->emptyNarrative : $elementDesc;
+        $this->location[$this->index]['administrative']                       = $this->filterAttributes(getVal($element, ['value'], []), 'administrative', ['code', 'vocabulary', 'level']);
+        $this->location[$this->index]['point'][0]['srs_name']                 = $this->attributes($element, 'srsName', 'point');
+        $this->location[$this->index]['point'][0]['position'][0]              = $this->latAndLong(getVal($element, ['value'], []));
+        $this->location[$this->index]['exactness'][0]['code']                 = $this->attributes($element, 'code', 'exactness');
+        $this->location[$this->index]['location_class'][0]['code']            = $this->attributes($element, 'code', 'locationClass');
+        $this->location[$this->index]['feature_designation'][0]['code']       = $this->attributes($element, 'code', 'featureDesignation');
         $this->index ++;
 
         return $this->location;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function plannedDisbursement($activity, $template)
+    protected function plannedDisbursement($element, $template)
     {
         $this->plannedDisbursement[$this->index]                                   = $template['planned_disbursement'];
-        $this->plannedDisbursement[$this->index]['planned_disbursement_type']      = $this->attributes($activity, 'type');
-        $this->plannedDisbursement[$this->index]['period_start'][0]['date']        = $this->attributes($activity, 'iso-date', 'periodStart');
-        $this->plannedDisbursement[$this->index]['period_end'][0]['date']          = $this->attributes($activity, 'iso-date', 'periodEnd');
-        $this->plannedDisbursement[$this->index]['value'][0]['amount']             = $this->value(getVal($activity, ['value'], []), 'value');
-        $this->plannedDisbursement[$this->index]['value'][0]['currency']           = $this->attributes($activity, 'currency', 'value');
-        $this->plannedDisbursement[$this->index]['value'][0]['value_date']         = $this->attributes($activity, 'value-date', 'value');
-        $this->plannedDisbursement[$this->index]['provider_org'][0]['ref']         = $this->attributes($activity, 'ref', 'providerOrg');
-        $this->plannedDisbursement[$this->index]['provider_org'][0]['activity_id'] = $this->attributes($activity, 'provider-activity-id', 'providerOrg');
-        $this->plannedDisbursement[$this->index]['provider_org'][0]['type']        = $this->attributes($activity, 'type', 'providerOrg');
+        $this->plannedDisbursement[$this->index]['planned_disbursement_type']      = $this->attributes($element, 'type');
+        $this->plannedDisbursement[$this->index]['period_start'][0]['date']        = $this->attributes($element, 'iso-date', 'periodStart');
+        $this->plannedDisbursement[$this->index]['period_end'][0]['date']          = $this->attributes($element, 'iso-date', 'periodEnd');
+        $this->plannedDisbursement[$this->index]['value'][0]['amount']             = $this->value(getVal($element, ['value'], []), 'value');
+        $this->plannedDisbursement[$this->index]['value'][0]['currency']           = $this->attributes($element, 'currency', 'value');
+        $this->plannedDisbursement[$this->index]['value'][0]['value_date']         = $this->attributes($element, 'value-date', 'value');
+        $this->plannedDisbursement[$this->index]['provider_org'][0]['ref']         = $this->attributes($element, 'ref', 'providerOrg');
+        $this->plannedDisbursement[$this->index]['provider_org'][0]['activity_id'] = $this->attributes($element, 'provider-activity-id', 'providerOrg');
+        $this->plannedDisbursement[$this->index]['provider_org'][0]['type']        = $this->attributes($element, 'type', 'providerOrg');
         $this->plannedDisbursement[$this->index]['provider_org'][0]['narrative']   = (($providerOrg = $this->value(
-                getVal($activity, ['value'], []),
+                getVal($element, ['value'], []),
                 'providerOrg'
             )) == '') ? $this->emptyNarrative : $providerOrg;
-        $this->plannedDisbursement[$this->index]['receiver_org'][0]['ref']         = $this->attributes($activity, 'ref', 'receiverOrg');
-        $this->plannedDisbursement[$this->index]['receiver_org'][0]['activity_id'] = $this->attributes($activity, 'receiver-activity-id', 'receiverOrg');
-        $this->plannedDisbursement[$this->index]['receiver_org'][0]['type']        = $this->attributes($activity, 'type', 'receiverOrg');
+        $this->plannedDisbursement[$this->index]['receiver_org'][0]['ref']         = $this->attributes($element, 'ref', 'receiverOrg');
+        $this->plannedDisbursement[$this->index]['receiver_org'][0]['activity_id'] = $this->attributes($element, 'receiver-activity-id', 'receiverOrg');
+        $this->plannedDisbursement[$this->index]['receiver_org'][0]['type']        = $this->attributes($element, 'type', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['narrative']   = (($receiverOrg = $this->value(
-                getVal($activity, ['value'], []),
+                getVal($element, ['value'], []),
                 'receiverOrg'
             )) == '') ? $this->emptyNarrative : $receiverOrg;
         $this->index ++;
@@ -548,15 +548,15 @@ class Activity
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function countryBudgetItems($activity, $template)
+    protected function countryBudgetItems($element, $template)
     {
         $this->countryBudgetItems[$this->index]               = $template['country_budget_items'];
-        $this->countryBudgetItems[$this->index]['vocabulary'] = $vocabulary = $this->attributes($activity, 'vocabulary');
-        foreach (getVal($activity, ['value'], []) as $index => $budgetItem) {
+        $this->countryBudgetItems[$this->index]['vocabulary'] = $vocabulary = $this->attributes($element, 'vocabulary');
+        foreach (getVal($element, ['value'], []) as $index => $budgetItem) {
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['code']                        = ($vocabulary == 1) ? $this->attributes($budgetItem, 'code') : "";
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['code_text']                   = ($vocabulary != 1) ? $this->attributes($budgetItem, 'code') : "";
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['percentage']                  = $this->attributes($budgetItem, 'percentage');
@@ -571,54 +571,54 @@ class Activity
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function documentLink($activity, $template)
+    protected function documentLink($element, $template)
     {
         $this->documentLink[$this->index]                          = $template['document_link'];
-        $this->documentLink[$this->index]['url']                   = $this->attributes($activity, 'url');
-        $this->documentLink[$this->index]['format']                = $this->attributes($activity, 'format');
-        $this->documentLink[$this->index]['title'][0]['narrative'] = (($title = $this->value(getVal($activity, ['value'], []), 'title')) == '') ? $this->emptyNarrative : $title;
-        $this->documentLink[$this->index]['category']              = $this->filterAttributes($activity['value'], 'category', ['code']);
-        foreach ($this->filterAttributes($activity['value'], 'language', ['code']) as $index => $language) {
+        $this->documentLink[$this->index]['url']                   = $this->attributes($element, 'url');
+        $this->documentLink[$this->index]['format']                = $this->attributes($element, 'format');
+        $this->documentLink[$this->index]['title'][0]['narrative'] = (($title = $this->value(getVal($element, ['value'], []), 'title')) == '') ? $this->emptyNarrative : $title;
+        $this->documentLink[$this->index]['category']              = $this->filterAttributes($element['value'], 'category', ['code']);
+        foreach ($this->filterAttributes($element['value'], 'language', ['code']) as $index => $language) {
             $this->documentLink[$this->index]['language'][$index]['language'] = $language['code'];
         }
-        $this->documentLink[$this->index]['document_date'][0]['date'] = $this->attributes($activity, 'iso-date', 'documentDate');
+        $this->documentLink[$this->index]['document_date'][0]['date'] = $this->attributes($element, 'iso-date', 'documentDate');
         $this->index ++;
 
         return $this->documentLink;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function policyMarker($activity, $template)
+    protected function policyMarker($element, $template)
     {
         $this->policyMarker[$this->index]                   = $template['policy_marker'];
-        $this->policyMarker[$this->index]['vocabulary']     = $this->attributes($activity, 'vocabulary');
-        $this->policyMarker[$this->index]['vocabulary_uri'] = $this->attributes($activity, 'vocabulary-uri');
-        $this->policyMarker[$this->index]['policy_marker']  = $this->attributes($activity, 'code');
-        $this->policyMarker[$this->index]['significance']   = $this->attributes($activity, 'significance');
-        $this->policyMarker[$this->index]['narrative']      = $this->narrative($activity);
+        $this->policyMarker[$this->index]['vocabulary']     = $this->attributes($element, 'vocabulary');
+        $this->policyMarker[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
+        $this->policyMarker[$this->index]['policy_marker']  = $this->attributes($element, 'code');
+        $this->policyMarker[$this->index]['significance']   = $this->attributes($element, 'significance');
+        $this->policyMarker[$this->index]['narrative']      = $this->narrative($element);
         $this->index ++;
 
         return $this->policyMarker;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function conditions($activity, $template)
+    protected function conditions($element, $template)
     {
         $this->conditions                       = $template['conditions'];
-        $this->conditions['condition_attached'] = $this->attributes($activity, 'attached');
-        foreach (getVal($activity, ['value'], []) as $index => $condition) {
+        $this->conditions['condition_attached'] = $this->attributes($element, 'attached');
+        foreach (getVal($element, ['value'], []) as $index => $condition) {
             $this->conditions['condition'][$index]['condition_type'] = $this->attributes($condition, 'type');
             $this->conditions['condition'][$index]['narrative']      = $this->narrative($condition);
         }
@@ -628,69 +628,69 @@ class Activity
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function legacyData($activity, $template)
+    protected function legacyData($element, $template)
     {
         $this->legacyData[$this->index]                    = $template['legacy_data'];
-        $this->legacyData[$this->index]['name']            = $this->attributes($activity, 'name');
-        $this->legacyData[$this->index]['value']           = $this->attributes($activity, 'value');
-        $this->legacyData[$this->index]['iati_equivalent'] = $this->attributes($activity, 'iati-equivalent');
+        $this->legacyData[$this->index]['name']            = $this->attributes($element, 'name');
+        $this->legacyData[$this->index]['value']           = $this->attributes($element, 'value');
+        $this->legacyData[$this->index]['iati_equivalent'] = $this->attributes($element, 'iati-equivalent');
         $this->index ++;
 
         return $this->legacyData;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function humanitarianScope($activity, $template)
+    protected function humanitarianScope($element, $template)
     {
         $this->humanitarianScope[$this->index]                   = $template['humanitarian_scope'];
-        $this->humanitarianScope[$this->index]['type']           = $this->attributes($activity, 'type');
-        $this->humanitarianScope[$this->index]['vocabulary']     = $this->attributes($activity, 'vocabulary');
-        $this->humanitarianScope[$this->index]['vocabulary_uri'] = $this->attributes($activity, 'vocabulary-uri');
-        $this->humanitarianScope[$this->index]['code']           = $this->attributes($activity, 'code');
-        $this->humanitarianScope[$this->index]['narrative']      = $this->narrative($activity);
+        $this->humanitarianScope[$this->index]['type']           = $this->attributes($element, 'type');
+        $this->humanitarianScope[$this->index]['vocabulary']     = $this->attributes($element, 'vocabulary');
+        $this->humanitarianScope[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
+        $this->humanitarianScope[$this->index]['code']           = $this->attributes($element, 'code');
+        $this->humanitarianScope[$this->index]['narrative']      = $this->narrative($element);
         $this->index ++;
 
         return $this->humanitarianScope;
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function collaborationType($activity, $template)
+    protected function collaborationType($element, $template)
     {
-        return $this->attributes($activity, 'code');
+        return $this->attributes($element, 'code');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return mixed|string
      */
-    protected function capitalSpend($activity, $template)
+    protected function capitalSpend($element, $template)
     {
-        return $this->attributes($activity, 'percentage');
+        return $this->attributes($element, 'percentage');
     }
 
     /**
-     * @param $activity
+     * @param $element
      * @param $template
      * @return array
      */
-    protected function relatedActivity($activity, $template)
+    protected function relatedActivity($element, $template)
     {
         $this->relatedActivity[$this->index]                        = $template['related_activity'];
-        $this->relatedActivity[$this->index]['relationship_type']   = $this->attributes($activity, 'type');
-        $this->relatedActivity[$this->index]['activity_identifier'] = $this->attributes($activity, 'ref');
+        $this->relatedActivity[$this->index]['relationship_type']   = $this->attributes($element, 'type');
+        $this->relatedActivity[$this->index]['activity_identifier'] = $this->attributes($element, 'ref');
         $this->index ++;
 
         return $this->relatedActivity;
