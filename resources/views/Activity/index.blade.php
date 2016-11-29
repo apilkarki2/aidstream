@@ -19,6 +19,7 @@
                     @include('includes.steps')
                 @endif
                 @include('includes.breadcrumb')
+                <div id="xml-import-status-placeholder"></div>
                 <div class="panel panel-default">
                     <div class="panel-content-heading">
                         <div>Activities</div>
@@ -83,6 +84,9 @@
     </div>
 @endsection
 @section('foot')
+    @if(session('xml_import_status'))
+        <script type="text/javascript" src="{{asset('js/xmlImporter/xmlImporter.js')}}"></script>
+    @endif
     {{--<script>--}}
     {{--$(document).ready(function () {--}}
     {{--$('[data-toggle="popover"]').popover({html: true});--}}

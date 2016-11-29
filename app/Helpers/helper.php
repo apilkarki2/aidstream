@@ -84,7 +84,8 @@ function getDefaultLanguage()
             return config('app.default_language');
         }
     }
-    $defaultLanguage = $defaultFieldValues ? $defaultFieldValues[0]['default_language'] : null;
+
+    $defaultLanguage = $defaultFieldValues ? getVal($defaultFieldValues, [0, 'default_language'], null) : null;
 
     return $defaultLanguage;
 }

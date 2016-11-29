@@ -52,6 +52,7 @@ class Activity extends Model
         'humanitarian_scope',
         'published_to_registry',
         'activity_workflow',
+        'imported_from_xml'
     ];
 
     /**
@@ -97,7 +98,7 @@ class Activity extends Model
         $identifier = $this->identifier['activity_identifier'];
         $title      = $this->title ? $this->title[0]['narrative'] : 'No Title';
 
-        return $identifier.'('.$title.')';
+        return $identifier . '(' . $title . ')';
     }
 
     /**

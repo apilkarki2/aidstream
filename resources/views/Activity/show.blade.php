@@ -22,34 +22,48 @@
         </div>
     </div>
     <div class="col-xs-12 col-md-8 col-lg-8 element-content-wrapper">
-        <div class="activity-status activity-status-{{ $status_label[$activity_workflow] }}">
-            <ol>
-                @foreach($status_label as $key => $val)
-                    @if($key == $activity_workflow)
-                        <li class="active"><span>{{ $val }}</span></li>
-                    @else
-                        <li><span>{{ $val }}</span></li>
-                    @endif
+        @if(!getVal($activityDataList,['imported_from_xml']))
+            <div class="activity-status activity-status-{{ $status_label[$activity_workflow] }}">
+                <ol>
+                    @foreach($status_label as $key => $val)
+                        @if($key == $activity_workflow)
+                            <li class="active"><span>{{ $val }}</span></li>
+                        @else
+                            <li><span>{{ $val }}</span></li>
+                        @endif
+                    @endforeach
+                </ol>
+                @if($btn_text != "")
+                    <form method="POST" id="change_status" class="pull-right" action="{{ $nextRoute }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                        <input type="hidden" name="activity_workflow" value="{{ $activity_workflow + 1 }}">
+                        @if($activity_workflow == 2)
+                            <input type="button" value="Mark as {{ $btn_text }}" class="btn_confirm"
+                                   data-title="Confirmation" data-message="Are you sure you want to Publish?">
+                        @else
+                            <input type="submit" value="Mark as {{ $btn_text }}">
+                        @endif
+                    </form>
+                @else
+                    <div class="popup-link-content">
+                        <a href="#" title="{{ucfirst($activityPublishedStatus)}}" class="{{ucfirst($activityPublishedStatus)}}">{{ucfirst($activityPublishedStatus)}}</a>
+                        <div class="link-content-message">{!!$message!!}</div>
+                    </div>
+                @endif
+            </div>
+        @else
+            <div class="alert alert-warning">
+                <p> This activity was imported from xml</p>
+                @foreach($errors as $element =>$error)
+                    <ul>
+                        {{$element}}
+                        @foreach($error as $errorMessage)
+                            <li>{{$errorMessage}}</li>
+                        @endforeach
+                    </ul>
                 @endforeach
-            </ol>
-            @if($btn_text != "")
-                <form method="POST" id="change_status" class="pull-right" action="{{ $nextRoute }}">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                    <input type="hidden" name="activity_workflow" value="{{ $activity_workflow + 1 }}">
-                    @if($activity_workflow == 2)
-                        <input type="button" value="Mark as {{ $btn_text }}" class="btn_confirm"
-                               data-title="Confirmation" data-message="Are you sure you want to Publish?">
-                    @else
-                        <input type="submit" value="Mark as {{ $btn_text }}">
-                    @endif
-                </form>
-            @else
-                <div class="popup-link-content">
-                    <a href="#" title="{{ucfirst($activityPublishedStatus)}}" class="{{ucfirst($activityPublishedStatus)}}">{{ucfirst($activityPublishedStatus)}}</a>
-                    <div class="link-content-message">{!!$message!!}</div>
-                </div>
-            @endif
-        </div>
+            </div>
+        @endif
         <a href="" class="pull-right print">Print</a>
         <a href="{{route('change-activity-default', $id)}}" class="pull-right override-activity">
             <span class="glyphicon glyphicon-triangle-left"></span> Override Activity Default

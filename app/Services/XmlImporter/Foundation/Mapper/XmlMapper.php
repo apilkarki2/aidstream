@@ -82,6 +82,8 @@ class XmlMapper
         'relatedActivity'
     ];
 
+    protected $version;
+
     /**
      * Xml constructor.
      */
@@ -98,7 +100,7 @@ class XmlMapper
      */
     public function assign($version = '2.02')
     {
-        $this->initComponents($version);
+        $this->version = $version;
 
         return $this;
     }
@@ -114,12 +116,12 @@ class XmlMapper
     {
         $mappedData = [];
         foreach ($activities as $index => $activity) {
+            $this->initComponents();
             $mappedData[$index]                         = $this->activity->map($this->filter($activity, 'iatiActivity'), $template);
             $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
             $mappedData[$index]['transactions']         = $this->transactionElement->map($this->filter($activity, 'transaction'), $template);
             $mappedData[$index]['result']               = $this->resultElement->map($this->filter($activity, 'result'), $template);
         }
-
         $this->data = $mappedData;
 
         return $this;
@@ -152,12 +154,12 @@ class XmlMapper
      */
     protected function defaultFieldValues($activity = [], $template)
     {
-        $defaultFieldValues                      = $template['default_field_values'];
-        $defaultFieldValues['default_currency']  = $this->attributes($activity, 'default-currency');
-        $defaultFieldValues['default_language']  = $this->attributes($activity, 'language');
-        $defaultFieldValues['default_hierarchy'] = $this->attributes($activity, 'hierarchy');
-        $defaultFieldValues['linked_data_uri']   = $this->attributes($activity, 'linked-data-uri');
-        $defaultFieldValues['humanitarian']      = $this->attributes($activity, 'humanitarian');
+        $defaultFieldValues[0]                      = $template['default_field_values'];
+        $defaultFieldValues[0]['default_currency']  = $this->attributes($activity, 'default-currency');
+        $defaultFieldValues[0]['default_language']  = $this->attributes($activity, 'language');
+        $defaultFieldValues[0]['default_hierarchy'] = $this->attributes($activity, 'hierarchy');
+        $defaultFieldValues[0]['linked_data_uri']   = $this->attributes($activity, 'linked-data-uri');
+        $defaultFieldValues[0]['humanitarian']      = $this->attributes($activity, 'humanitarian');
 
         return $defaultFieldValues;
     }
