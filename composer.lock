@@ -3712,7 +3712,6 @@
             ],
 
             "time": "2016-10-08 15:01:37"
->>>>>>> xml importer prototype - wip
         },
         {
             "name": "guzzlehttp/promises",

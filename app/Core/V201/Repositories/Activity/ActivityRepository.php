@@ -313,7 +313,7 @@ class ActivityRepository
      */
     public function createActivity($activityData)
     {
-        $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values']);
+        $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
 
         return $this->activity->create(
             [
@@ -339,11 +339,12 @@ class ActivityRepository
     /**
      * Set Default values for the imported csv activities.
      * @param $defaultFieldValues
+     * @param $organizationId
      * @return mixed
      */
-    protected function setDefaultFieldValues($defaultFieldValues)
+    protected function setDefaultFieldValues($defaultFieldValues, $organizationId)
     {
-        $settings                                          = $this->settings->where('organization_id', session('org_id'))->first();
+        $settings                                          = $this->settings->where('organization_id', $organizationId)->first();
         $settingsDefaultFieldValues                        = $settings->default_field_values;
         $settingsDefaultFieldValues[0]['default_currency'] = (($currency = getVal((array) $defaultFieldValues, [0, 'default_currency'])) == '')
             ? getVal((array) $settingsDefaultFieldValues, [0, 'default_currency']) : $currency;
@@ -355,9 +356,14 @@ class ActivityRepository
         return $settingsDefaultFieldValues;
     }
 
-    public function importXmlActivities(array $mappedActivity)
+    /**
+     * @param array $mappedActivity
+     * @param $organizationId
+     * @return static
+     */
+    public function importXmlActivities(array $mappedActivity, $organizationId)
     {
-        $mappedActivity['default_field_values'] = $this->setDefaultFieldValues($mappedActivity['default_field_values']);
+        $mappedActivity['default_field_values'] = $this->setDefaultFieldValues($mappedActivity['default_field_values'], $organizationId);
         unset($mappedActivity['document_link']);
 
         return $this->activity->create($mappedActivity);

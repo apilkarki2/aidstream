@@ -145,7 +145,7 @@ class XmlQueueProcessor
             if ($this->isIatiIdentifierDifferent($dbActivities, $iatiIdentifierText)) {
                 $activity['organization_id']   = $orgId;
                 $activity['imported_from_xml'] = 1;
-                $storeActivity                 = $this->activityRepo->importXmlActivities($activity);
+                $storeActivity                 = $this->activityRepo->importXmlActivities($activity, $orgId);
                 $activityId                    = $storeActivity->id;
                 $success ++;
                 $success ++;

@@ -38,8 +38,9 @@
                                     <div class="form-group col-xs-6 col-sm-6 activity-file-choose">
                                         <label class="control-label">Import Xml</label>
                                         <input type="file" class="form-control" name="xml_file">
-                                        <input type="submit" value="Submit" class="btn pull-left">
                                     </div>
+
+                                    <button type="submit" class="btn pull-left">Upload</button>
                                 </form>
                             </div>
                             {{--<div class="download-transaction-wrap">--}}

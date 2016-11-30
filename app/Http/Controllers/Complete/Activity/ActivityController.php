@@ -260,10 +260,9 @@ class ActivityController extends Controller
 //            $activityDataList['default_flow_type']= 'fr';
 //            $activityDataList['title'] = null;
 //            $activityDataList['transaction'][0]['transaction']['transaction_type'][0]['transaction_type_code'] = 'asdasdas';
-            $activityDataList['results'][0]['result']['type'] = 'asdasdas';
+//            $activityDataList['results'][0]['result']['type'] = 'asdasdas';
             $errors                                           = $this->xmlValidator->init($activityDataList)
                                                                                    ->validateActivity($activityId);
-            dd($activityDataList, $errors);
         }
 
         if ($activityDataList['activity_workflow'] == 0) {

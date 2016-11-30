@@ -39,7 +39,6 @@ class Validation extends Factory
     {
         $errors = [];
         foreach ($this->errors() as $index => $error) {
-            dd($error, $index, $activityId);
             $element            = $this->parseErrors($index);
             $errors[$element][] = getVal($error, [0], '');
         }
