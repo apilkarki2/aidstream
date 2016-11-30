@@ -9,7 +9,6 @@
     {{ header("Expires: 0 ")}}
     <title>Aidstream</title>
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="images/favicon.png"/>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.min.css">
 </head>
 <body>
@@ -185,9 +184,7 @@
 @endif
 
 @include('includes.footer')
-<script src="js/jquery.js"></script>
-<script src="js/modernizr.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script src="js/initial.min.js"></script>
 <script>
     $(document).ready(function () {
         function hamburgerMenu() {

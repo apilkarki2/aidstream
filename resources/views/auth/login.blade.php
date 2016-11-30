@@ -6,8 +6,8 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
     <title>Aidstream - Login</title>
     <link rel="shotcut icon" type="image/png" sizes="32*32" href="{{ asset('/images/favicon.png') }}"/>
-    <link href="{{ asset('/css/main.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/css/style.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/css/main.min.css') }}" rel="stylesheet">
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -145,9 +145,24 @@
 @else
     <script type="text/javascript" src="{{url('/js/main.min.js')}}"></script>
     @endif
-            <!-- Google Analytics -->
-    <script type="text/javascript" src="{{url('/js/ga.js')}}"></script>
-    <!-- End Google Analytics -->
+<!-- Google Analytics -->
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-75937759-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+<!-- End Google Analytics -->
     <script>
         $(document).ready(function () {
             function hamburgerMenu() {

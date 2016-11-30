@@ -29,6 +29,12 @@ var css_style = [
     './resources/assets/css/style.css'
 ];
 
+var js_initial = [
+    './resources/assets/js/vendor/jquery.js',
+    './resources/assets/js/vendor/bootstrap.min.js',
+    './resources/assets/js/vendor/modernizr.js'
+];
+
 var js_files = [
     './resources/assets/js/vendor/jquery.js',
     './resources/assets/js/vendor/bootstrap.min.js',
@@ -37,12 +43,12 @@ var js_files = [
     './resources/assets/js/vendor/jquery.cookie.js',
     './resources/assets/js/vendor/jquery.mousewheel.js',
     './resources/assets/js/vendor/jquery.jscrollpane.min.js',
+    './resources/assets/js/vendor/jquery.validate.min.js',
     './resources/assets/js/vendor/select2.min.js',
     './resources/assets/js/vendor/jquery.datetimepicker.full.min.js',
     './resources/assets/js/vendor/jquery.dataTables.min.js',
     './resources/assets/js/vendor/ga.js',
     './resources/assets/js/vendor/intro.min.js',
-    './resources/assets/js/vendor/jquery.validate.js',
     './resources/assets/js/script.js'
 ];
 
@@ -67,6 +73,7 @@ gulp.task('watch', function () {
     gulp.watch(css_files, ['css-main']);
     gulp.watch(css_style, ['css-style']);
     gulp.watch(js_files, ['js-main']);
+    gulp.watch(js_initial, ['js-initial']);
     gulp.watch(['image-min']);
 });
 
@@ -74,19 +81,21 @@ gulp.task('css-main', function () {
     return gulp.src(css_files)
         .pipe(sourcemaps.init())
         .pipe(concat('main.css'))
+        .pipe(gulp.dest('./resources/assets/css'))
         .pipe(minifyCss({compatibility: 'ie8'}))
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('./resources/assets/css'));
+        .pipe(gulp.dest('./public/css'));
+        //.pipe(gulp.dest('./resources/assets/css'));
 });
 
 //remove unused css
 
-gulp.task('purify-css', function() {
-    return gulp.src('./resources/assets/css/main.min.css')
-        .pipe(purify(['./resources/views/**/*.blade.php','./public/js/*.js']))
-        .pipe(minifyCss({compatibility: 'ie8'}))
-        .pipe(gulp.dest('./public/css'));
-});
+//gulp.task('purify-css', function() {
+//    return gulp.src('./resources/assets/css/main.min.css')
+//        .pipe(purify(['./resources/views/**/*.blade.php','./public/js/*.js','./resources/assets/js/**/*.js']))
+//        .pipe(minifyCss({compatibility: 'ie8'}))
+//        .pipe(gulp.dest('./public/css'));
+//});
 
 /*
  * Default task, running just `gulp` will compile the sass,
@@ -99,6 +108,15 @@ gulp.task('css-style', function () {
         .pipe(rename({suffix: '.min'}))
         .pipe(minifyCss({compatibility: 'ie8'}))
         .pipe(gulp.dest('./public/css'));
+});
+
+gulp.task('js-initial', function () {
+    return gulp.src(js_initial)
+        .pipe(concat('initial.js'))
+        //.pipe(gulp.dest('./public/js'))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(uglify())
+        .pipe(gulp.dest('./public/js'));
 });
 
 gulp.task('js-main', function () {

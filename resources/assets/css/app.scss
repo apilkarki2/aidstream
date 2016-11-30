@@ -441,6 +441,9 @@ label {
 }
 
 .login-container {
+  h1 {
+    font-size: 36px;
+  }
   @include outer-container(392px);
   padding-top: 40px;
   clear: both;
@@ -5685,6 +5688,7 @@ body > .skiptranslate iframe {
     height: 40px;
     margin-bottom: 20px;
     width: 100%;
+    border: 0;
   }
 }
 
@@ -7382,6 +7386,10 @@ body > .skiptranslate iframe {
 
   .login-container, .register-container {
     padding-top: 60px;
+  }
+
+  .login-container h1 {
+    font-size: 40px;
   }
 
   .modal-dialog.login-container, .modal-dialog.register-container {
