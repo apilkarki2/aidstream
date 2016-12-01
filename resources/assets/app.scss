@@ -6382,6 +6382,38 @@ body > .skiptranslate iframe {
   }
 }
 
+.activity_title i {
+  display: inline-block;
+  text-indent: -9999px;
+  vertical-align: middle;
+}
+
+.imported-from-xml {
+  @include size(16px 16px);
+  background: #FF645B;
+  border-radius:50%;
+  position: relative;
+  &:before {
+    @include position(absolute, 2px auto auto 6px);
+    content: "\00a1";
+    color: $color_white;
+    text-indent: 1px;
+    transform: rotate(180deg);
+    font-style: normal;
+    font-size: 13px;
+  }
+}
+
+.xml-import-status-wrapper {
+  padding: 0;
+  > .alert-warning {
+    width: calc(100% + 16px);
+    ul {
+      display: none;
+    }
+  }
+}
+
 @media all and (max-width: 1030px) {
   .activity-status {
     padding: 16px 10px 18px 50px;

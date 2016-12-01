@@ -45,6 +45,7 @@
                                         <td>{{ $key + 1 }}</td>
                                         <td class="activity_title">
                                             {{ $activity->title ? $activity->title[0]['narrative'] : 'No Title' }}
+                                            <i class="{{ $activity->isImportedFromXml() ? 'imported-from-xml' : '' }}">icon</i>
                                             <span>{{ $activity->identifier['activity_identifier'] }}</span>
                                         </td>
                                         <td class="updated-date">{{ changeTimeZone($activity->updated_at) }}</td>
@@ -73,7 +74,7 @@
                             </table>
                         @else
                             <div class="text-center no-data no-activity-data">
-                                You haven’t added any activity yet.
+                                <p>You haven’t added any activity yet.</p>
                                 <a href="{{route('activity.create') }}" class="btn btn-primary">Add an activity</a>
                             </div>
                         @endif

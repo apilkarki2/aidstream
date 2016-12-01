@@ -196,4 +196,14 @@ class Activity extends Model
                  ->where('organizations.id', $orgId)
                  ->get();
     }
+
+    /**
+     * Check if an Activity has been imported from Xml.
+     *
+     * @return mixed
+     */
+    public function isImportedFromXml()
+    {
+        return $this->imported_from_xml;
+    }
 }
