@@ -20,12 +20,19 @@ class XmlUpload
     protected $xmlImportManager;
 
     /**
-     * XmlUpload constructor.
-     * @param XmlImportManager $xmlImportManager
+     * @var XmlQueueProcessor
      */
-    public function __construct(XmlImportManager $xmlImportManager)
+    protected $xmlQueueProcessor;
+
+    /**
+     * XmlUpload constructor.
+     * @param XmlImportManager  $xmlImportManager
+     * @param XmlQueueProcessor $xmlQueueProcessor
+     */
+    public function __construct(XmlImportManager $xmlImportManager, XmlQueueProcessor $xmlQueueProcessor)
     {
-        $this->xmlImportManager = $xmlImportManager;
+        $this->xmlImportManager  = $xmlImportManager;
+        $this->xmlQueueProcessor = $xmlQueueProcessor;
     }
 
     /**
@@ -36,14 +43,7 @@ class XmlUpload
      */
     public function handle(XmlWasUploaded $event)
     {
-//        $xmlImportManager = app()->make(XmlImportManager::class);
-        $userId = auth()->user()->id;
-//        $this->dispatch(new ImportXml(session('org_id'), $userId, $event->filename));
-        $xmlImportQueue = app()->make(XmlQueueProcessor::class);
-
-        $xmlImportQueue->import($event->filename, session('org_id'), $userId);
-
-//        $this->xmlImportManager->import($event->filename, session('org_id'));
+        $this->dispatch(new ImportXml($event->organizationId, $event->userId, $event->filename));
 
         return true;
     }

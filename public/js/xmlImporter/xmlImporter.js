@@ -1,4 +1,5 @@
 var xmlImportCompleted = false;
+
 var XmlImporter = {
     callAsync: function (url, methodType) {
         return $.ajax({
@@ -24,6 +25,9 @@ var XmlImporter = {
     },
     complete: function () {
         this.callAsync('/xml-import/complete', 'get');
+    },
+    reloadPage: function () {
+        location.reload();
     }
 };
 
@@ -32,10 +36,10 @@ $('document').ready(function () {
         if (xmlImportCompleted) {
             XmlImporter.complete();
             clearInterval(interval);
+            XmlImporter.reloadPage();
         } else {
             XmlImporter.status();
             XmlImporter.checkCompletion();
         }
     }, 1000);
-
 });

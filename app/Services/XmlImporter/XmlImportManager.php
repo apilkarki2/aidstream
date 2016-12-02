@@ -62,7 +62,6 @@ class XmlImportManager
         $this->sessionManager     = $sessionManager;
         $this->logger             = $logger;
         $this->filesystem         = $filesystem;
-//        $this->userId             = $this->getUserId();
     }
 
     /**
@@ -91,56 +90,6 @@ class XmlImportManager
 
     }
 
-//    /**
-//     * Import the Xml data.
-//     *
-//     * @param $filename
-//     * @param $orgId
-//     * @return bool|null
-//     */
-//    public function import($filename, $orgId)
-//    {
-//        try {
-//            $file     = $this->temporaryXmlStorage($filename);
-//            $contents = file_get_contents($file);
-//            if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
-//                $version          = $this->xmlServiceProvider->version($contents);
-//                $xmlData          = $this->xmlServiceProvider->load($contents);
-//                $mappedActivities = $this->xmlProcessor->process($xmlData, $version);
-//                $this->save($mappedActivities, $orgId);
-//
-//                return true;
-//            } else {
-//                $errors = libxml_get_errors();
-//                foreach ($errors as $error) {
-//                    dd($error);
-//                }
-//            }
-//
-//            return false;
-//        } catch (Exception $exception) {
-//            $this->logger->error(
-//                $exception->getMessage(),
-//                [
-//                    'trace' => $exception->getTraceAsString(),
-//                    'user'  => auth()->user()->getNameAttribute()
-//                ]
-//            );
-//
-//            return null;
-//        }
-//    }
-
-//    protected function save($mappedActivities, $orgId)
-//    {
-//        foreach ($mappedActivities as $activity) {
-//            array_merge($activity, ['organization_id' => $orgId]);
-//            dd($activity);
-//            $activityId = $this->activityRepo->storeXMlActivities($activity);
-//        }
-//        dd($mappedActivities);
-//    }
-
     /**
      * Get the temporary storage path for the uploaded Xml file.
      *
@@ -168,22 +117,30 @@ class XmlImportManager
         }
     }
 
-    public function startImport($filename)
+    public function startImport($filename, $userId, $organizationId)
     {
 //        $this->sessionManager->put(['xml-importing' => true]);
-        $this->fireXmlUploadEvent($filename);
+        $this->fireXmlUploadEvent($filename, $userId, $organizationId);
     }
 
     /**
      * Fire the XmlWasUploaded event.
      *
      * @param $filename
+     * @param $userId
+     * @param $organizationId
      */
-    protected function fireXmlUploadEvent($filename)
+    protected function fireXmlUploadEvent($filename, $userId, $organizationId)
     {
-        Event::fire(new XmlWasUploaded($filename));
+        Event::fire(new XmlWasUploaded($filename, $userId, $organizationId));
     }
 
+    /**
+     * Load a json file with a specific filename.
+     *
+     * @param $filename
+     * @return mixed|null
+     */
     public function loadJsonFile($filename)
     {
         $filePath = $this->temporaryXmlStorage($filename);

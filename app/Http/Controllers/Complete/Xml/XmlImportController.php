@@ -46,7 +46,8 @@ class XmlImportController extends Controller
     {
         $file = $request->file('xml_file');
         if ($this->xmlImportManager->store($file)) {
-            $this->xmlImportManager->startImport($file->getClientOriginalName());
+            $userId = auth()->user()->id;
+            $this->xmlImportManager->startImport($file->getClientOriginalName(), $userId, session('org_id'));
 
 //            return redirect()->route('xml-import.status');
         }
@@ -67,6 +68,11 @@ class XmlImportController extends Controller
         return redirect()->route('activity.index');
     }
 
+    /**
+     * Check the Xml Import status.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function status()
     {
         $completedActivity    = $this->xmlImportManager->loadJsonFile('xml_completed_status.json');
@@ -85,6 +91,11 @@ class XmlImportController extends Controller
         return response()->json(['totalActivities' => $totalActivities, 'currentActivityCount' => $currentActivityCount, 'failed' => $failed, 'success' => $success]);
     }
 
+    /**
+     * Check if the import process is complete.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function isCompleted()
     {
         $completedActivity = $this->xmlImportManager->loadJsonFile('xml_completed_status.json');
