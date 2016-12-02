@@ -73,8 +73,8 @@ class XmlImportManager
     public function store(UploadedFile $file)
     {
         try {
-            shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
             $file->move($this->temporaryXmlStorage(), $file->getClientOriginalName());
+            shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
 
             return true;
         } catch (Exception $exception) {

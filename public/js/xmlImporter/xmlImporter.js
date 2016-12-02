@@ -21,6 +21,15 @@ var XmlImporter = {
             if (data.status == 'completed') {
                 xmlImportCompleted = true;
             }
+
+            if (data.status == 'file not found') {
+                $('#xml-import-status-placeholder').html(
+                    "<div class='alert alert-danger'>"
+                    + "Sorry the xml file you uploaded is incorrect"
+                    + "</div>"
+                );
+                xmlImportCompleted = true;
+            }
         })
     },
     complete: function () {
@@ -41,5 +50,5 @@ $('document').ready(function () {
             XmlImporter.status();
             XmlImporter.checkCompletion();
         }
-    }, 1000);
+    }, 2000);
 });

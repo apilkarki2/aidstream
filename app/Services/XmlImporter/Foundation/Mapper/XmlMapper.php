@@ -110,7 +110,7 @@ class XmlMapper
      *
      * @param array $activities
      * @param       $template
-     * @return $this
+     * @return $this|bool
      */
     public function map(array $activities, $template)
     {
@@ -125,6 +125,22 @@ class XmlMapper
         $this->data = $mappedData;
 
         return $this;
+    }
+
+    /**
+     * Returns false if the xml is not activity file.
+     * @param $activities
+     * @return bool
+     */
+    public function isValidActivityFile($activities)
+    {
+        foreach ($activities as $activity) {
+            if ($this->name(getVal($activity, ['name'])) != 'iatiActivity') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

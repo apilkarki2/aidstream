@@ -242,7 +242,6 @@ class ActivityController extends Controller
             if (empty($errors)) {
                 $activityDataList = $this->getActivityAsArray($this->resetImportedFromXmlFlag($activityData));
             }
-
         }
 
         if ($activityDataList['activity_workflow'] == 0) {

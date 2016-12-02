@@ -64,10 +64,12 @@
             <div class="xml-import-wrapper">
                 <p> This activity has some errors. You must fix this before publishing. <span class="show-error-link">Show error(s)</span></p>
                 <div class="error-listing">
-                    @foreach($errors as $element =>$error)
+                    @foreach($errors as $element =>$errorIndex)
                         <div class="error-list">
                             <label>{{$element}}</label>
-                            <p><a href="{{ $error['link'] }}">{{ $error['message'] }}</a></p>
+                            @foreach($errorIndex as $error)
+                                <p><a href="{{ $error['link'] }}">{{ $error['message'] }}</a></p>
+                            @endforeach
                         </div>
                     @endforeach
                 </div>

@@ -99,7 +99,9 @@ class XmlImportController extends Controller
     public function isCompleted()
     {
         $completedActivity = $this->xmlImportManager->loadJsonFile('xml_completed_status.json');
-        $status            = 'incomplete';
+
+        $status = ($completedActivity) ? 'incomplete' : 'file not found';
+
         if ($completedActivity) {
             $totalActivities      = getVal($completedActivity, ['total_activities']);
             $currentActivityCount = getVal($completedActivity, ['current_activity_count']);

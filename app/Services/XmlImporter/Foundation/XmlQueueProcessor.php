@@ -98,29 +98,30 @@ class XmlQueueProcessor
     public function import($filename, $orgId, $userId)
     {
 //        try {
-            $this->orgId    = $orgId;
-            $this->userId   = $userId;
-            $this->filename = $filename;
-            $file           = $this->temporaryXmlStorage($filename);
+        $this->orgId    = $orgId;
+        $this->userId   = $userId;
+        $this->filename = $filename;
+        $file           = $this->temporaryXmlStorage($filename);
 
-            shell_exec(sprintf('chmod 777 -R %s', $file));
-
-            $contents       = file_get_contents($file);
+        $contents = file_get_contents($file);
 //        if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
 
-            $version          = $this->xmlServiceProvider->version($contents);
-            $xmlData          = $this->xmlServiceProvider->load($contents);
-            $mappedActivities = $this->xmlProcessor->process($xmlData, $version);
+        $version          = $this->xmlServiceProvider->version($contents);
+        $xmlData          = $this->xmlServiceProvider->load($contents);
+        $mappedActivities = $this->xmlProcessor->process($xmlData, $version);
+        if ($mappedActivities) {
             $this->save($mappedActivities, $orgId);
+        }
 
-            //        } else {
+
+        //        } else {
 //            $errors = libxml_get_errors();
 //            foreach ($errors as $error) {
 //                dd($error);
 //            }
 //        }
 
-            return false;
+        return false;
 //        } catch (Exception $exception) {
 //            $this->logger->error(
 //                $exception->getMessage(),
@@ -204,7 +205,7 @@ class XmlQueueProcessor
      * @param $activityId
      * @return $this
      */
-    public function saveDocumentLink($activity, $activityId)
+    protected function saveDocumentLink($activity, $activityId)
     {
         foreach (getVal($activity, ['document_link'], []) as $documentLink) {
             $documentLinkData['document_link'] = $documentLink;
@@ -287,9 +288,6 @@ class XmlQueueProcessor
     protected function storeInJsonFile($filename, $data)
     {
         $filePath = $this->temporaryXmlStorage($filename);
-
-        shell_exec('chmod 777 '. $filePath);
-
         file_put_contents($filePath, json_encode($data));
     }
 }

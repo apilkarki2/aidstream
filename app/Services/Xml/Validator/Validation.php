@@ -18,6 +18,38 @@ class Validation extends Factory
      */
     protected $validator;
 
+    protected $elementLinks = [
+        'Other Identifier'           => 'activity.other-identifier.index',
+        'Title'                      => 'activity.title.index',
+        'Description'                => 'activity.description.index',
+        'Activity Status'            => 'activity.activity-status.index',
+        'Activity Date'              => 'activity.activity-date.index',
+        'Contact Info'               => 'activity.contact-info.index',
+        'Activity Scope'             => 'activity.activity-scope.index',
+        'Participating Organization' => 'activity.participating-organization.index',
+        'Recipient Country'          => 'activity.recipient-country.index',
+        'Recipient Region'           => 'activity.recipient-region.index',
+        'Location'                   => 'activity.location.index',
+        'Sector'                     => 'activity.sector.index',
+        'Country Budget Item'        => 'activity.country-budget-items.index',
+        'Humanitarian Scope'         => 'activity.humanitarian-scope.index',
+        'Policy Marker'              => 'activity.policy-marker.index',
+        'Collaboration Type'         => 'activity.collaboration_type.index',
+        'Default Flow Type'          => 'activity.default-flow-type.index',
+        'Default Finance Type'       => 'activity.default-finance-type.index',
+        'Default Aid Type'           => 'activity.default-aid-type.index',
+        'Default Tied Status'        => 'activity.default-tied-status.index',
+        'Budget'                     => 'activity.budget.index',
+        'Planned Disbursement'       => 'activity.planned-disbursement.index',
+        'Capital Spend'              => 'activity.capital-spend.index',
+        'Related Activity'           => 'activity.related-activity.index',
+        'Legacy Data'                => 'activity.legacy-data.index',
+        'Conditions'                 => 'activity.condition.index',
+        'Document Links'             => 'activity.document-link.edit',
+        'Transaction'                => 'activity.transaction.edit',
+        'Results'                    => 'activity.result.edit',
+    ];
+
     /**
      * Validation constructor.
      * @param TranslatorInterface $translator
@@ -73,9 +105,9 @@ class Validation extends Factory
 
         $errors = $this->embedLinks($activityId, $errors);
 
-        if ($shouldBeUnique) {
-            $errors = $this->getDistinctErrors($errors);
-        }
+//        if ($shouldBeUnique) {
+//            $errors = $this->getDistinctErrors($errors);
+//        }
 
         return $errors;
     }
@@ -384,11 +416,11 @@ class Validation extends Factory
      */
     protected function getDistinctErrors($errors)
     {
-        foreach ($errors as $key => $error) {
-            $errors[$key] = array_unique($error);
-        }
+//        foreach ($errors as $key => $error) {
+//            $errors[$key] = array_unique($error);
+//        }
 
-        return $errors;
+        return array_unique($errors);
     }
 
     /**
@@ -401,16 +433,39 @@ class Validation extends Factory
     protected function embedLinks($activityId, array $errors)
     {
         $links = [];
-
         foreach ($errors as $element => $error) {
-            if ($element != 'Conditions') {
-                $elementUri                 = preg_replace("/[\s]/", "-", strtolower($element));
-                $link                       = route('activity.' . $elementUri . '.index', $activityId);
-                $links[$element]['link']    = $link;
-                $links[$element]['message'] = reset($error);
+            $index = 0;
+            if (!in_array($element, ['Transaction', 'Results', 'Document Links'])) {
+                $error = $this->getDistinctErrors($error);
+                foreach ($error as $errorText) {
+                    $link                               = route($this->elementLinks[$element], [$activityId]);
+                    $links[$element][$index]['link']    = $link;
+                    $links[$element][$index]['message'] = $errorText;
+                    $index ++;
+                }
+            } else {
+                $links[$element] = $this->getErrors($element, $error, $activityId);
+
             }
         }
 
         return $links;
+    }
+
+    protected function getErrors($element, $elementErrors, $activityId)
+    {
+        $errors = [];
+
+        $index = 0;
+        foreach ($elementErrors as $elementIndex => $error) {
+            $elementName               = strtolower($this->parseErrors($elementIndex));
+            $errorIndex                = (int) getVal(explode('.', $elementIndex), [1]);
+            $id                        = getVal($this->validator->getData(), [$elementName, $errorIndex, 'id']);
+            $errors[$index]['link']    = route($this->elementLinks[$element], [$activityId, $id]);
+            $errors[$index]['message'] = $error;
+            $index ++;
+        }
+
+        return $errors;
     }
 }

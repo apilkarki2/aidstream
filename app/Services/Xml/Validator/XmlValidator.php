@@ -1069,16 +1069,16 @@ class XmlValidator
 
             if ($sector['sector_vocabulary'] == 1 || $sector['sector_vocabulary'] == 2) {
                 if ($sector['sector_vocabulary'] == 1) {
-                    $rules[sprintf('%s.sector_code', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_vocabulary';
+                    $rules[sprintf('%s.sector_code', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_vocabulary', $this->validCodeList('Sector', 'V201'));
                 }
                 if ($sector['sector_code'] != "") {
-                    $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_code';
+                    $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_code', $this->validCodeList('SectorVocabulary', 'V202'));
                 }
                 if ($sector['sector_vocabulary'] == 2) {
-                    $rules[sprintf('%s.sector_category_code', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_vocabulary';
+                    $rules[sprintf('%s.sector_category_code', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_vocabulary', $this->validCodeList('SectorCategory', 'V201'));
                 }
                 if ($sector['sector_category_code'] != "") {
-                    $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_category_code';
+                    $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_category_code', $this->validCodeList('SectorVocabulary', 'V202'));
                 }
             } else {
                 if ($sector['sector_vocabulary'] != "") {
@@ -1086,7 +1086,7 @@ class XmlValidator
                 }
 
                 if ($sector['sector_text'] != "") {
-                    $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_text';
+                    $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_text', $this->validCodeList('SectorVocabulary', 'V202'));
                 }
 
                 if ($sector['sector_vocabulary'] == "99" || $sector['sector_vocabulary'] == "98") {
@@ -1966,8 +1966,8 @@ class XmlValidator
                 $this->getValueRules(getVal($transaction, ['transaction', 'value'], []), $transactionBase),
                 $this->getDescriptionRules(getVal($transaction, ['transaction', 'description'], []), $transactionBase),
                 $this->getSectorsRules(getVal($transaction, ['transaction', 'sector'], []), $transactionBase),
-                $this->getRulesForProviderOrg(getVal($transaction, ['transaction', 'provider_organization'], []), $transactionBase),
-                $this->getRulesForReceiverOrg(getVal($transaction, ['transaction', 'receiver_organization'], []), $transactionBase)
+                $this->getRulesForTransactionProviderOrg(getVal($transaction, ['transaction', 'provider_organization'], []), $transactionBase),
+                $this->getRulesForTransactionReceiverOrg(getVal($transaction, ['transaction', 'receiver_organization'], []), $transactionBase)
             );
         }
 
@@ -2003,8 +2003,8 @@ class XmlValidator
                 $this->getValueMessages(getVal($transaction, ['transaction', 'value'], []), $transactionBase),
                 $this->getDescriptionMessages(getVal($transaction, ['transaction', 'description'], []), $transactionBase),
                 $this->getSectorsMessages(getVal($transaction, ['transaction', 'sector'], []), $transactionBase),
-                $this->getMessagesForProviderOrg(getVal($transaction, ['transaction', 'provider_organization'], []), $transactionBase),
-                $this->getMessagesForReceiverOrg(getVal($transaction, ['transaction', 'receiver_organization'], []), $transactionBase)
+                $this->getMessagesForTransactionProviderOrg(getVal($transaction, ['transaction', 'provider_organization'], []), $transactionBase),
+                $this->getMessagesForTransactionReceiverOrg(getVal($transaction, ['transaction', 'receiver_organization'], []), $transactionBase)
             );
         }
 
@@ -2121,14 +2121,14 @@ class XmlValidator
             $rules[sprintf('%s.sector_category_code', $sectorBase)] = sprintf('in:%s', $this->validCodeList('SectorCategory', 'V201'));
 
             if ($sector['sector_vocabulary'] == 1) {
-                $rules[sprintf('%s.sector_code', $sectorBase)]       = 'required_with:' . $sectorBase . '.sector_vocabulary';
-                $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_code';
+                $rules[sprintf('%s.sector_code', $sectorBase)]       = sprintf('in:%s|required_with:' . $sectorBase . '.sector_vocabulary', $this->validCodeList('Sector', 'V201'));
+                $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_code', $this->validCodeList('SectorVocabulary', 'V202'));
             } elseif ($sector['sector_vocabulary'] == 2) {
-                $rules[sprintf('%s.sector_category_code', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_vocabulary';
-                $rules[sprintf('%s.sector_vocabulary', $sectorBase)]    = 'required_with:' . $sectorBase . '.sector_category_code';
+                $rules[sprintf('%s.sector_category_code', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_vocabulary', $this->validCodeList('SectorCategory', 'V201'));
+                $rules[sprintf('%s.sector_vocabulary', $sectorBase)]    = sprintf('in:%s|required_with:' . $sectorBase . '.sector_category_code', $this->validCodeList('SectorVocabulary', 'V202'));
             } elseif ($sector['sector_vocabulary'] != "") {
                 $rules[sprintf('%s.sector_text', $sectorBase)]       = 'required_with:' . $sectorBase . '.sector_vocabulary';
-                $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_text';
+                $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = sprintf('in:%s|required_with:' . $sectorBase . '.sector_text', $this->validCodeList('SectorVocabulary', 'V202'));
             }
         }
         $rules = array_merge($rules, $this->factory->getRulesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase));
