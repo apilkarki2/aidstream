@@ -66,10 +66,8 @@
                 <div class="error-listing">
                     @foreach($errors as $element =>$error)
                         <div class="error-list">
-                            @foreach($error as $errorMessage)
-                                <label>{{$element}}</label>
-                                <p><a href="{{ $error['link'] }}">{{ $error['message'] }}</a></p>
-                            @endforeach
+                            <label>{{$element}}</label>
+                            <p><a href="{{ $error['link'] }}">{{ $error['message'] }}</a></p>
                         </div>
                     @endforeach
                 </div>
