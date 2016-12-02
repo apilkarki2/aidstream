@@ -102,6 +102,9 @@ class XmlQueueProcessor
             $this->userId   = $userId;
             $this->filename = $filename;
             $file           = $this->temporaryXmlStorage($filename);
+
+            shell_exec(sprintf('chmod 777 -R %s', $file));
+
             $contents       = file_get_contents($file);
 //        if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
 
@@ -284,6 +287,9 @@ class XmlQueueProcessor
     protected function storeInJsonFile($filename, $data)
     {
         $filePath = $this->temporaryXmlStorage($filename);
+
+        shell_exec('chmod 777 '. $filePath);
+
         file_put_contents($filePath, json_encode($data));
     }
 }
