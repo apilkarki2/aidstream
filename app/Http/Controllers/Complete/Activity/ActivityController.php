@@ -4,6 +4,7 @@ use App\Core\V201\Requests\Activity\IatiIdentifierRequest;
 use App\Http\API\CKAN\CkanClient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Request;
+use App\Models\Activity\Activity;
 use App\Services\Activity\ActivityManager;
 use App\Models\Settings;
 use App\Services\Activity\ChangeActivityDefaultManager;
@@ -220,6 +221,7 @@ class ActivityController extends Controller
     public function show($id)
     {
         $activityData = $this->activityManager->getActivityData($id);
+
         if ($activityData->activity_workflow == 3) {
             $filename                = $this->getPublishedActivityFilename($this->organization_id, $activityData);
             $activityPublishedStatus = $this->getPublishedActivityStatus($filename, $this->organization_id);
@@ -230,40 +232,17 @@ class ActivityController extends Controller
             return redirect()->route('activity.index')->withResponse($this->getNoPrivilegesMessage());
         }
 
-        $activityDataList                   = $activityData->activity_data_list;
-        $activityResult                     = $this->resultManager->getResults($id)->toArray();
-        $activityTransaction                = $this->transactionManager->getTransactions($id)->toArray();
-        $activityDocumentLinks              = $this->documentLinkManager->getDocumentLinks($id)->toArray();
-        $activityDataList['results']        = $activityResult;
-        $activityDataList['transaction']    = $activityTransaction;
-        $activityDataList['document_links'] = $activityDocumentLinks;
-        $activityDataList['reporting_org']  = $activityData->organization->reporting_org;
+        $activityDataList = $this->getActivityAsArray($activityData);
 
-        $errors = [];
-        if ($activityData->imported_from_xml) {
+        if ($activityData->isImportedFromXml()) {
             $activityId = $activityData->id;
-//            $activityDataList['description'][1]['narrative'][0]['language'] = 'fr';
-//            $activityDataList['other_identifier'][0]['type']                = 'zpt';
-//            $activityDataList['activity_status'] = 123123;
-//            $activityDataList['activity_date'][0]['type']                     = '1';
-//            $activityDataList['activity_date'][0]['date']                     = '2018-02-18';
-//            $activityDataList['activity_d[ate'][1]['narrative'][0]['language'] = 'fr';
-//            $activityDataList['contact_info'][0]['email'][0]['email'] = 'asdasdasd';
-//            $activityDataList['recipient_country'][0]['country_code'] = 'asdasd';
-//            $activityDataList['recipient_country'][0]['percentage']   = '88';
-//            $activityDataList['recipient_region'][0]['region_code']   = '9990';
-//            $activityDataList['location'][0]['location_reach'][0]['code'] = '9990';
-//            $activityDataList['sector'][0]['percentage'] = '80';
-//            $activityDataList['country_budget_items'][0]['budget_item'][0]['percentage'] = '80';
-//            $activityDataList['humanitarian_scope'][0]['vocabulary'] = '80';
-//            $activityDataList['policy_marker'][0]['narrative'][0]['language'] = 'fr';
-//            $activityDataList['default_flow_type']= 'fr';
-//            $activityDataList['title'] = [];
-//            $activityDataList['transaction'][0]['transaction']['transaction_type'][0]['transaction_type_code'] = 'asdasdas';
-//            $activityDataList['results'][0]['result']['type'] = 'asdasdas';
-//
-            $errors = $this->xmlValidator->init($activityDataList)
-                                         ->validateActivity($activityId, true);
+            $errors     = $this->xmlValidator->init($activityDataList)
+                                             ->validateActivity($activityId, true);
+
+            if (empty($errors)) {
+                $activityDataList = $this->getActivityAsArray($this->resetImportedFromXmlFlag($activityData));
+            }
+
         }
 
         if ($activityDataList['activity_workflow'] == 0) {
@@ -1030,5 +1009,33 @@ class ActivityController extends Controller
         }
 
         return redirect()->back()->withResponse($response);
+    }
+
+    /**
+     * Get all Activity data as an array.
+     *
+     * @param Activity $activityData
+     * @return mixed
+     */
+    protected function getActivityAsArray(Activity $activityData)
+    {
+        $activityDataList                   = $activityData->activity_data_list;
+        $activityResult                     = $this->resultManager->getResults($activityData->id)->toArray();
+        $activityTransaction                = $this->transactionManager->getTransactions($activityData->id)->toArray();
+        $activityDocumentLinks              = $this->documentLinkManager->getDocumentLinks($activityData->id)->toArray();
+        $activityDataList['results']        = $activityResult;
+        $activityDataList['transaction']    = $activityTransaction;
+        $activityDataList['document_links'] = $activityDocumentLinks;
+        $activityDataList['reporting_org']  = $activityData->organization->reporting_org;
+
+        return $activityDataList;
+    }
+
+    protected function resetImportedFromXmlFlag($activityData)
+    {
+        $activityData->imported_from_xml = false;
+        $activityData->save();
+
+        return $activityData;
     }
 }
