@@ -61,16 +61,18 @@
         </div>
     @else
         <div class="col-xs-12 col-md-8 col-lg-8 element-content-wrapper xml-import-status-wrapper">
-            <div class="alert alert-warning">
-                <p> This activity has some errors. You must fix this before publishing. <span>Show error(s)</span></p>
-                <ul>
+            <div class="xml-import-wrapper">
+                <p> This activity has some errors. You must fix this before publishing. <span class="show-error-link">Show error(s)</span></p>
+                <div class="error-listing">
                 @foreach($errors as $element =>$error)
-                        {{$element}}
+                    <div class="error-list">
+                        <label>{{$element}}</label>
                         @foreach($error as $errorMessage)
-                            <li>{{$errorMessage}}</li>
+                            <p>{{$errorMessage}}</p>
                         @endforeach
+                    </div>
                 @endforeach
-                </ul>
+                </div>
             </div>
             <a href="" class="pull-right print">Print</a>
             <a href="{{route('change-activity-default', $id)}}" class="pull-right override-activity">
