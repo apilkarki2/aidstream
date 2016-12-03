@@ -1,10 +1,10 @@
 <?php namespace App\Http\Controllers;
 
 use App\Helpers\GetCodeName;
-use App\Models\ActivityPublished;
-use App\Models\Organization\Organization;
+use App\Models\PerfectViewer\ActivitySnapshot;
 use App\Services\Activity\ActivityManager;
 use App\Services\Organization\OrganizationManager;
+use App\Services\PerfectViewer\PerfectViewerManager;
 use App\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -15,11 +15,24 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class WhoIsUsingController extends Controller
 {
 
-    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user)
+    /**
+     * @var ActivitySnapshot
+     */
+    protected $perfectViewerManager;
+
+    /**
+     * WhoIsUsingController constructor.
+     * @param ActivityManager      $activityManager
+     * @param OrganizationManager  $organizationManager
+     * @param User                 $user
+     * @param PerfectViewerManager $perfectViewerManager
+     */
+    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user, PerfectViewerManager $perfectViewerManager)
     {
-        $this->activityManager = $activityManager;
-        $this->orgManager      = $organizationManager;
-        $this->user            = $user;
+        $this->activityManager      = $activityManager;
+        $this->orgManager           = $organizationManager;
+        $this->user                 = $user;
+        $this->perfectViewerManager = $perfectViewerManager;
     }
 
     /**
@@ -27,23 +40,22 @@ class WhoIsUsingController extends Controller
      */
     public function index()
     {
-        $organizationCount = $this->initializeOrganizationQueryBuilder()->get()->count();
+        $organizationCount = $this->organizationQueryBuilder()->get()->count();
 
         return view('who-is-using', compact('organizationCount'));
     }
 
-    /** Returns query builder of organizations having activity or organization file published.
+    /** Returns query of organizations published on Aidstream.
      * @return mixed
      */
-    public function initializeOrganizationQueryBuilder()
+    public function organizationQueryBuilder()
     {
-        return Organization::leftJoin('activity_published', 'organizations.id', '=', 'activity_published.organization_id')
-                           ->leftJoin('organization_published', 'organizations.id', '=', 'organization_published.organization_id')
-                           ->where('activity_published.published_to_register', 1)
-                           ->orWhere('organization_published.published_to_register', 1)
-                           ->select('organizations.id', 'organizations.name', 'organizations.logo_url', 'organizations.reporting_org')
-                           ->groupBy('organizations.id')
-                           ->orderBy('organizations.name');
+        return $this->perfectViewerManager->organizationQueryBuilder();
+    }
+
+    protected function activityQueryBuilder()
+    {
+        return $this->perfectViewerManager->activityQueryBuilder();
     }
 
     /**
@@ -55,12 +67,33 @@ class WhoIsUsingController extends Controller
     public function listOrganization($page = 0, $count = 20)
     {
         $skip                  = $page * $count;
-        $data['next_page']     = $this->initializeOrganizationQueryBuilder()->get()->count() > ($skip + $count);
-        $data['organizations'] = $this->initializeOrganizationQueryBuilder()->skip($skip)->take($count)->get();
+        $data['next_page']     = $this->organizationQueryBuilder()->get()->count() > ($skip + $count);
+        $data['organizations'] = $this->organizationQueryBuilder()->skip($skip)->take($count)->get();
 
         return $data;
     }
 
+
+    public function showActivity($orgId, $activityId)
+    {
+        $organizationIdExists = $this->organizationQueryBuilder()->where('org_slug', $orgId)->get();
+        if (count($organizationIdExists) == 0) {
+            throw new NotFoundHttpException();
+        }
+        $activityIdExists = $this->activityQueryBuilder()->where('activity_id', $activityId)->get();
+        if (count($activityIdExists) == 0) {
+            throw new NotFoundHttpException();
+        }
+        $recipientCountries = $this->getRecipientCountries($activityIdExists);
+
+        $user = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
+
+        $organization = json_decode($organizationIdExists, true);
+        $activity = json_decode($activityIdExists, true);
+
+
+        return view('perfectViewer.activity-viewer', compact('organization', 'activity', 'user', 'recipientCountries'));
+    }
 
     /**
      * @param $organizationId
@@ -68,35 +101,45 @@ class WhoIsUsingController extends Controller
      */
     public function getDataForOrganization($organizationId)
     {
-        $organizationIdExists = $this->initializeOrganizationQueryBuilder()->having('organizations.id', '=', $organizationId)->get();
+        $organizationIdExists = $this->organizationQueryBuilder()->where('org_slug', $organizationId)->get();
 
         if (count($organizationIdExists) == 0) {
             throw new NotFoundHttpException();
         }
 
-        $data               = $this->activityManager->getDataForOrganization($organizationId);
-        $orgInfo            = $this->orgManager->getOrganization($organizationId);
-        $transaction        = $this->mergeTransaction($data);
-        $transactionType    = $this->getTransactionName($transaction);
-        $recipientRegion    = $this->mergeRecipientRegion($data);
-        $recipientCountry   = $this->mergeRecipientCountry($data);
-        $sector             = $this->mergeSector($data);
-        $activityStatus     = $this->mergeActivityStatus($data);
-        $activityStatusJson = $this->convertIntoFormat($activityStatus);
-        $activityName       = $this->getActivityName($data);
+        $activitySnapshot = $this->perfectViewerManager->getSnapshotWithOrgId($organizationIdExists[0]->org_id);
+//        $organizationInfo = $this->perfectViewerManager->getOrgWithOrgId($organizationId);
 
-        $final_data = $this->getDataMerge(
-            $transactionType,
-            $recipientRegion,
-            $recipientCountry,
-            $sector,
-            $activityName,
-            $activityStatusJson
-        );
+        $organizations = json_decode($organizationIdExists[0], true);
+        $activities    = json_decode($activitySnapshot, true);
 
-        $user = $this->user->getDataByOrgIdAndRoleId($organizationId, '1');
 
-        return view('who-is-using-organization', compact('final_data', 'orgInfo', 'user'));
+//        $data               = $this->activityManager->getDataForOrganization($organizationId);
+//        $orgInfo            = $this->orgManager->getOrganization($organizationId);
+//        $transaction        = $this->mergeTransaction($data);
+//        $transactionType    = $this->getTransactionName($transaction);
+//        $recipientRegion    = $this->mergeRecipientRegion($data);
+//        $recipientCountry   = $this->mergeRecipientCountry($data);
+//        $sector             = $this->mergeSector($data);
+//        $activityStatus     = $this->mergeActivityStatus($data);
+//        $activityStatusJson = $this->convertIntoFormat($activityStatus);
+//        $activityName       = $this->getActivityName($data);
+//
+//        $final_data = $this->getDataMerge(
+//            $transactionType,
+//            $recipientRegion,
+//            $recipientCountry,
+//            $sector,
+//            $activityName,
+//            $activityStatusJson
+//        );
+
+        $recipientCountries = $this->getRecipientCountries($activities);
+
+        $user = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
+
+//        return view('who-is-using-organization', compact('final_data', 'orgInfo', 'user'));
+        return view('perfectViewer.organization-viewer', compact('activities', 'organizations', 'user', 'recipientCountries'));
 
     }
 
@@ -280,4 +323,18 @@ class WhoIsUsingController extends Controller
             'activity_name'     => $activityName
         ];
     }
+
+    private function getRecipientCountries($activities)
+    {
+        $recipientCountries = [];
+        foreach ($activities as $index => $activity) {
+            foreach ($activity['published_data']['transactions'] as $tranIndex => $transaction) {
+                $recipientCountries[] = getVal($transaction, ['transaction', 'recipient_country', 0, 'country_code'], '');
+            }
+        }
+
+        $recipientCountries = array_unique($recipientCountries);
+        return $recipientCountries;
+    }
+
 }
