@@ -80,14 +80,13 @@ class PerfectActivityViewerManager
 
         $transactions = $this->perfectActivityViewerRepo->getTransactions($activityId);
 
-        $transactionFiltered = $this->filterTransaction($transactions);
-
+        $totalBudget = $this->calculateBudget($activity->budget);
 
         try {
-            $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactionFiltered);
+            $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget);
 
             $this->database->beginTransaction();
-            $result = $this->perfectActivityViewerRepo->store($this->transform($perfectData, $orgId, $activityId, $published_to_registry, $filename));
+            $result = $this->perfectActivityViewerRepo->store($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
             $this->database->commit();
 
             $this->logger->info(
@@ -116,7 +115,7 @@ class PerfectActivityViewerManager
      * @param $filename
      * @return array
      */
-    public function transform($perfectData, $orgId, $activityId, $published_to_registry, $filename)
+    public function transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename)
     {
         return [
             'published_data'       => $perfectData,
@@ -131,9 +130,11 @@ class PerfectActivityViewerManager
      * Converts given attributes to JSON
      * @param $activity
      * @param $reporting_org
+     * @param $transactions
+     * @param $totalBudget
      * @return array
      */
-    public function convertIntoJson($activity, $reporting_org, $transactions)
+    public function convertIntoJson($activity, $reporting_org, $transactions, $totalBudget)
     {
         return [
             'title'                      => $activity->title,
@@ -151,7 +152,8 @@ class PerfectActivityViewerManager
             'participating_organization' => $activity->participating_organization,
             'document_link'              => $activity->document_link,
             'reporting_org'              => $reporting_org,
-            'transactions'               => $transactions
+            'transactions'               => $transactions,
+            'totalBudget'                => $totalBudget
         ];
     }
 
@@ -164,29 +166,17 @@ class PerfectActivityViewerManager
     }
 
     /**
-     * Filters out unnecessary transaction data
-     * @param $transactions
-     * @return mixed
+     * Calculates total budget of an activity
+     * @param $budget
+     * @return int|string
      */
-    private function filterTransaction($transactions)
+    private function calculateBudget($budget)
     {
-        $transactionArray = [];
-        $filteredTransaction = [];
-        foreach ($transactions as $index => $transaction) {
-            $transactionArray[$index]['id'] = $transaction->id;
-            foreach ((array) $transaction as $i => $value) {
-                $transactionArray[$index][$i] = $value;
-            }
+        $totalBudget = 0;
+        foreach($budget as $index => $value)
+        {
+            $totalBudget += getVal($value, ['value', 0, 'amount'], '');
         }
-
-//        foreach($transactionArray as $index => $transaction){
-//            $filteredTransaction['id'] = $transaction['id'];
-//            dd(getVal($transaction, ['transaction']));
-//            $filteredTransaction['type'] = $transaction['transaction'];
-//
-//        }
-//
-//        dd($filteredTransaction);
-        return $filteredTransaction;
+        return $totalBudget;
     }
 }

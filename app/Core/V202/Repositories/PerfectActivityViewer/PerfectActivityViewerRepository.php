@@ -1,5 +1,7 @@
 <?php namespace App\Core\V202\Repositories\PerfectActivityViewer;
 
+use App\Models\Activity\Transaction;
+use App\Models\ActivityPublished;
 use App\Models\PerfectActivity\ActivitySnapshot;
 use Illuminate\Support\Facades\DB;
 
@@ -16,12 +18,26 @@ class PerfectActivityViewerRepository
     protected $activitySnapshot;
 
     /**
-     * PerfectActivityViewer constructor.
-     * @param ActivitySnapshot $activitySnapshot
+     * @var ActivityPublished
      */
-    public function __construct(ActivitySnapshot $activitySnapshot)
+    protected $activityPublished;
+
+    /**
+     * @var Transaction
+     */
+    protected $transaction;
+
+    /**
+     * PerfectActivityViewer constructor.
+     * @param ActivitySnapshot  $activitySnapshot
+     * @param ActivityPublished $activityPublished
+     * @param Transaction       $transaction
+     */
+    public function __construct(ActivitySnapshot $activitySnapshot, ActivityPublished $activityPublished, Transaction $transaction)
     {
         $this->activitySnapshot = $activitySnapshot;
+        $this->activityPublished = $activityPublished;
+        $this->transaction = $transaction;
     }
 
     /**
@@ -30,7 +46,7 @@ class PerfectActivityViewerRepository
      */
     public function store(array $data)
     {
-        return $this->activitySnapshot->create($data);
+        return $this->activitySnapshot->updateOrCreate(['activity_id' => $data['activity_id'], 'org_id' => $data['org_id']], $data);
     }
 
     /**
@@ -39,12 +55,14 @@ class PerfectActivityViewerRepository
      */
     public function getPublishedFileName($orgId)
     {
-        return DB::table('activity_published')->where('organization_id', $orgId)->orderBy('created_at', 'desc')->first(['filename']);
+        return $this->activityPublished->where('organization_id', $orgId)->orderBy('created_at', 'desc')->first(['filename']);
     }
 
     public function getTransactions($activityId)
     {
-        return DB::table('activity_transactions')->where('activity_id', $activityId)->get();
+        $transactions = $this->transaction->where('activity_id', $activityId)->get();
+
+        return $transactions->toArray();
     }
 
 }
