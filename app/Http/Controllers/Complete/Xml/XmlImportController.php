@@ -45,24 +45,12 @@ class XmlImportController extends Controller
     public function store(XmlUploadRequest $request)
     {
         $file = $request->file('xml_file');
+
         if ($this->xmlImportManager->store($file)) {
             $userId = auth()->user()->id;
             $this->xmlImportManager->startImport($file->getClientOriginalName(), $userId, session('org_id'));
-
-//            return redirect()->route('xml-import.status');
         }
 
-//        if (($result = $this->xmlImportManager->import($request->file('xml_file')))) {
-//            return redirect()->back()->withResponse(['type' => 'success', 'code' => ['message', ['message' => 'Xml successfully be imported.']]]);
-//        }
-//
-//        if (false == $result) {
-//            return redirect()->back()->withResponse(['type' => 'warning', 'code' => ['message', ['message' => 'The uploaded Xml file contains malformed Xml contents.']]]);
-//        }
-//
-//        return redirect()->back()->withResponse(['type' => 'warning', 'code' => ['message', ['message' => 'Xml could not be imported. Please try again later.']]]);
-
-//        $response = ['type' => 'success', 'code' => ['message', ['message' => 'Your activity is being imported. Please wait']]];
         session(['xml_import_status' => 'started']);
 
         return redirect()->route('activity.index');
@@ -75,11 +63,8 @@ class XmlImportController extends Controller
      */
     public function status()
     {
-        $completedActivity    = $this->xmlImportManager->loadJsonFile('xml_completed_status.json');
-        $totalActivities      = 0;
-        $currentActivityCount = 0;
-        $failed               = 0;
-        $success              = 0;
+        $completedActivity = $this->xmlImportManager->loadJsonFile('xml_completed_status.json');
+        list($totalActivities, $currentActivityCount, $failed, $success) = [0, 0, 0, 0];
 
         if ($completedActivity) {
             $totalActivities      = getVal($completedActivity, ['total_activities']);
@@ -113,9 +98,12 @@ class XmlImportController extends Controller
         return response()->json(['status' => $status]);
     }
 
+    /**
+     * Complete the Xml Import process.
+     */
     public function complete()
     {
-        Session::forget('xml_import_status');
+        Session::forget(['xml_import_status']);
         $this->xmlImportManager->removeTemporaryXmlFolder();
     }
 }

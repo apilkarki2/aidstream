@@ -265,6 +265,7 @@ class XmlQueueProcessor
      */
     protected function storeXmlImportStatus($totalActivities, $currentActivity, $success, $failed)
     {
+        shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
         $data = ['total_activities' => $totalActivities, 'current_activity_count' => $currentActivity, 'success' => $success, 'failed' => $failed];
         $this->storeInJsonFile('xml_completed_status.json', $data);
     }
@@ -276,6 +277,7 @@ class XmlQueueProcessor
      */
     protected function storeInvalidActivity($activity, $index)
     {
+        shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
         $this->jsonData[$index] = $activity;
         $this->storeInJsonFile('xml_invalid.json', $this->jsonData);
     }

@@ -14,7 +14,7 @@ var XmlImporter = {
                 + data.currentActivityCount + " out of " + data.totalActivities + " activities processed. "
                 + "Failed: " + data.failed + " Success: " + data.success
                 + "</div>");
-        })
+        });
     },
     checkCompletion: function () {
         this.callAsync('/xml-import/isCompleted', 'get').success(function (data) {

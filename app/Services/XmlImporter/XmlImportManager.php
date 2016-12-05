@@ -120,7 +120,6 @@ class XmlImportManager
 
     public function startImport($filename, $userId, $organizationId)
     {
-//        $this->sessionManager->put(['xml-importing' => true]);
         $this->fireXmlUploadEvent($filename, $userId, $organizationId);
     }
 
@@ -144,10 +143,24 @@ class XmlImportManager
      */
     public function loadJsonFile($filename)
     {
-        $filePath = $this->temporaryXmlStorage($filename);
         try {
-            return json_decode(file_get_contents($filePath), true);
+            $filePath = $this->temporaryXmlStorage($filename);
+
+            if (file_exists($filePath)) {
+                return json_decode(file_get_contents($filePath), true);
+            }
+
+            return false;
         } catch (Exception $exception) {
+            $this->logger->error(
+                sprintf('Error due to %s', $exception->getMessage()),
+                [
+                    'trace'    => $exception->getTraceAsString(),
+                    'user_id'  => auth()->user()->id,
+                    'filename' => $filename
+                ]
+            );
+
             return null;
         }
     }
