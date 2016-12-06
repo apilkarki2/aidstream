@@ -3,7 +3,6 @@
 use App\Core\V202\Repositories\PerfectActivityViewer\PerfectActivityViewerRepository;
 use App\Models\Activity\Activity;
 use App\Models\Activity\Transaction;
-use App\Models\Organization\Organization;
 use Exception;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\DatabaseManager;
@@ -32,14 +31,14 @@ class PerfectActivityViewerManager
     protected $auth;
 
     /**
-     * @var Organization
+     * @var
      */
-    protected $organization;
+    protected $published;
 
     /**
      * @var
      */
-    protected $published;
+    protected $defaultFieldValues;
 
     /**
      * PerfectActivityViewerManager constructor.
@@ -47,20 +46,18 @@ class PerfectActivityViewerManager
      * @param PerfectActivityViewerRepository $perfectActivityViewerRepository
      * @param DatabaseManager                 $databaseManager
      * @param Logger                          $logger
-     * @param Organization                    $organization
      */
     public function __construct(
         Guard $auth,
         PerfectActivityViewerRepository $perfectActivityViewerRepository,
         DatabaseManager $databaseManager,
-        Logger $logger,
-        Organization $organization
+        Logger $logger
+
     ) {
         $this->auth                      = $auth;
         $this->perfectActivityViewerRepo = $perfectActivityViewerRepository;
         $this->database                  = $databaseManager;
         $this->logger                    = $logger;
-        $this->organization              = $organization;
     }
 
     /**
@@ -70,20 +67,25 @@ class PerfectActivityViewerManager
      */
     public function createSnapshot(Activity $activity)
     {
-        $orgId                 = $activity->organization_id;
-        $activityId            = $activity->id;
-        $published_to_registry = $activity->published_to_registry;
-        $organization          = $this->getReportingOrg();
-        $reporting_org         = getVal($organization, [0], [])->reporting_org;
-        $filename              = $this->perfectActivityViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
-        $filename              = $filename->filename;
-
-        $transactions = $this->perfectActivityViewerRepo->getTransactions($activityId);
-
-        $totalBudget = $this->calculateBudget($activity->budget);
-
         try {
-            $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget);
+            //activity data
+            $this->defaultFieldValues = $activity->default_field_values;
+            $orgId                    = $activity->organization_id;
+            $activityId               = $activity->id;
+            $published_to_registry    = $activity->published_to_registry;
+
+            //organization data
+            $organization             = $this->getReportingOrg($orgId);
+            $reporting_org            = getVal($organization, [0, 'reporting_org'], []);
+            $filename                 = $this->perfectActivityViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
+            $filename                 = $filename->filename;
+
+            //transaction and budget
+            $transactions     = $this->perfectActivityViewerRepo->getTransactions($activityId);
+            $totalBudget      = $this->calculateBudget(getVal((array) $activity, ['budget'], []));
+            $totalTransaction = $this->calculateTransaction($transactions);
+
+            $perfectData      = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/);
 
             $this->database->beginTransaction();
             $result = $this->perfectActivityViewerRepo->store($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
@@ -121,7 +123,7 @@ class PerfectActivityViewerManager
             'published_data'       => $perfectData,
             'org_id'               => $orgId,
             'activity_id'          => $activityId,
-            'activity_in_registry' => $published_to_registry,
+            'activity_in_registry' => $this->correctBoolean($published_to_registry),
             'filename'             => $filename
         ];
     }
@@ -132,9 +134,10 @@ class PerfectActivityViewerManager
      * @param $reporting_org
      * @param $transactions
      * @param $totalBudget
+//     * @param $totalTransaction
      * @return array
      */
-    public function convertIntoJson($activity, $reporting_org, $transactions, $totalBudget)
+    public function convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/)
     {
         return [
             'title'                      => $activity->title,
@@ -153,16 +156,17 @@ class PerfectActivityViewerManager
             'document_link'              => $activity->document_link,
             'reporting_org'              => $reporting_org,
             'transactions'               => $transactions,
-            'totalBudget'                => $totalBudget
+            'totalBudget'                => $totalBudget,
+//            'totalTransaction'           => $totalTransaction
         ];
     }
 
     /**
      * Provides reporting organization
      */
-    private function getReportingOrg()
+    protected function getReportingOrg($orgId)
     {
-        return $this->organization->getOrganization();
+        return $this->perfectActivityViewerRepo->getOrganization($orgId)->toArray();
     }
 
     /**
@@ -170,13 +174,87 @@ class PerfectActivityViewerManager
      * @param $budget
      * @return int|string
      */
-    private function calculateBudget($budget)
+    protected function calculateBudget($budget)
     {
         $totalBudget = 0;
-        foreach($budget as $index => $value)
-        {
+        foreach ($budget as $index => $value) {
             $totalBudget += getVal($value, ['value', 0, 'amount'], '');
         }
+
         return $totalBudget;
+    }
+
+    protected function calculateTransaction($transactions)
+    {
+        $totalTransaction = [];
+
+        foreach ($transactions as $index => $transaction) {
+
+            $value = $this->giveCorrectValue($transaction);
+
+            switch (getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) {
+
+                case 1:
+                    $totalTransaction['incoming_funds'] = $value;
+                    break;
+
+                case 2:
+                    $totalTransaction['commitments'] = $value;
+                    break;
+
+                case 3:
+                    $totalTransaction['disbursements'] = $value;
+                    break;
+
+                case 4:
+                    $totalTransaction['expenditures'] = $value;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return $totalTransaction;
+    }
+
+    protected function giveCorrectValue($transaction)
+    {
+
+//
+//        $defaultCurrency = getVal($this->defaultFieldValues, ['0', 'default_currency']);
+//        $currency = getVal($transaction, ['transaction', 'value', 0, 'currency'], '');
+//        $date = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
+//        $amount = getVal($transaction, ['transaction', 'value', 0, 'amount'], '');
+//
+//        if(getVal($transaction, ['transaction', 'value', 0, 'currency'], '') != 'USD')
+//        {
+//            if($currency != 'USD')
+//            {
+//                        if($currency == ''){
+//
+//                        }
+//                        else{
+//
+//                        }
+//            }
+//        }
+        return 0;
+    }
+
+    public function organizationQueryBuilder()
+    {
+        return $this->perfectActivityViewerRepo->organizationQueryBuilder();
+    }
+
+    public function correctBoolean($published_to_registry)
+    {
+        if($published_to_registry == true)
+            return 1;
+        return 0;
+    }
+
+    public function getSnapshotWithOrgId($orgId){
+        return $this->perfectActivityViewerRepo->getSnapshot($orgId);
     }
 }

@@ -3,8 +3,10 @@
 use App\Helpers\GetCodeName;
 use App\Models\ActivityPublished;
 use App\Models\Organization\Organization;
+use App\Models\PerfectActivity\ActivitySnapshot;
 use App\Services\Activity\ActivityManager;
 use App\Services\Organization\OrganizationManager;
+use App\Services\PerfectActivityViewer\PerfectActivityViewerManager;
 use App\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -15,11 +17,24 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class WhoIsUsingController extends Controller
 {
 
-    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user)
+    /**
+     * @var ActivitySnapshot
+     */
+    protected $perfectActivityViewerManager;
+
+    /**
+     * WhoIsUsingController constructor.
+     * @param ActivityManager              $activityManager
+     * @param OrganizationManager          $organizationManager
+     * @param User                         $user
+     * @param PerfectActivityViewerManager $perfectActivityViewerManager
+     */
+    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user, PerfectActivityViewerManager $perfectActivityViewerManager)
     {
-        $this->activityManager = $activityManager;
-        $this->orgManager      = $organizationManager;
-        $this->user            = $user;
+        $this->activityManager              = $activityManager;
+        $this->orgManager                   = $organizationManager;
+        $this->user                         = $user;
+        $this->perfectActivityViewerManager = $perfectActivityViewerManager;
     }
 
     /**
@@ -27,23 +42,17 @@ class WhoIsUsingController extends Controller
      */
     public function index()
     {
-        $organizationCount = $this->initializeOrganizationQueryBuilder()->get()->count();
+        $organizationCount = $this->organizationQueryBuilder()->get()->count();
 
         return view('who-is-using', compact('organizationCount'));
     }
 
-    /** Returns query builder of organizations having activity or organization file published.
+    /** Returns query of organizations published on Aidstream.
      * @return mixed
      */
-    public function initializeOrganizationQueryBuilder()
+    public function organizationQueryBuilder()
     {
-        return Organization::leftJoin('activity_published', 'organizations.id', '=', 'activity_published.organization_id')
-                           ->leftJoin('organization_published', 'organizations.id', '=', 'organization_published.organization_id')
-                           ->where('activity_published.published_to_register', 1)
-                           ->orWhere('organization_published.published_to_register', 1)
-                           ->select('organizations.id', 'organizations.name', 'organizations.logo_url', 'organizations.reporting_org')
-                           ->groupBy('organizations.id')
-                           ->orderBy('organizations.name');
+        return $this->perfectActivityViewerManager->organizationQueryBuilder();
     }
 
     /**
@@ -55,9 +64,8 @@ class WhoIsUsingController extends Controller
     public function listOrganization($page = 0, $count = 20)
     {
         $skip                  = $page * $count;
-        $data['next_page']     = $this->initializeOrganizationQueryBuilder()->get()->count() > ($skip + $count);
-        $data['organizations'] = $this->initializeOrganizationQueryBuilder()->skip($skip)->take($count)->get();
-
+        $data['next_page']     = $this->organizationQueryBuilder()->get()->count() > ($skip + $count);
+        $data['organizations'] = $this->organizationQueryBuilder()->skip($skip)->take($count)->get();
         return $data;
     }
 
@@ -68,11 +76,15 @@ class WhoIsUsingController extends Controller
      */
     public function getDataForOrganization($organizationId)
     {
-        $organizationIdExists = $this->initializeOrganizationQueryBuilder()->having('organizations.id', '=', $organizationId)->get();
+        $organizationIdExists = $this->organizationQueryBuilder()->where('org_id', $organizationId)->get();
 
         if (count($organizationIdExists) == 0) {
             throw new NotFoundHttpException();
         }
+
+        $snapshotData = $this->perfectActivityViewerManager->getSnapshotWithOrgId($organizationId);
+
+        dd($organizationIdExists, $snapshotData);
 
         $data               = $this->activityManager->getDataForOrganization($organizationId);
         $orgInfo            = $this->orgManager->getOrganization($organizationId);

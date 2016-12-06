@@ -3,6 +3,7 @@
 namespace App\Models\PerfectActivity;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 /**
  * Class ActivitySnapshot
