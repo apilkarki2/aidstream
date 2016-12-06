@@ -416,10 +416,6 @@ class Validation extends Factory
      */
     protected function getDistinctErrors($errors)
     {
-//        foreach ($errors as $key => $error) {
-//            $errors[$key] = array_unique($error);
-//        }
-
         return array_unique($errors);
     }
 

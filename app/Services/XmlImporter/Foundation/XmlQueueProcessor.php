@@ -104,35 +104,18 @@ class XmlQueueProcessor
         $file           = $this->temporaryXmlStorage($filename);
 
         $contents = file_get_contents($file);
-//        if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
-
-        $version          = $this->xmlServiceProvider->version($contents);
-        $xmlData          = $this->xmlServiceProvider->load($contents);
-        $mappedActivities = $this->xmlProcessor->process($xmlData, $version);
-        if ($mappedActivities) {
-            $this->save($mappedActivities, $orgId);
+        if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
+            $version          = $this->xmlServiceProvider->version($contents);
+            $xmlData          = $this->xmlServiceProvider->load($contents);
+            $mappedActivities = $this->xmlProcessor->process($xmlData, $version);
+            if ($mappedActivities) {
+                $this->save($mappedActivities, $orgId);
+            }
+        } else {
+            $this->storeInJsonFile('schema_error.json', ['filename' => $filename]);
         }
 
-
-        //        } else {
-//            $errors = libxml_get_errors();
-//            foreach ($errors as $error) {
-//                dd($error);
-//            }
-//        }
-
         return false;
-//        } catch (Exception $exception) {
-//            $this->logger->error(
-//                $exception->getMessage(),
-//                [
-//                    'trace' => $exception->getTraceAsString(),
-//                    'user'  => auth()->user()->getNameAttribute()
-//                ]
-//            );
-
-//            return null;
-//        }
     }
 
     /**

@@ -64,16 +64,22 @@ class XmlImportController extends Controller
     public function status()
     {
         $completedActivity = $this->xmlImportManager->loadJsonFile('xml_completed_status.json');
-        list($totalActivities, $currentActivityCount, $failed, $success) = [0, 0, 0, 0];
+        $schemaError       = $this->xmlImportManager->loadJsonFile('schema_error.json');
 
-        if ($completedActivity) {
+        list($totalActivities, $currentActivityCount, $failed, $success, $response) = [0, 0, 0, 0, ''];
+
+        if ($schemaError) {
+            $response = ['error' => 'true'];
+        } elseif ($completedActivity) {
             $totalActivities      = getVal($completedActivity, ['total_activities']);
             $currentActivityCount = getVal($completedActivity, ['current_activity_count']);
             $failed               = getVal($completedActivity, ['failed']);
             $success              = getVal($completedActivity, ['success']);
+
+            $response = ['totalActivities' => $totalActivities, 'currentActivityCount' => $currentActivityCount, 'failed' => $failed, 'success' => $success];
         }
 
-        return response()->json(['totalActivities' => $totalActivities, 'currentActivityCount' => $currentActivityCount, 'failed' => $failed, 'success' => $success]);
+        return response()->json($response);
     }
 
     /**
@@ -105,5 +111,17 @@ class XmlImportController extends Controller
     {
         Session::forget(['xml_import_status']);
         $this->xmlImportManager->removeTemporaryXmlFolder();
+    }
+
+    public function schemaErrors()
+    {
+        $error = $this->xmlImportManager->loadJsonFile('schema_error.json');
+        if ($error) {
+            $filename = getVal($error, ['filename']);
+            $this->xmlImportManager->parseXmlErrors($filename);
+            $this->complete();
+        }
+
+        return view('xmlImport.schemaError');
     }
 }

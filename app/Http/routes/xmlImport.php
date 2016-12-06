@@ -42,5 +42,13 @@ $router->group(
                 'uses' => 'XmlImportController@complete'
             ]
         );
+
+        $router->get(
+            '/xml-import/schemaErrors',
+            [
+                'as'   => 'xml-import.schemaErrors',
+                'uses' => 'XmlImportController@schemaErrors'
+            ]
+        );
     }
 );

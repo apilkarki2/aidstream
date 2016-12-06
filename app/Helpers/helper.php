@@ -692,7 +692,7 @@ function getIndicatorReference(array $reference)
     );
 
     $code         = checkIfEmpty($reference['code']);
-    $indicatorUri = checkIfEmpty($reference['indicator_uri']);
+    $indicatorUri = checkIfEmpty(getVal($reference, ['indicator_uri']));
     $indicatorUri = (empty($indicatorUri)) ? '<em>Not Available </em>' : getClickableLink($indicatorUri);
 
 

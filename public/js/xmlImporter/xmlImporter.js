@@ -9,11 +9,16 @@ var XmlImporter = {
     },
     status: function () {
         this.callAsync('/xml-import/import-status', 'get').success(function (data) {
-            $('#xml-import-status-placeholder').html(
-                "<div class='alert alert-success'>"
-                + data.currentActivityCount + " out of " + data.totalActivities + " activities processed. "
-                + "Failed: " + data.failed + " Success: " + data.success
-                + "</div>");
+
+            if (data.error) {
+                window.location.href = 'xml-import/schemaErrors';
+            } else {
+                $('#xml-import-status-placeholder').html(
+                    "<div class='alert alert-success'>"
+                    + data.currentActivityCount + " out of " + data.totalActivities + " activities processed. "
+                    + "Failed: " + data.failed + " Success: " + data.success
+                    + "</div>");
+            }
         });
     },
     checkCompletion: function () {

@@ -41,7 +41,7 @@ class XmlValidator
         $rules['activity_status']      = sprintf('required|in:%s', $this->validCodeList('ActivityStatus', 'V201'));
         $rules                         = array_merge($rules, $this->rulesForActivityDate($activity));
         $rules                         = array_merge($rules, $this->rulesForContactInfo($activity));
-        $rules['activity_scope']       = sprintf('required|in:%s', $this->validCodeList('ActivityScope', 'V201'));
+        $rules['activity_scope']       = sprintf('in:%s', $this->validCodeList('ActivityScope', 'V201'));
         $rules                         = array_merge($rules, $this->rulesForParticipatingOrg($activity));
         $rules                         = array_merge($rules, $this->rulesForRecipientCountry($activity));
         $rules                         = array_merge($rules, $this->rulesForRecipientRegion($activity));
@@ -673,7 +673,7 @@ class XmlValidator
 
         foreach ($recipientCountries as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryBase                           = 'recipient_country.' . $recipientCountryIndex;
-            $rules[$recipientCountryBase . '.country_code'] = sprintf('required|in: %s', $this->validCodeList('Country', 'V201', 'Organization'));
+            $rules[$recipientCountryBase . '.country_code'] = sprintf('required|in:%s', $this->validCodeList('Country', 'V201', 'Organization'));
             $rules[$recipientCountryBase . '.percentage']   = 'numeric|max:100';
             if (count($recipientCountries) > 1 || $recipientRegion != null) {
                 $rules[$recipientCountryBase . '.percentage'] = 'required|numeric|max:100';
@@ -1880,7 +1880,7 @@ class XmlValidator
         $rules      = [];
         $conditions = getVal($activity, ['conditions'], []);
 
-        $rules['conditions.condition_attached'] = 'required|in:1,0';
+        $rules['conditions.condition_attached'] = 'in:1,0';
 
         foreach (getVal($conditions, ['condition'], []) as $conditionIndex => $condition) {
             $conditionBase                                       = sprintf('conditions.condition.%s', $conditionIndex);

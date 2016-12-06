@@ -1,10 +1,12 @@
 <?php namespace App\Services\XmlImporter;
 
+use App\Core\V201\Element\Activity\XmlService;
 use App\Core\V201\Repositories\Activity\ActivityRepository;
 use App\Core\V201\Repositories\Activity\Result;
 use App\Core\V201\Repositories\Activity\Transaction;
 use App\Core\V201\Repositories\Document;
 use App\Services\XmlImporter\Events\XmlWasUploaded;
+use DOMDocument;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionManager;
@@ -20,6 +22,9 @@ use App\Services\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
  */
 class XmlImportManager
 {
+    /**
+     *
+     */
     const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
 
     /**
@@ -32,6 +37,9 @@ class XmlImportManager
      */
     protected $xmlProcessor;
 
+    /**
+     * @var SessionManager
+     */
     protected $sessionManager;
 
     /**
@@ -39,7 +47,14 @@ class XmlImportManager
      */
     protected $logger;
 
+    /**
+     * @var Filesystem
+     */
     protected $filesystem;
+    /**
+     * @var XmlService
+     */
+    protected $xmlService;
 
     /**
      * XmlImportManager constructor.
@@ -49,19 +64,22 @@ class XmlImportManager
      * @param SessionManager     $sessionManager
      * @param LoggerInterface    $logger
      * @param Filesystem         $filesystem
+     * @param XmlService         $xmlService
      */
     public function __construct(
         XmlServiceProvider $xmlServiceProvider,
         XmlProcessor $xmlProcessor,
         SessionManager $sessionManager,
         LoggerInterface $logger,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        XmlService $xmlService
     ) {
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->xmlProcessor       = $xmlProcessor;
         $this->sessionManager     = $sessionManager;
         $this->logger             = $logger;
         $this->filesystem         = $filesystem;
+        $this->xmlService         = $xmlService;
     }
 
     /**
@@ -118,6 +136,11 @@ class XmlImportManager
         }
     }
 
+    /**
+     * @param $filename
+     * @param $userId
+     * @param $organizationId
+     */
     public function startImport($filename, $userId, $organizationId)
     {
         $this->fireXmlUploadEvent($filename, $userId, $organizationId);
@@ -172,6 +195,34 @@ class XmlImportManager
     {
         $filePath = $this->temporaryXmlStorage();
         $this->filesystem->deleteDirectory($filePath);
+    }
+
+    /**
+     * Returns errors from the xml
+     * @param $filename
+     */
+    public function parseXmlErrors($filename)
+    {
+        $filePath = $this->temporaryXmlStorage($filename);
+        $xml      = $this->loadXml($filePath);
+        $xmlLines = $this->xmlService->formatUploadedXml($xml);
+        $messages = $this->xmlService->getSchemaErrors($xml, session('version'));
+        $this->sessionManager->put(['xmlLines' => $xmlLines, 'messages' => $messages]);
+    }
+
+    /**
+     * Load the xml from the given filePath
+     * @param $filePath
+     * @return string
+     */
+    protected function loadXml($filePath)
+    {
+        libxml_use_internal_errors(true);
+
+        $document = new DOMDocument();
+        $document->load($filePath);
+
+        return $document->saveXML();
     }
 
 }
