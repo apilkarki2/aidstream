@@ -31,7 +31,7 @@ class Validation extends Factory
         'Recipient Region'           => 'activity.recipient-region.index',
         'Location'                   => 'activity.location.index',
         'Sector'                     => 'activity.sector.index',
-        'Country Budget Item'        => 'activity.country-budget-items.index',
+        'Country Budget Items'       => 'activity.country-budget-items.index',
         'Humanitarian Scope'         => 'activity.humanitarian-scope.index',
         'Policy Marker'              => 'activity.policy-marker.index',
         'Collaboration Type'         => 'activity.collaboration_type.index',
@@ -103,11 +103,7 @@ class Validation extends Factory
             $errors[$element][$index] = getVal($error, [0], '');
         }
 
-        $errors = $this->embedLinks($activityId, $errors);
-
-//        if ($shouldBeUnique) {
-//            $errors = $this->getDistinctErrors($errors);
-//        }
+        $errors = $this->embedLinks($activityId, $errors, $shouldBeUnique);
 
         return $errors;
     }
@@ -329,10 +325,8 @@ class Validation extends Factory
      * @param $formBase
      * @return array
      */
-    public function getRulesForPeriodStart(
-        $formFields,
-        $formBase
-    ) {
+    public function getRulesForPeriodStart($formFields, $formBase)
+    {
         $rules = [];
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'required|date';
@@ -348,10 +342,8 @@ class Validation extends Factory
      * @param $formBase
      * @return array
      */
-    public function getMessagesForPeriodStart(
-        $formFields,
-        $formBase
-    ) {
+    public function getMessagesForPeriodStart($formFields, $formBase)
+    {
         $messages = [];
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = 'Period Start is required';
@@ -368,10 +360,8 @@ class Validation extends Factory
      * @param $formBase
      * @return array
      */
-    public function getRulesForPeriodEnd(
-        $formFields,
-        $formBase
-    ) {
+    public function getRulesForPeriodEnd($formFields, $formBase)
+    {
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
@@ -393,10 +383,8 @@ class Validation extends Factory
      * @param $formBase
      * @return array
      */
-    public function getMessagesForPeriodEnd(
-        $formFields,
-        $formBase
-    ) {
+    public function getMessagesForPeriodEnd($formFields, $formBase)
+    {
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
@@ -424,15 +412,20 @@ class Validation extends Factory
      *
      * @param       $activityId
      * @param array $errors
+     * @param bool  $shouldBeUnique
      * @return array
      */
-    protected function embedLinks($activityId, array $errors)
+    protected function embedLinks($activityId, array $errors, $shouldBeUnique = false)
     {
         $links = [];
+
         foreach ($errors as $element => $error) {
             $index = 0;
             if (!in_array($element, ['Transaction', 'Results', 'Document Links'])) {
-                $error = $this->getDistinctErrors($error);
+                if ($shouldBeUnique) {
+                    $error = $this->getDistinctErrors($error);
+                }
+
                 foreach ($error as $errorText) {
                     $link                               = route($this->elementLinks[$element], [$activityId]);
                     $links[$element][$index]['link']    = $link;
@@ -448,6 +441,14 @@ class Validation extends Factory
         return $links;
     }
 
+    /**
+     * Get the errors in the uploaded Xml File.
+     *
+     * @param $element
+     * @param $elementErrors
+     * @param $activityId
+     * @return array
+     */
     protected function getErrors($element, $elementErrors, $activityId)
     {
         $errors = [];

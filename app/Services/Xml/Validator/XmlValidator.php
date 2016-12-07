@@ -1,11 +1,21 @@
 <?php namespace App\Services\Xml\Validator;
 
 
+/**
+ * Class XmlValidator
+ * @package App\Services\Xml\Validator
+ */
 class XmlValidator
 {
+    /**
+     * @var
+     */
     protected $activity;
-    protected $factory;
 
+    /**
+     * @var Validation
+     */
+    protected $factory;
 
     /**
      * @param Validation $factory
@@ -13,10 +23,12 @@ class XmlValidator
     public function __construct(Validation $factory)
     {
         $this->factory = $factory;
-
-        return $this;
     }
 
+    /**
+     * @param $activity
+     * @return $this
+     */
     public function init($activity)
     {
         $this->activity = $activity;
@@ -24,6 +36,11 @@ class XmlValidator
         return $this;
     }
 
+    /**
+     * @param      $activityId
+     * @param bool $shouldBeUnique
+     * @return array
+     */
     public function validateActivity($activityId, $shouldBeUnique = false)
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
@@ -31,6 +48,11 @@ class XmlValidator
                              ->withErrors($activityId, $shouldBeUnique);
     }
 
+    /**
+     * Returns the required validation rules for an Activity.
+     *
+     * @return array
+     */
     public function rules()
     {
         $activity                      = $this->activity;
@@ -69,6 +91,11 @@ class XmlValidator
     }
 
 
+    /**
+     * Returns the required messages for the failed validation rules.
+     *
+     * @return array
+     */
     public function messages()
     {
         $activity                             = $this->activity;
@@ -110,6 +137,10 @@ class XmlValidator
         return $messages;
     }
 
+    /**
+     * @param array $activity
+     * @return mixed
+     */
     protected function rulesForTitle(array $activity)
     {
         $title                      = getVal($activity, ['title'], []);
@@ -122,6 +153,12 @@ class XmlValidator
         return $rules;
     }
 
+    /**
+     * Messages for Title.
+     *
+     * @param array $activity
+     * @return mixed
+     */
     protected function messagesForTitle(array $activity)
     {
         $title                         = getVal($activity, ['title'], []);
@@ -135,6 +172,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Description.
+     *
      * @param array $activity
      * @return array
      */
@@ -155,6 +194,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Description.
+     *
      * @param array $activity
      * @return array
      */
@@ -176,6 +217,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Other Identifier.
+     *
      * @param array $activity
      * @return array
      */
@@ -198,6 +241,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Other Identifier.
+     *
      * @param array $activity
      * @return array
      */
@@ -221,6 +266,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Owner Organization.
+     *
      * @param $ownerOrgData
      * @param $otherIdentifierBase
      * @return array
@@ -241,6 +288,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Owner Organization.
+     *
      * @param $ownerOrgData
      * @param $otherIdentifierBase
      * @return array
@@ -261,6 +310,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Activity Date.
+     *
      * @param array $activity
      * @return array
      */
@@ -285,6 +336,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Activity Date.
+     *
      * @param array $activity
      * @return array
      */
@@ -316,6 +369,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Contact Info.
+     *
      * @param array $activity
      * @return array
      */
@@ -343,6 +398,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info.
+     *
      * @param array $activity
      * @return array
      */
@@ -370,6 +427,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Contact Info Organization.
+     *
      * @param $organizationData
      * @param $contactBase
      * @return array
@@ -387,6 +446,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info Organization.
+     *
      * @param $organizationData
      * @param $contactBase
      * @return array
@@ -404,6 +465,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Contact Info Department.
+     *
      * @param $departments
      * @param $contactBase
      * @return array
@@ -421,6 +484,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info Department.
+     *
      * @param $departments
      * @param $contactBase
      * @return array
@@ -438,6 +503,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Contact Info Person Name.
+     *
      * @param $personNames
      * @param $contactBase
      * @return array
@@ -455,6 +522,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info Person Name.
+     *
      * @param $personNames
      * @param $contactBase
      * @return array
@@ -472,6 +541,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Contact Info Job Title.
+     *
      * @param $jobTitles
      * @param $contactBase
      * @return array
@@ -489,6 +560,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info Job Title.
+     *
      * @param $jobTitles
      * @param $contactBase
      * @return array
@@ -506,6 +579,8 @@ class XmlValidator
     }
 
     /**
+     * Rules for Contact Info Mailing Address.
+     *
      * @param $mailingAddresses
      * @param $contactBase
      * @return array
@@ -523,6 +598,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info Mailing Address.
+     *
      * @param $mailingAddresses
      * @param $contactBase
      * @return array
@@ -541,6 +618,8 @@ class XmlValidator
 
 
     /**
+     * Rules for Contact Info Email.
+     *
      * @param $emails
      * @param $contactBase
      * @return array
@@ -557,6 +636,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info Email.
+     *
      * @param $emails
      * @param $contactBase
      * @return array
@@ -573,7 +654,8 @@ class XmlValidator
     }
 
     /**
-     * rule for website
+     * Rules for Contact Info Website.
+     *
      * @param $websites
      * @param $contactBase
      * @return array
@@ -590,6 +672,8 @@ class XmlValidator
     }
 
     /**
+     * Messages for Contact Info Website.
+     *
      * @param $websites
      * @param $contactBase
      * @return array
@@ -1410,7 +1494,8 @@ class XmlValidator
     }
 
     /**
-     * returns messages for HumanitarianScope
+     * Returns messages for HumanitarianScope.
+     *
      * @param array $activity
      * @return array|mixed
      */
@@ -1438,6 +1523,8 @@ class XmlValidator
     }
 
     /**
+     * Get rules for Policy Marker.
+     *
      * @param array $activity
      * @return array
      */
@@ -1462,6 +1549,8 @@ class XmlValidator
     }
 
     /**
+     * Get messages for PolicyMarker.
+     *
      * @param array $activity
      * @return array
      */
@@ -1487,6 +1576,8 @@ class XmlValidator
     }
 
     /**
+     * Get rules for Budget.
+     *
      * @param array $activity
      * @return array
      */
@@ -1518,6 +1609,8 @@ class XmlValidator
     }
 
     /**
+     * Get messages for Budget.
+     *
      * @param array $activity
      * @return array
      */
@@ -1820,6 +1913,10 @@ class XmlValidator
         return $rules;
     }
 
+    /**
+     * @param array $activity
+     * @return array
+     */
     protected function messagesForRelatedActivity(array  $activity)
     {
         $messages          = [];
@@ -2011,6 +2108,11 @@ class XmlValidator
         return $messages;
     }
 
+    /**
+     * @param $transactions
+     * @param $transactionId
+     * @return array
+     */
     protected function getReferences($transactions, $transactionId)
     {
         $references = [];
@@ -2779,6 +2881,12 @@ class XmlValidator
         return implode(",", $codes);
     }
 
+    /**
+     * @param        $codeList
+     * @param        $version
+     * @param string $directory
+     * @return mixed
+     */
     protected function loadCodeList($codeList, $version, $directory = "Activity")
     {
         return json_decode(file_get_contents(app_path(sprintf('Core/%s/Codelist/en/%s/%s.json', $version, $directory, $codeList))), true);
