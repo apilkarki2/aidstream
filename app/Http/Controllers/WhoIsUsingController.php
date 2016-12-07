@@ -17,21 +17,21 @@ class WhoIsUsingController extends Controller
     /**
      * @var ActivitySnapshot
      */
-    protected $perfectActivityViewerManager;
+    protected $perfectViewerManager;
 
     /**
      * WhoIsUsingController constructor.
      * @param ActivityManager      $activityManager
      * @param OrganizationManager  $organizationManager
      * @param User                 $user
-     * @param PerfectViewerManager $perfectActivityViewerManager
+     * @param PerfectViewerManager $perfectViewerManager
      */
-    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user, PerfectViewerManager $perfectActivityViewerManager)
+    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user, PerfectViewerManager $perfectViewerManager)
     {
         $this->activityManager              = $activityManager;
         $this->orgManager                   = $organizationManager;
         $this->user                         = $user;
-        $this->perfectActivityViewerManager = $perfectActivityViewerManager;
+        $this->perfectViewerManager = $perfectViewerManager;
     }
 
     /**
@@ -49,7 +49,7 @@ class WhoIsUsingController extends Controller
      */
     public function organizationQueryBuilder()
     {
-        return $this->perfectActivityViewerManager->organizationQueryBuilder();
+        return $this->perfectViewerManager->organizationQueryBuilder();
     }
 
     /**
@@ -79,33 +79,39 @@ class WhoIsUsingController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $snapshotData = $this->perfectActivityViewerManager->getSnapshotWithOrgId($organizationId);
+        $activitySnapshot = $this->perfectViewerManager->getSnapshotWithOrgId($organizationId);
+        $organizationSnapshot = $this->perfectViewerManager->getOrgSnapshotWithOrgId($organizationId);
 
-        dd($organizationIdExists, $snapshotData);
+        $organizations = json_decode($organizationSnapshot[0], true);
+        $orgInfo = json_decode($organizationIdExists[0], true);
+        $activities = json_decode($activitySnapshot, true);
 
-        $data               = $this->activityManager->getDataForOrganization($organizationId);
-        $orgInfo            = $this->orgManager->getOrganization($organizationId);
-        $transaction        = $this->mergeTransaction($data);
-        $transactionType    = $this->getTransactionName($transaction);
-        $recipientRegion    = $this->mergeRecipientRegion($data);
-        $recipientCountry   = $this->mergeRecipientCountry($data);
-        $sector             = $this->mergeSector($data);
-        $activityStatus     = $this->mergeActivityStatus($data);
-        $activityStatusJson = $this->convertIntoFormat($activityStatus);
-        $activityName       = $this->getActivityName($data);
+//        dd($orgInfo, $organizations, $activities);
 
-        $final_data = $this->getDataMerge(
-            $transactionType,
-            $recipientRegion,
-            $recipientCountry,
-            $sector,
-            $activityName,
-            $activityStatusJson
-        );
+//        $data               = $this->activityManager->getDataForOrganization($organizationId);
+//        $orgInfo            = $this->orgManager->getOrganization($organizationId);
+//        $transaction        = $this->mergeTransaction($data);
+//        $transactionType    = $this->getTransactionName($transaction);
+//        $recipientRegion    = $this->mergeRecipientRegion($data);
+//        $recipientCountry   = $this->mergeRecipientCountry($data);
+//        $sector             = $this->mergeSector($data);
+//        $activityStatus     = $this->mergeActivityStatus($data);
+//        $activityStatusJson = $this->convertIntoFormat($activityStatus);
+//        $activityName       = $this->getActivityName($data);
+//
+//        $final_data = $this->getDataMerge(
+//            $transactionType,
+//            $recipientRegion,
+//            $recipientCountry,
+//            $sector,
+//            $activityName,
+//            $activityStatusJson
+//        );
 
         $user = $this->user->getDataByOrgIdAndRoleId($organizationId, '1');
 
-        return view('who-is-using-organization', compact('final_data', 'orgInfo', 'user'));
+//        return view('who-is-using-organization', compact('final_data', 'orgInfo', 'user'));
+        return view('perfectViewer.organization-viewer', compact('activities', 'orgInfo', 'organizations', 'user'));
 
     }
 

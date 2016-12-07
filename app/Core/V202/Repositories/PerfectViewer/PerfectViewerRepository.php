@@ -117,4 +117,9 @@ class PerfectViewerRepository
     {
         return $this->activitySnapshot->where('org_id', $orgId)->get();
     }
+
+    public function getOrgSnapshot($orgId)
+    {
+        return $this->organizationSnapshot->where('org_id', $orgId)->get();
+    }
 }

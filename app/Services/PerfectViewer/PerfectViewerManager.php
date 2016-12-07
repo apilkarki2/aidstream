@@ -17,7 +17,7 @@ class PerfectViewerManager
     /**
      * @var PerfectViewerRepository
      */
-    protected $perfectActivityViewerRepo;
+    protected $perfectViewerRepo;
 
     /**
      * @var DatabaseManager
@@ -47,21 +47,21 @@ class PerfectViewerManager
     /**
      * PerfectActivityViewerManager constructor.
      * @param Guard                   $auth
-     * @param PerfectViewerRepository $perfectActivityViewerRepository
+     * @param PerfectViewerRepository $perfectViewerRepository
      * @param DatabaseManager         $databaseManager
      * @param Logger                  $logger
      */
     public function __construct(
         Guard $auth,
-        PerfectViewerRepository $perfectActivityViewerRepository,
+        PerfectViewerRepository $perfectViewerRepository,
         DatabaseManager $databaseManager,
         Logger $logger
 
     ) {
-        $this->auth                      = $auth;
-        $this->perfectActivityViewerRepo = $perfectActivityViewerRepository;
-        $this->database                  = $databaseManager;
-        $this->logger                    = $logger;
+        $this->auth              = $auth;
+        $this->perfectViewerRepo = $perfectViewerRepository;
+        $this->database          = $databaseManager;
+        $this->logger            = $logger;
     }
 
     /**
@@ -82,22 +82,22 @@ class PerfectViewerManager
             $published_to_registry    = $activity->published_to_registry;
 
             //transaction and budget
-            $transactions     = $this->perfectActivityViewerRepo->getTransactions($activityId);
+            $transactions     = $this->perfectViewerRepo->getTransactions($activityId);
             $totalBudget      = $this->calculateBudget(getVal((array) $activity, ['budget'], []));
             $totalTransaction = $this->calculateTransaction($transactions);
 
             //organization data
             $organization  = $this->getOrg($orgId);
             $reporting_org = getVal($organization, [0, 'reporting_org'], []);
-            $filename      = $this->perfectActivityViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
+            $filename      = $this->perfectViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
             $filename      = $filename->filename;
             $perfectOrg    = $this->makePerfectOrg($organization, $totalTransaction);
 
             $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/);
 
             $this->database->beginTransaction();
-            $result    = $this->perfectActivityViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
-            $orgResult = $this->perfectActivityViewerRepo->storeOrganization($perfectOrg);
+            $result    = $this->perfectViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
+            $orgResult = $this->perfectViewerRepo->storeOrganization($perfectOrg);
             $this->database->commit();
 
             $this->logger->info(
@@ -177,7 +177,7 @@ class PerfectViewerManager
      */
     protected function getOrg($orgId)
     {
-        return $this->perfectActivityViewerRepo->getOrganization($orgId)->toArray();
+        return $this->perfectViewerRepo->getOrganization($orgId)->toArray();
     }
 
     /**
@@ -187,9 +187,12 @@ class PerfectViewerManager
      */
     protected function calculateBudget($budget)
     {
-        $totalBudget = 0;
+        $totalBudget['value'] = 0;
+        $totalBudget['currency'] = '';
+
         foreach ($budget as $index => $value) {
-            $totalBudget += getVal($value, ['value', 0, 'amount'], '');
+            $totalBudget['value'] += getVal($value, ['value', 0, 'amount'], '');
+            $totalBudget['currency'] = getVal($value, ['value', 0, 'currency'], '');
         }
 
         return $totalBudget;
@@ -262,12 +265,17 @@ class PerfectViewerManager
 
     public function organizationQueryBuilder()
     {
-        return $this->perfectActivityViewerRepo->organizationQueryBuilder();
+        return $this->perfectViewerRepo->organizationQueryBuilder();
     }
 
     public function getSnapshotWithOrgId($orgId)
     {
-        return $this->perfectActivityViewerRepo->getSnapshot($orgId);
+        return $this->perfectViewerRepo->getSnapshot($orgId);
+    }
+
+    public function getOrgSnapshotWithOrgId($orgId)
+    {
+        return $this->perfectViewerRepo->getOrgSnapshot($orgId);
     }
 
     public function makePerfectOrg($organization, $totalTransaction)
