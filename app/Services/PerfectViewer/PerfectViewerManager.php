@@ -1,8 +1,7 @@
-<?php namespace App\Services\PerfectActivityViewer;
+<?php namespace App\Services\PerfectViewer;
 
-use App\Core\V202\Repositories\PerfectActivityViewer\PerfectActivityViewerRepository;
+use App\Core\V202\Repositories\PerfectViewer\PerfectViewerRepository;
 use App\Models\Activity\Activity;
-use App\Models\Activity\Transaction;
 use Exception;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\DatabaseManager;
@@ -10,13 +9,13 @@ use Illuminate\Contracts\Logging\Log as Logger;
 
 /**
  * Class PerfectActivityViewerManager
- * @package App\Services\PerfectActivityViewer
+ * @package App\Services\PerfectViewer
  */
-class PerfectActivityViewerManager
+class PerfectViewerManager
 {
 
     /**
-     * @var PerfectActivityViewerRepository
+     * @var PerfectViewerRepository
      */
     protected $perfectActivityViewerRepo;
 
@@ -41,15 +40,20 @@ class PerfectActivityViewerManager
     protected $defaultFieldValues;
 
     /**
+     * @var
+     */
+    protected $exchangeRates;
+
+    /**
      * PerfectActivityViewerManager constructor.
-     * @param Guard                           $auth
-     * @param PerfectActivityViewerRepository $perfectActivityViewerRepository
-     * @param DatabaseManager                 $databaseManager
-     * @param Logger                          $logger
+     * @param Guard                   $auth
+     * @param PerfectViewerRepository $perfectActivityViewerRepository
+     * @param DatabaseManager         $databaseManager
+     * @param Logger                  $logger
      */
     public function __construct(
         Guard $auth,
-        PerfectActivityViewerRepository $perfectActivityViewerRepository,
+        PerfectViewerRepository $perfectActivityViewerRepository,
         DatabaseManager $databaseManager,
         Logger $logger
 
@@ -63,32 +67,37 @@ class PerfectActivityViewerManager
     /**
      * Creates snapshot for Perfect Activity Viewer
      * @param $activity
-     * @return \App\Models\PerfectActivity\ActivitySnapshot|bool
+     * @return PerfectViewerManager|bool
      */
     public function createSnapshot(Activity $activity)
     {
+        $this->exchangeRates = json_decode(file_get_contents(app_path('./../public/data/exchangerates.json')), true);
+
         try {
+
             //activity data
             $this->defaultFieldValues = $activity->default_field_values;
             $orgId                    = $activity->organization_id;
             $activityId               = $activity->id;
             $published_to_registry    = $activity->published_to_registry;
 
-            //organization data
-            $organization             = $this->getReportingOrg($orgId);
-            $reporting_org            = getVal($organization, [0, 'reporting_org'], []);
-            $filename                 = $this->perfectActivityViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
-            $filename                 = $filename->filename;
-
             //transaction and budget
             $transactions     = $this->perfectActivityViewerRepo->getTransactions($activityId);
             $totalBudget      = $this->calculateBudget(getVal((array) $activity, ['budget'], []));
             $totalTransaction = $this->calculateTransaction($transactions);
 
-            $perfectData      = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/);
+            //organization data
+            $organization  = $this->getOrg($orgId);
+            $reporting_org = getVal($organization, [0, 'reporting_org'], []);
+            $filename      = $this->perfectActivityViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
+            $filename      = $filename->filename;
+            $perfectOrg    = $this->makePerfectOrg($organization, $totalTransaction);
+
+            $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/);
 
             $this->database->beginTransaction();
-            $result = $this->perfectActivityViewerRepo->store($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
+            $result    = $this->perfectActivityViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
+            $orgResult = $this->perfectActivityViewerRepo->storeOrganization($perfectOrg);
             $this->database->commit();
 
             $this->logger->info(
@@ -99,7 +108,7 @@ class PerfectActivityViewerManager
                 ]
             );
 
-            return $result;
+            return $this;
 
         } catch (Exception $exception) {
             $this->database->rollback();
@@ -123,7 +132,7 @@ class PerfectActivityViewerManager
             'published_data'       => $perfectData,
             'org_id'               => $orgId,
             'activity_id'          => $activityId,
-            'activity_in_registry' => $this->correctBoolean($published_to_registry),
+            'activity_in_registry' => $published_to_registry,
             'filename'             => $filename
         ];
     }
@@ -134,7 +143,7 @@ class PerfectActivityViewerManager
      * @param $reporting_org
      * @param $transactions
      * @param $totalBudget
-//     * @param $totalTransaction
+    //     * @param $totalTransaction
      * @return array
      */
     public function convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/)
@@ -157,14 +166,16 @@ class PerfectActivityViewerManager
             'reporting_org'              => $reporting_org,
             'transactions'               => $transactions,
             'totalBudget'                => $totalBudget,
-//            'totalTransaction'           => $totalTransaction
+            //            'totalTransaction'           => $totalTransaction
         ];
     }
 
     /**
      * Provides reporting organization
+     * @param $orgId
+     * @return
      */
-    protected function getReportingOrg($orgId)
+    protected function getOrg($orgId)
     {
         return $this->perfectActivityViewerRepo->getOrganization($orgId)->toArray();
     }
@@ -186,7 +197,10 @@ class PerfectActivityViewerManager
 
     protected function calculateTransaction($transactions)
     {
-        $totalTransaction = [];
+        $totalTransaction['total_incoming_funds'] = 0;
+        $totalTransaction['total_commitments']    = 0;
+        $totalTransaction['total_disbursements']  = 0;
+        $totalTransaction['total_expenditures']   = 0;
 
         foreach ($transactions as $index => $transaction) {
 
@@ -195,19 +209,19 @@ class PerfectActivityViewerManager
             switch (getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) {
 
                 case 1:
-                    $totalTransaction['incoming_funds'] = $value;
+                    $totalTransaction['total_incoming_funds'] += $value;
                     break;
 
                 case 2:
-                    $totalTransaction['commitments'] = $value;
+                    $totalTransaction['total_commitments'] += $value;
                     break;
 
                 case 3:
-                    $totalTransaction['disbursements'] = $value;
+                    $totalTransaction['total_disbursements'] += $value;
                     break;
 
                 case 4:
-                    $totalTransaction['expenditures'] = $value;
+                    $totalTransaction['total_expenditures'] += $value;
                     break;
 
                 default:
@@ -220,25 +234,29 @@ class PerfectActivityViewerManager
 
     protected function giveCorrectValue($transaction)
     {
+        $defaultCurrency = getVal($this->defaultFieldValues, ['0', 'default_currency']);
+        $currency        = getVal($transaction, ['transaction', 'value', 0, 'currency'], '');
+        $date            = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
+        $amount          = getVal($transaction, ['transaction', 'value', 0, 'amount'], '');
 
-//
-//        $defaultCurrency = getVal($this->defaultFieldValues, ['0', 'default_currency']);
-//        $currency = getVal($transaction, ['transaction', 'value', 0, 'currency'], '');
-//        $date = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
-//        $amount = getVal($transaction, ['transaction', 'value', 0, 'amount'], '');
-//
-//        if(getVal($transaction, ['transaction', 'value', 0, 'currency'], '') != 'USD')
-//        {
-//            if($currency != 'USD')
-//            {
-//                        if($currency == ''){
-//
-//                        }
-//                        else{
-//
-//                        }
-//            }
-//        }
+        if ($currency != 'USD') {
+            if ($currency == '') {
+                if ($defaultCurrency != 'USD') {
+                    $eRate = getVal($this->exchangeRates, [sprintf('USD%s', $defaultCurrency)], 1);
+
+                    return dd($amount / $eRate);
+                } else {
+                    if ($defaultCurrency == 'USD') {
+                        return $amount;
+                    }
+                }
+            } else {
+                $eRate = getVal($this->exchangeRates, [sprintf('USD%s', $currency)], 1);
+
+                return $amount / $eRate;
+            }
+        }
+
         return 0;
     }
 
@@ -247,14 +265,18 @@ class PerfectActivityViewerManager
         return $this->perfectActivityViewerRepo->organizationQueryBuilder();
     }
 
-    public function correctBoolean($published_to_registry)
+    public function getSnapshotWithOrgId($orgId)
     {
-        if($published_to_registry == true)
-            return 1;
-        return 0;
+        return $this->perfectActivityViewerRepo->getSnapshot($orgId);
     }
 
-    public function getSnapshotWithOrgId($orgId){
-        return $this->perfectActivityViewerRepo->getSnapshot($orgId);
+    public function makePerfectOrg($organization, $totalTransaction)
+    {
+        return [
+            'org_id'                => getVal($organization, [0, 'id'], ''),
+            'published_to_registry' => $organization[0]['published_to_registry'],
+            'org_slug'              => getVal($organization, [0, 'reporting_org', 0, 'reporting_organization_identifier'], ''),
+            'transaction_totals'    => $totalTransaction
+        ];
     }
 }

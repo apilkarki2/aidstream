@@ -1,15 +1,12 @@
 <?php namespace App\Http\Controllers;
 
 use App\Helpers\GetCodeName;
-use App\Models\ActivityPublished;
-use App\Models\Organization\Organization;
-use App\Models\PerfectActivity\ActivitySnapshot;
+use App\Models\PerfectViewer\ActivitySnapshot;
 use App\Services\Activity\ActivityManager;
 use App\Services\Organization\OrganizationManager;
-use App\Services\PerfectActivityViewer\PerfectActivityViewerManager;
+use App\Services\PerfectViewer\PerfectViewerManager;
 use App\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 /**
  * Class WhoIsUsingController
  * @package App\Http\Controllers
@@ -24,12 +21,12 @@ class WhoIsUsingController extends Controller
 
     /**
      * WhoIsUsingController constructor.
-     * @param ActivityManager              $activityManager
-     * @param OrganizationManager          $organizationManager
-     * @param User                         $user
-     * @param PerfectActivityViewerManager $perfectActivityViewerManager
+     * @param ActivityManager      $activityManager
+     * @param OrganizationManager  $organizationManager
+     * @param User                 $user
+     * @param PerfectViewerManager $perfectActivityViewerManager
      */
-    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user, PerfectActivityViewerManager $perfectActivityViewerManager)
+    function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user, PerfectViewerManager $perfectActivityViewerManager)
     {
         $this->activityManager              = $activityManager;
         $this->orgManager                   = $organizationManager;

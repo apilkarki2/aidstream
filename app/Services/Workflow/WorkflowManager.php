@@ -1,6 +1,6 @@
 <?php namespace App\Services\Workflow;
 
-use App\Services\PerfectActivityViewer\PerfectActivityViewerManager;
+use App\Services\PerfectViewer\PerfectViewerManager;
 use Exception;
 use Psr\Log\LoggerInterface;
 use App\Models\Activity\Activity;
@@ -53,20 +53,20 @@ class WorkflowManager
     protected $twitter;
 
     /**
-     * @var PerfectActivityViewerManager
+     * @var PerfectViewerManager
      */
     protected $perfectActivity;
 
     /**
      * WorkflowManager constructor.
-     * @param OrganizationManager          $organizationManager
-     * @param ActivityManager              $activityManager
-     * @param XmlServiceProvider           $xmlServiceProvider
-     * @param OrganizationDataProvider     $organizationDataProvider
-     * @param Publisher                    $publisher
-     * @param LoggerInterface              $logger
-     * @param TwitterAPI                   $twitter
-     * @param PerfectActivityViewerManager $perfectActivityViewerManager
+     * @param OrganizationManager      $organizationManager
+     * @param ActivityManager          $activityManager
+     * @param XmlServiceProvider       $xmlServiceProvider
+     * @param OrganizationDataProvider $organizationDataProvider
+     * @param Publisher                $publisher
+     * @param LoggerInterface          $logger
+     * @param TwitterAPI               $twitter
+     * @param PerfectViewerManager     $perfectActivityViewerManager
      */
     public function __construct(
         OrganizationManager $organizationManager,
@@ -76,7 +76,7 @@ class WorkflowManager
         Publisher $publisher,
         LoggerInterface $logger,
         TwitterAPI $twitter,
-        PerfectActivityViewerManager $perfectActivityViewerManager
+        PerfectViewerManager $perfectActivityViewerManager
     ) {
         $this->organizationManager      = $organizationManager;
         $this->activityManager          = $activityManager;
@@ -156,9 +156,9 @@ class WorkflowManager
                 $this->twitter->post($organization->settings, $organization);
             }
 
-            $this->update($details, $activity);
-
             $this->perfectActivity->createSnapshot($activity);
+
+            $this->update($details, $activity);
 
             return true;
         } catch (\ErrorException $exception) {

@@ -1,10 +1,6 @@
-<?php
-
-namespace App\Models\PerfectActivity;
+<?php namespace App\Models\PerfectViewer;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
-
 /**
  * Class ActivitySnapshot
  * @package App\Models\PerfectActivity

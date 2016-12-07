@@ -1,15 +1,16 @@
-<?php namespace App\Core\V202\Repositories\PerfectActivityViewer;
+<?php namespace App\Core\V202\Repositories\PerfectViewer;
 
 use App\Models\Activity\Transaction;
 use App\Models\ActivityPublished;
 use App\Models\Organization\Organization;
-use App\Models\PerfectActivity\ActivitySnapshot;
+use App\Models\PerfectViewer\ActivitySnapshot;
+use App\Models\PerfectViewer\OrganizationSnapshot;
 
 /**
  * Class PerfectActivityViewerRepository
- * @package App\Core\V202\Repositories\PerfectActivityViewer
+ * @package App\Core\V202\Repositories\PerfectViewer
  */
-class PerfectActivityViewerRepository
+class PerfectViewerRepository
 {
 
     /**
@@ -31,21 +32,26 @@ class PerfectActivityViewerRepository
      * @var Organization
      */
     protected $organization;
+    /**
+     * @var OrganizationSnapshot
+     */
+    private $organizationSnapshot;
 
     /**
-     * PerfectActivityViewer constructor.
-     * @param ActivitySnapshot  $activitySnapshot
-     * @param ActivityPublished $activityPublished
-     * @param Transaction       $transaction
-     * @param Organization      $organization
+     * PerfectViewer constructor.
+     * @param ActivitySnapshot     $activitySnapshot
+     * @param ActivityPublished    $activityPublished
+     * @param Transaction          $transaction
+     * @param Organization         $organization
+     * @param OrganizationSnapshot $organizationSnapshot
      */
-    public function __construct(ActivitySnapshot $activitySnapshot, ActivityPublished $activityPublished, Transaction $transaction, Organization $organization)
+    public function __construct(ActivitySnapshot $activitySnapshot, ActivityPublished $activityPublished, Transaction $transaction, Organization $organization, OrganizationSnapshot $organizationSnapshot)
     {
         $this->activitySnapshot  = $activitySnapshot;
         $this->activityPublished = $activityPublished;
         $this->transaction       = $transaction;
         $this->organization      = $organization;
-
+        $this->organizationSnapshot = $organizationSnapshot;
     }
 
     /**
@@ -53,9 +59,14 @@ class PerfectActivityViewerRepository
      * @param array $data
      * @return ActivitySnapshot
      */
-    public function store(array $data)
+    public function storeActivity(array $data)
     {
         return $this->activitySnapshot->updateOrCreate(['activity_id' => $data['activity_id'], 'org_id' => $data['org_id']], $data);
+    }
+
+    public function storeOrganization(array $perfectOrg)
+    {
+        return $this->organizationSnapshot->updateOrCreate(['org_id' => $perfectOrg['org_id']], $perfectOrg);
     }
 
     /**
