@@ -97,7 +97,6 @@ class XmlQueueProcessor
      */
     public function import($filename, $orgId, $userId)
     {
-//        try {
         $this->orgId    = $orgId;
         $this->userId   = $userId;
         $this->filename = $filename;
@@ -114,7 +113,7 @@ class XmlQueueProcessor
         } else {
             shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
 
-            $this->storeInJsonFile('schema_error.json', ['filename' => $filename]);
+            $this->storeInJsonFile('schema_error.json', ['filename' => $filename, 'version' => $this->xmlServiceProvider->version($contents, true)]);
         }
 
         return false;

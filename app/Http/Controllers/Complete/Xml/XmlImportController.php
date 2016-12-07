@@ -111,7 +111,6 @@ class XmlImportController extends Controller
     {
         session()->forget('xml_import_status');
         Session::save();
-//        Session::forget(['xml_import_status']);
         $this->xmlImportManager->removeTemporaryXmlFolder();
     }
 
@@ -120,7 +119,8 @@ class XmlImportController extends Controller
         $error = $this->xmlImportManager->loadJsonFile('schema_error.json');
         if ($error) {
             $filename = getVal($error, ['filename']);
-            $this->xmlImportManager->parseXmlErrors($filename);
+            $version  = getVal($error, ['version']);
+            $this->xmlImportManager->parseXmlErrors($filename, $version);
             $this->complete();
         }
 

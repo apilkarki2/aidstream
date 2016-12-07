@@ -201,13 +201,14 @@ class XmlImportManager
     /**
      * Returns errors from the xml
      * @param $filename
+     * @param $version
      */
-    public function parseXmlErrors($filename)
+    public function parseXmlErrors($filename, $version)
     {
         $filePath = $this->temporaryXmlStorage($filename);
         $xml      = $this->loadXml($filePath);
         $xmlLines = $this->xmlService->formatUploadedXml($xml);
-        $messages = $this->xmlService->getSchemaErrors($xml, session('version'));
+        $messages = $this->xmlService->getSchemaErrors($xml, $version);
         app('session')->set('xmlLines', $xmlLines);
         app('session')->set('messages', $messages);
         Session::save();

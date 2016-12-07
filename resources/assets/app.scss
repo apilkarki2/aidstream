@@ -6456,7 +6456,7 @@ body > .skiptranslate iframe {
   }
 }
 
-.error-listing,.xml-info ul {
+.error-listing, .xml-info ul {
   height: 15%;
   max-height: 240px;
   overflow: scroll;
@@ -6478,12 +6478,13 @@ body > .skiptranslate iframe {
 }
 
 .xml-error-wrap {
-  padding-left: 20px!important;
+  padding-left: 20px !important;
 }
 
 .xml-info ul {
   display: block;
   background: #FFF8E9;
+  padding: 4px 0 10px !important;
   li {
     padding: 10px 36px 0;
     font-size: 13px;
