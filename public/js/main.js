@@ -2738,7 +2738,7 @@ $(document).ready(function () {
     $(".show-error-link").click(function(){
         $(this).parent('p').next().slideToggle(200,function(){
             if($(this).is(':visible')){
-                jQuery('.error-listing').jScrollPane(
+                $('.error-listing').jScrollPane(
                     {reinitialise: true}
                 );
             }
@@ -2750,6 +2750,7 @@ $(document).ready(function () {
             $(this).text("Show error(s)");
     });
 
+    $('.xml-info ul').jScrollPane({reinitialise: true});
 });
 
 $(document).ready(function () {

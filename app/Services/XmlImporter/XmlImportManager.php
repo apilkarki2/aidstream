@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Session;
 use Psr\Log\LoggerInterface;
 use App\Services\XmlImporter\Foundation\XmlProcessor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -207,7 +208,12 @@ class XmlImportManager
         $xml      = $this->loadXml($filePath);
         $xmlLines = $this->xmlService->formatUploadedXml($xml);
         $messages = $this->xmlService->getSchemaErrors($xml, session('version'));
-        $this->sessionManager->put(['xmlLines' => $xmlLines, 'messages' => $messages]);
+        app('session')->set('xmlLines', $xmlLines);
+        app('session')->set('messages', $messages);
+        Session::save();
+
+//        session(['xmlLines' => $xmlLines, 'messages' => $messages]);
+//        $this->sessionManager->put(['xmlLines' => $xmlLines, 'messages' => $messages]);
     }
 
     /**

@@ -4553,6 +4553,17 @@ table.dataTable thead .sorting_desc {
   }
 }
 
+.xml-info {
+  ul {
+    height: 15%;
+    max-height: 240px;
+    overflow: scroll;
+  }
+  .jspPane {
+    width: 100% !important;
+  }
+}
+
 .org-title {
   margin-top: 5px;
   float: left;
@@ -6445,7 +6456,7 @@ body > .skiptranslate iframe {
   }
 }
 
-.error-listing {
+.error-listing,.xml-info ul {
   height: 15%;
   max-height: 240px;
   overflow: scroll;
@@ -6463,6 +6474,19 @@ body > .skiptranslate iframe {
   .jspDrag {
     background: #aaa !important;
     border-radius: 100px;
+  }
+}
+
+.xml-error-wrap {
+  padding-left: 20px!important;
+}
+
+.xml-info ul {
+  display: block;
+  background: #FFF8E9;
+  li {
+    padding: 10px 36px 0;
+    font-size: 13px;
   }
 }
 
@@ -8035,4 +8059,5 @@ body > .skiptranslate iframe {
     width: 80%;
   }
 }
+
 

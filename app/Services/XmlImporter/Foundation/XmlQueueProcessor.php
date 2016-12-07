@@ -112,6 +112,8 @@ class XmlQueueProcessor
                 $this->save($mappedActivities, $orgId);
             }
         } else {
+            shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
+
             $this->storeInJsonFile('schema_error.json', ['filename' => $filename]);
         }
 
@@ -260,7 +262,6 @@ class XmlQueueProcessor
      */
     protected function storeInvalidActivity($activity, $index)
     {
-        shell_exec(sprintf('chmod 777 -R %s', $this->temporaryXmlStorage()));
         $this->jsonData[$index] = $activity;
         $this->storeInJsonFile('xml_invalid.json', $this->jsonData);
     }

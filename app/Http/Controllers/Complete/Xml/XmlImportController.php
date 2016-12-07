@@ -109,7 +109,9 @@ class XmlImportController extends Controller
      */
     public function complete()
     {
-        Session::forget(['xml_import_status']);
+        session()->forget('xml_import_status');
+        Session::save();
+//        Session::forget(['xml_import_status']);
         $this->xmlImportManager->removeTemporaryXmlFolder();
     }
 

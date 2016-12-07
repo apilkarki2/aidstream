@@ -122,19 +122,13 @@
         <div class="row">
             @include('includes.side_bar_menu')
             <div class="col-xs-9 col-md-9 col-lg-9 content-wrapper">
-                <div class="element-panel-heading">
-                    <div>
-                        <span>The Xml you uploaded contains error. Please fix these errors and upload them again.</span>
-
-                        <div class="panel-action-btn panel-xml-btn">
-                            <span><a href="{{ route('activity.index')}}" class="back-to-activity">Back to activity list</a></span>
-                        </div>
-                    </div>
+                <div class="steps-wrapper xml-error-wrap">
+                    <p>The Xml you uploaded contains error. Please fix these errors and upload them again.</p>
                 </div>
                 <div class="xml-info">
                     <ul>
                         @foreach(session('messages') as $message)
-                            <li class="error">{!! $message !!}</li>
+                            <li>{!! $message !!}</li>
                         @endforeach
                     </ul>
                     <div>

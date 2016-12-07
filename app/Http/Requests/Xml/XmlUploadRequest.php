@@ -26,7 +26,7 @@ class XmlUploadRequest extends Request
     public function rules()
     {
         return [
-            'xml_file' => 'mimes:xml'
+            'xml_file' => 'required|mimes:xml'
         ];
     }
 
