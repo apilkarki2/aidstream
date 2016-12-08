@@ -187,7 +187,7 @@ class PerfectViewerManager
      */
     protected function calculateBudget($budget)
     {
-        $totalBudget['value'] = 0;
+        $totalBudget['value']    = 0;
         $totalBudget['currency'] = '';
 
         foreach ($budget as $index => $value) {
@@ -247,7 +247,7 @@ class PerfectViewerManager
                 if ($defaultCurrency != 'USD') {
                     $eRate = getVal($this->exchangeRates, [sprintf('USD%s', $defaultCurrency)], 1);
 
-                    return dd($amount / $eRate);
+                    return $amount / $eRate;
                 } else {
                     if ($defaultCurrency == 'USD') {
                         return $amount;
@@ -268,20 +268,27 @@ class PerfectViewerManager
         return $this->perfectViewerRepo->organizationQueryBuilder();
     }
 
+    public function activityQueryBuilder()
+    {
+        return $this->perfectViewerRepo->activityQueryBuilder();
+
+    }
+
     public function getSnapshotWithOrgId($orgId)
     {
         return $this->perfectViewerRepo->getSnapshot($orgId);
     }
 
-    public function getOrgSnapshotWithOrgId($orgId)
+    public function getOrgWithOrgId($orgId)
     {
-        return $this->perfectViewerRepo->getOrgSnapshot($orgId);
+        return $this->perfectViewerRepo->getOrgWithId($orgId);
     }
 
     public function makePerfectOrg($organization, $totalTransaction)
     {
         return [
             'org_id'                => getVal($organization, [0, 'id'], ''),
+            'org_data'              => getVal($organization, [0], []),
             'published_to_registry' => $organization[0]['published_to_registry'],
             'org_slug'              => getVal($organization, [0, 'reporting_org', 0, 'reporting_organization_identifier'], ''),
             'transaction_totals'    => $totalTransaction

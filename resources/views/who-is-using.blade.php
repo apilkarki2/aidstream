@@ -63,7 +63,7 @@
 
             $.ajax({
                 type: 'get',
-                url: baseUrl + '/' + page + '/' + count,
+                url: baseUrl + '/page/' + page + '/count/' + count,
                 success: function (data) {
                     if (!data.next_page) {
                         $('.load-more').addClass('hidden').remove();
@@ -73,13 +73,13 @@
                     for (var i = 0; i < organizations.length; i++) {
                         var organization = organizations[i];
                         var logo = '';
-                        var link = baseUrl + '/' + organization.id;
+                        var link = baseUrl + '/' + organization.org_slug;
                         if (organization.logo_url) {
                             logo = $('.has-image-logo').clone();
                             $('a', logo).attr({href: link}).children('img').attr({src: organization.logo_url, alt: organization.name});
                         } else {
                             logo = $('.no-image-logo').clone();
-                            $('span a', logo).attr({href: link}).html(organization.name);
+                            $('span a', logo).attr({href: link}).html(organization.org_data.name);
                         }
                         logos += logo.html();
                     }

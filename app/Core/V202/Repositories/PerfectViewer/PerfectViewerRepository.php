@@ -45,12 +45,17 @@ class PerfectViewerRepository
      * @param Organization         $organization
      * @param OrganizationSnapshot $organizationSnapshot
      */
-    public function __construct(ActivitySnapshot $activitySnapshot, ActivityPublished $activityPublished, Transaction $transaction, Organization $organization, OrganizationSnapshot $organizationSnapshot)
-    {
-        $this->activitySnapshot  = $activitySnapshot;
-        $this->activityPublished = $activityPublished;
-        $this->transaction       = $transaction;
-        $this->organization      = $organization;
+    public function __construct(
+        ActivitySnapshot $activitySnapshot,
+        ActivityPublished $activityPublished,
+        Transaction $transaction,
+        Organization $organization,
+        OrganizationSnapshot $organizationSnapshot
+    ) {
+        $this->activitySnapshot     = $activitySnapshot;
+        $this->activityPublished    = $activityPublished;
+        $this->transaction          = $transaction;
+        $this->organization         = $organization;
         $this->organizationSnapshot = $organizationSnapshot;
     }
 
@@ -103,14 +108,20 @@ class PerfectViewerRepository
 
     /**
      * Provides all the organizations from Activity Snapshot
-     * @return Organization
+     * @return OrganizationSnapshot
      */
     public function organizationQueryBuilder()
     {
-        return $this->organization
-            ->select('organizations.*')
-            ->join('activity_snapshots', 'organizations.id', '=', 'activity_snapshots.org_id')
-            ->groupBy('organizations.id');
+        return $this->organizationSnapshot;
+//        return $this->organization
+//            ->select('organizations.*')
+//            ->join('activity_snapshots', 'organizations.id', '=', 'activity_snapshots.org_id')
+//            ->groupBy('organizations.id');
+    }
+
+    public function activityQueryBuilder()
+    {
+        return $this->activitySnapshot;
     }
 
     public function getSnapshot($orgId)
@@ -118,8 +129,8 @@ class PerfectViewerRepository
         return $this->activitySnapshot->where('org_id', $orgId)->get();
     }
 
-    public function getOrgSnapshot($orgId)
+    public function getOrgWithId($orgId)
     {
-        return $this->organizationSnapshot->where('org_id', $orgId)->get();
+        return $this->organization->where('reporting_org[0].reporting_organization_identifier', $orgId)->get();
     }
 }

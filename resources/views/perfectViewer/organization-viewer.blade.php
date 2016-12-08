@@ -42,7 +42,7 @@
 <div class="wrapper">
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
-            <div class="organisation-info">
+            <div class="organisation-info"> 
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation name-->
                     @if($orgInfo['logo'])
@@ -61,6 +61,7 @@
             </div>
         </div>
     </section>
+
     <section class="col-md-12 org-main-wrapper">
         <div class="width-940">
             <div class="col-xs-12 col-md-8 org-activity-wrapper">
@@ -69,7 +70,7 @@
                 @foreach($activities as $index => $activity)
                     <!--dynamic activity list-->
                         <li>
-                            <a href="#">
+                            <a href="{{url('/who-is-using/'.$organizations['org_slug'].'/'.$activity['activity_id'])}}">
                                 <div class="col-md-9 pull-left activity-info-wrapper">
                                     <h3 class="activity-name">
                                         <!--dynamic activity name-->
@@ -121,7 +122,7 @@
                                 <div class="col-md-3 pull-right total-budget-wrapper">
                                     <span>Total Budget</span>
                                     <span class="total-budget-amount">{{getVal($activity, ['published_data', 'totalBudget', 'value'], 0)}}</span>
-                                    <span class="currency">{{getVal($activity, ['published_data', 'totalBudget', 'currency'], 0)}}</span>
+                                    <span class="currency">{{getVal($activity, ['published_data', 'totalBudget', 'currency'], '')}}</span>
                                 </div>
                             </a>
                         </li>
@@ -164,6 +165,8 @@
             </div>
         </div>
     </section>
+
+    <div id="map"></div>
     <footer>
         <div class="width-900">
             <div class="social-wrapper bottom-line">
@@ -211,5 +214,10 @@
     </footer>
 </div>
 </body>
+<script>
+    var recipientCountries = {!!json_encode($recipientCountries)!!};
+</script>
+<script src="/js/d3.min.js"></script>
+<script type="text/javascript" src="/js/worldMap.js"></script>
 
 </html>

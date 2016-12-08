@@ -7,6 +7,7 @@ use App\Services\Organization\OrganizationManager;
 use App\Services\PerfectViewer\PerfectViewerManager;
 use App\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Class WhoIsUsingController
  * @package App\Http\Controllers
@@ -28,9 +29,9 @@ class WhoIsUsingController extends Controller
      */
     function __construct(ActivityManager $activityManager, OrganizationManager $organizationManager, User $user, PerfectViewerManager $perfectViewerManager)
     {
-        $this->activityManager              = $activityManager;
-        $this->orgManager                   = $organizationManager;
-        $this->user                         = $user;
+        $this->activityManager      = $activityManager;
+        $this->orgManager           = $organizationManager;
+        $this->user                 = $user;
         $this->perfectViewerManager = $perfectViewerManager;
     }
 
@@ -52,6 +53,11 @@ class WhoIsUsingController extends Controller
         return $this->perfectViewerManager->organizationQueryBuilder();
     }
 
+    protected function activityQueryBuilder()
+    {
+        return $this->perfectViewerManager->activityQueryBuilder();
+    }
+
     /**
      * return organization list
      * @param int $page
@@ -63,9 +69,24 @@ class WhoIsUsingController extends Controller
         $skip                  = $page * $count;
         $data['next_page']     = $this->organizationQueryBuilder()->get()->count() > ($skip + $count);
         $data['organizations'] = $this->organizationQueryBuilder()->skip($skip)->take($count)->get();
+
         return $data;
     }
 
+
+    public function showActivity($orgId, $activityId)
+    {
+        $organizationIdExists = $this->organizationQueryBuilder()->where('org_slug', $orgId)->get();
+        if (count($organizationIdExists) == 0) {
+            throw new NotFoundHttpException();
+        }
+        $activityIdExists = $this->activityQueryBuilder()->where('activity_id', $activityId)->get();
+        if (count($activityIdExists) == 0) {
+            throw new NotFoundHttpException();
+        }
+
+        dd($organizationIdExists, $activityIdExists);
+    }
 
     /**
      * @param $organizationId
@@ -73,18 +94,18 @@ class WhoIsUsingController extends Controller
      */
     public function getDataForOrganization($organizationId)
     {
-        $organizationIdExists = $this->organizationQueryBuilder()->where('org_id', $organizationId)->get();
+        $organizationIdExists = $this->organizationQueryBuilder()->where('org_slug', $organizationId)->get();
 
         if (count($organizationIdExists) == 0) {
             throw new NotFoundHttpException();
         }
 
-        $activitySnapshot = $this->perfectViewerManager->getSnapshotWithOrgId($organizationId);
-        $organizationSnapshot = $this->perfectViewerManager->getOrgSnapshotWithOrgId($organizationId);
+        $activitySnapshot = $this->perfectViewerManager->getSnapshotWithOrgId($organizationIdExists[0]->org_id);
+//        $organizationInfo = $this->perfectViewerManager->getOrgWithOrgId($organizationId);
 
-        $organizations = json_decode($organizationSnapshot[0], true);
-        $orgInfo = json_decode($organizationIdExists[0], true);
-        $activities = json_decode($activitySnapshot, true);
+        $orgInfo       = json_decode($organizationIdExists[0], true)['org_data'];
+        $organizations = json_decode($organizationIdExists[0], true);
+        $activities    = json_decode($activitySnapshot, true);
 
 //        dd($orgInfo, $organizations, $activities);
 
@@ -108,10 +129,12 @@ class WhoIsUsingController extends Controller
 //            $activityStatusJson
 //        );
 
-        $user = $this->user->getDataByOrgIdAndRoleId($organizationId, '1');
+        $recipientCountries = $this->getRecipientCountries($activities);
+
+        $user = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
 
 //        return view('who-is-using-organization', compact('final_data', 'orgInfo', 'user'));
-        return view('perfectViewer.organization-viewer', compact('activities', 'orgInfo', 'organizations', 'user'));
+        return view('perfectViewer.organization-viewer', compact('activities', 'orgInfo', 'organizations', 'user', 'recipientCountries'));
 
     }
 
@@ -295,4 +318,18 @@ class WhoIsUsingController extends Controller
             'activity_name'     => $activityName
         ];
     }
+
+    private function getRecipientCountries($activities)
+    {
+        $recipientCountries = [];
+        foreach ($activities as $index => $activity) {
+            foreach ($activity['published_data']['transactions'] as $tranIndex => $transaction) {
+                $recipientCountries[] = getVal($transaction, ['transaction', 'recipient_country', 0, 'country_code'], '');
+            }
+        }
+
+        $recipientCountries = array_unique($recipientCountries);
+        return $recipientCountries;
+    }
+
 }
