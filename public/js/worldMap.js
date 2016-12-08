@@ -2,7 +2,7 @@ var w =1200;
 var h = 600;
 
 d3.json("/data/countries.geo.json",function (countries){
-    worldMap(finalData.recipient_country);
+    worldMap(recipientCountries);
     function worldMap(countryNames){
         var canvas = d3.select("#map")
             .attr("preserveAspectRatio","xMinYMin meet")
@@ -26,14 +26,10 @@ d3.json("/data/countries.geo.json",function (countries){
         var plotMap = group.append("path")
             .attr("d", geoPath)
             .style("fill",function(d){
-                if(countryNames[d.id2] > 0)
+                if(countryNames[d.id2] != undefined)
                     return "#00A8FF";
-
-                // else if(d.properties.name == "Bermuda")
-                // return "#0067B1";
-
                 else
-                return "#EBEBEB";
+                return "#BBB";
 
             })
             .attr("stroke","#fff")

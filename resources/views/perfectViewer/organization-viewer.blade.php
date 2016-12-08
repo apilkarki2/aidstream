@@ -215,7 +215,7 @@
 </div>
 </body>
 <script>
-    var recipientCountries = {!!json_encode($recipientCountries)!!};
+    var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
 </script>
 <script src="/js/d3.min.js"></script>
 <script type="text/javascript" src="/js/worldMap.js"></script>
