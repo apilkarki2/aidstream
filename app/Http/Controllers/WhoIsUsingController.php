@@ -85,7 +85,11 @@ class WhoIsUsingController extends Controller
             throw new NotFoundHttpException();
         }
 
-        dd($organizationIdExists, $activityIdExists);
+        $user = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
+
+        return view('perfectViewer.activity-viewer', compact('organizationIdExists', 'activityIdExists', 'user'));
+
+//        dd($organizationIdExists, $activityIdExists);
     }
 
     /**
