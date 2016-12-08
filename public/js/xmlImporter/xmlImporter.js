@@ -48,15 +48,12 @@ var XmlImporter = {
 $('document').ready(function () {
     var interval = setInterval(function () {
         if (xmlImportCompleted) {
-            var complete = XmlImporter.complete();
-
-            if (complete) {
-                clearInterval(interval);
-                XmlImporter.reloadPage();
-            }
+            XmlImporter.complete();
+            clearInterval(interval);
+            XmlImporter.reloadPage();
         } else {
             XmlImporter.status();
             XmlImporter.checkCompletion();
         }
-    }, 2000);
+    }, 4000);
 });

@@ -85,7 +85,7 @@
     </div>
 @endsection
 @section('foot')
-    @if(session('xml_import_status'))
+    @if(xmlImportIsStarted())
         <script type="text/javascript" src="{{asset('js/xmlImporter/xmlImporter.js')}}"></script>
     @endif
     {{--<script>--}}

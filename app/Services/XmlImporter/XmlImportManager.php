@@ -112,6 +112,22 @@ class XmlImportManager
         return storage_path(sprintf('%s/%s/%s/', self::UPLOADED_XML_STORAGE_PATH, session('org_id'), auth()->user()->id));
     }
 
+    public function checkStatus()
+    {
+        if (file_exists($this->temporaryXmlStorage('status.json'))) {
+            $content = json_decode(file_get_contents($this->temporaryXmlStorage('status.json')), true);
+
+            return $content['xml_import_status'];
+        }
+
+        return null;
+    }
+
+    public function deleteStatusFile()
+    {
+        $this->filesystem->delete($this->temporaryXmlStorage('status.json'));
+    }
+
     /**
      * Get the id for the current user.
      *
@@ -131,6 +147,9 @@ class XmlImportManager
      */
     public function startImport($filename, $userId, $organizationId)
     {
+        $contents = json_encode(['xml_import_status' => 'started']);
+        $this->filesystem->put($this->temporaryXmlStorage('status.json'), $contents);
+
         $this->fireXmlUploadEvent($filename, $userId, $organizationId);
     }
 
@@ -197,7 +216,7 @@ class XmlImportManager
         $xmlLines = $this->xmlService->formatUploadedXml($xml);
         $messages = $this->xmlService->getSchemaErrors($xml, $version);
         session(['xmlLines' => $xmlLines, 'messages' => $messages]);
-        session()->save();
+//        session()->save();
     }
 
     /**

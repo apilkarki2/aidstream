@@ -1072,3 +1072,14 @@ function getSectorStructure($sector)
     ];
 }
 
+function xmlImportIsStarted()
+{
+    $filePath = storage_path('xmlImporter/tmp/file/' . session('org_id') . '/' . auth()->user()->id . '/status.json');
+
+    if (file_exists($filePath)) {
+        return getVal(json_decode(file_get_contents($filePath), true), ['xml_import_status'], null) ? true : false;
+    }
+
+    return false;
+}
+

@@ -51,7 +51,7 @@ class XmlImportController extends Controller
             $this->xmlImportManager->startImport($file->getClientOriginalName(), $userId, session('org_id'));
         }
 
-        session(['xml_import_status' => 'started']);
+//        session(['xml_import_status' => 'started']);
 
         return redirect()->route('activity.index');
     }
@@ -111,17 +111,28 @@ class XmlImportController extends Controller
      */
     public function complete()
     {
-        session()->forget('xml_import_status');
-        Session::save();
+        if ($this->xmlImportManager->checkStatus() == 'started') {
+            $this->xmlImportManager->deleteStatusFile();
 
-        $this->xmlImportManager->removeTemporaryXmlFolder();
+            $this->xmlImportManager->removeTemporaryXmlFolder();
+        }
+//        if (request()->session()->has('xml_import_status')) {
+//            request()->session()->forget('xml_import_status');
+//            Session::save();
+//        }
 
-        return response()->json(['completed' => true]);
+//        return response()->json(['completed' => true]);
     }
 
+    /**
+     * Get the schema error in the uploaded XML File.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function schemaErrors()
     {
         $error = $this->xmlImportManager->loadJsonFile('schema_error.json');
+
         if ($error) {
             $filename = getVal($error, ['filename']);
             $version  = getVal($error, ['version']);
