@@ -3,8 +3,15 @@
 use App\Helpers\GetCodeName;
 use Illuminate\Support\Facades\Input;
 
+/**
+ * Class RegistersValidationRules
+ * @package App\Services\Xml\Validator\Traits
+ */
 trait RegistersValidationRules
 {
+    /**
+     * Register the required validation rules.
+     */
     protected function registerValidationRules()
     {
         $this->extendImplicit(

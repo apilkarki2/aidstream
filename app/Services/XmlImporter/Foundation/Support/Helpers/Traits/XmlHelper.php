@@ -187,7 +187,7 @@ trait XmlHelper
      * @param null  $fieldName
      * @return mixed|string
      */
-    protected function attributes(array $element, $key = null, $fieldName = null)
+    public function attributes(array $element, $key = null, $fieldName = null)
     {
         if (!$key) {
             return getVal($element, ['attributes'], []);

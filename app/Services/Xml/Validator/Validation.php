@@ -4,7 +4,6 @@ use App\Services\Xml\Validator\Traits\RegistersValidationRules;
 use Illuminate\Validation\Factory;
 use Symfony\Component\Translation\TranslatorInterface;
 
-
 /**
  * Class Validation
  * @package App\Services\Xml\Validator
@@ -18,6 +17,11 @@ class Validation extends Factory
      */
     protected $validator;
 
+    /**
+     * Element URIs.
+     *
+     * @var array
+     */
     protected $elementLinks = [
         'Other Identifier'           => 'activity.other-identifier.index',
         'Title'                      => 'activity.title.index',

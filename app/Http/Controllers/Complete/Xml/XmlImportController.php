@@ -3,7 +3,6 @@
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Xml\XmlUploadRequest;
 use App\Services\XmlImporter\XmlImportManager;
-use Illuminate\Support\Facades\Session;
 
 /**
  * Class XmlImportController
@@ -110,7 +109,8 @@ class XmlImportController extends Controller
     public function complete()
     {
         session()->forget('xml_import_status');
-        Session::save();
+        session()->save();
+
         $this->xmlImportManager->removeTemporaryXmlFolder();
     }
 

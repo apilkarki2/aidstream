@@ -55,7 +55,7 @@ class Activity
     /**
      * @var array
      */
-    protected $identifier = [];
+    public $identifier = [];
 
     /**
      * @var array
@@ -75,7 +75,7 @@ class Activity
     /**
      * @var
      */
-    protected $orgRef;
+    public $orgRef;
     /**
      * @var array
      */
@@ -205,7 +205,7 @@ class Activity
         }
     }
 
-    protected function reportingOrg($element, $template)
+    public function reportingOrg($element, $template)
     {
         if (empty($this->identifier)) {
             $this->orgRef = $this->attributes($element, 'ref');
@@ -216,7 +216,7 @@ class Activity
         return $this->identifier;
     }
 
-    protected function iatiIdentifier($element, $template)
+    public function iatiIdentifier($element, $template)
     {
         $this->identifier                         = $template['identifier'];
         $this->identifier['iati_identifier_text'] = $this->value($element);
@@ -227,7 +227,7 @@ class Activity
         return $this->identifier;
     }
 
-    protected function otherIdentifier($element, $template)
+    public function otherIdentifier($element, $template)
     {
         $this->otherIdentifier[$this->index]                              = $template['other_identifier'];
         $this->otherIdentifier[$this->index]['reference']                 = $this->value($element);
@@ -243,7 +243,7 @@ class Activity
         return null;
     }
 
-    protected function title($element, $template)
+    public function title($element, $template)
     {
         $this->title[$this->index] = $template['title'];
         foreach ($this->narrative($element) as $narrative) {
@@ -254,7 +254,7 @@ class Activity
         return $this->title;
     }
 
-    protected function description($element, $template)
+    public function description($element, $template)
     {
         $type                             = $this->attributes($element, 'type');
         $descType                         = ($type == '') ? 1 : $type;
@@ -278,7 +278,7 @@ class Activity
         return $this->attributes($element, 'code');
     }
 
-    protected function activityDate($element, $template)
+    public function activityDate($element, $template)
     {
         $this->activityDate[$this->index]              = $template['activity_date'];
         $this->activityDate[$this->index]['date']      = $this->attributes($element, 'iso-date');
@@ -289,7 +289,7 @@ class Activity
         return $this->activityDate;
     }
 
-    protected function contactInfo($element, $template)
+    public function contactInfo($element, $template)
     {
         $this->contactInfo[$this->index]                                    = $template['contact_info'];
         $this->contactInfo[$this->index]['type']                            = $this->attributes($element, 'type');
@@ -306,7 +306,7 @@ class Activity
         return $this->contactInfo;
     }
 
-    protected function participatingOrg($element, $template)
+    public function participatingOrg($element, $template)
     {
         $this->participatingOrg[$this->index]                      = $template['participating_organization'];
         $this->participatingOrg[$this->index]['organization_role'] = $this->getOrganisationRole($this->attributes($element, 'role'));
@@ -319,12 +319,12 @@ class Activity
         return $this->participatingOrg;
     }
 
-    protected function activityScope($element, $template)
+    public function activityScope($element, $template)
     {
         return $this->attributes($element, 'code');
     }
 
-    protected function recipientCountry($element, $template)
+    public function recipientCountry($element, $template)
     {
         $this->recipientCountry[$this->index]                 = $template['recipient_country'];
         $this->recipientCountry[$this->index]['country_code'] = $this->attributes($element, 'code');
@@ -335,7 +335,7 @@ class Activity
         return $this->recipientCountry;
     }
 
-    protected function recipientRegion($element, $template)
+    public function recipientRegion($element, $template)
     {
         $this->recipientRegion[$this->index]                      = $template['recipient_region'];
         $this->recipientRegion[$this->index]['region_code']       = $this->attributes($element, 'code');
@@ -348,7 +348,7 @@ class Activity
         return $this->recipientRegion;
     }
 
-    protected function location($element, $template)
+    public function location($element, $template)
     {
         $this->location[$this->index]                                         = $template['location'];
         $this->location[$this->index]['name'][0]['narrative']                 = $this->groupNarrative($element['value'], 'name');
@@ -361,7 +361,7 @@ class Activity
         return $this->location;
     }
 
-    protected function sector($element, $template)
+    public function sector($element, $template)
     {
         $this->sector[$this->index]                         = $template['sector'];
         $vocabulary                                         = $this->getSectorVocabulary($this->attributes($element, 'vocabulary'));
@@ -376,7 +376,7 @@ class Activity
         return $this->sector;
     }
 
-    protected function countryBudgetItems($element, $template)
+    public function countryBudgetItems($element, $template)
     {
         $this->countryBudgetItems[$this->index]               = $template['country_budget_items'];
         $this->countryBudgetItems[$this->index]['vocabulary'] = $vocabulary = $this->attributes($element, 'vocabulary');
@@ -394,7 +394,7 @@ class Activity
         return $this->countryBudgetItems;
     }
 
-    protected function policyMarker($element, $template)
+    public function policyMarker($element, $template)
     {
         $this->policyMarker[$this->index]                  = $template['policy_marker'];
         $this->policyMarker[$this->index]['vocabulary']    = $this->getPolicyMarkerVocabulary($this->attributes($element, 'vocabulary'));
@@ -406,7 +406,7 @@ class Activity
         return $this->policyMarker;
     }
 
-    protected function collaborationType($element, $template)
+    public function collaborationType($element, $template)
     {
         return $this->attributes($element, 'code');
     }
@@ -431,7 +431,7 @@ class Activity
         return $this->attributes($element, 'code');
     }
 
-    protected function budget($element, $template)
+    public function budget($element, $template)
     {
         $this->budget[$this->index]                            = $template['budget'];
         $this->budget[$this->index]['budget_type']             = $this->attributes($element, 'type');
@@ -445,7 +445,7 @@ class Activity
         return $this->budget;
     }
 
-    protected function plannedDisbursement($element, $template)
+    public function plannedDisbursement($element, $template)
     {
         $this->plannedDisbursement[$this->index]                            = $template['planned_disbursement'];
         $this->plannedDisbursement[$this->index]['period_start'][0]['date'] = $this->attributes($element, 'iso-date', 'periodStart');
@@ -458,12 +458,12 @@ class Activity
         return $this->plannedDisbursement;
     }
 
-    protected function capitalSpend($element, $template)
+    public function capitalSpend($element, $template)
     {
         return $this->attributes($element, 'percentage');
     }
 
-    protected function documentLink($element, $template)
+    public function documentLink($element, $template)
     {
         $this->documentLink[$this->index]                          = $template['document_link'];
         $this->documentLink[$this->index]['url']                   = $this->attributes($element, 'url');
@@ -479,7 +479,7 @@ class Activity
         return $this->documentLink;
     }
 
-    protected function relatedActivity($element, $template)
+    public function relatedActivity($element, $template)
     {
         $this->relatedActivity[$this->index]                        = $template['related_activity'];
         $this->relatedActivity[$this->index]['relationship_type']   = $this->attributes($element, 'type');
@@ -489,7 +489,7 @@ class Activity
         return $this->relatedActivity;
     }
 
-    protected function conditions($element, $template)
+    public function conditions($element, $template)
     {
         $this->conditions                       = $template['conditions'];
         $this->conditions['condition_attached'] = $this->attributes($element, 'attached');
@@ -502,7 +502,7 @@ class Activity
         return $this->conditions;
     }
 
-    protected function legacyData($activity, $template)
+    public function legacyData($activity, $template)
     {
         $this->legacyData[$this->index]                    = $template['legacy_data'];
         $this->legacyData[$this->index]['name']            = $this->attributes($activity, 'name');
@@ -512,7 +512,6 @@ class Activity
 
         return $this->legacyData;
     }
-
 
     protected function getPolicyMarkerVocabulary($vocabulary)
     {

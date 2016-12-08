@@ -1,18 +1,12 @@
 <?php namespace App\Services\XmlImporter;
 
-use App\Core\V201\Element\Activity\XmlService;
-use App\Core\V201\Repositories\Activity\ActivityRepository;
-use App\Core\V201\Repositories\Activity\Result;
-use App\Core\V201\Repositories\Activity\Transaction;
-use App\Core\V201\Repositories\Document;
-use App\Services\XmlImporter\Events\XmlWasUploaded;
-use DOMDocument;
 use Exception;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Session\SessionManager;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Session;
+use DOMDocument;
 use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Filesystem\Filesystem;
+use App\Core\V201\Element\Activity\XmlService;
+use App\Services\XmlImporter\Events\XmlWasUploaded;
 use App\Services\XmlImporter\Foundation\XmlProcessor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Services\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
@@ -24,7 +18,7 @@ use App\Services\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 class XmlImportManager
 {
     /**
-     *
+     * Temporary Xml file storage location.
      */
     const UPLOADED_XML_STORAGE_PATH = 'xmlImporter/tmp/file';
 
@@ -39,11 +33,6 @@ class XmlImportManager
     protected $xmlProcessor;
 
     /**
-     * @var SessionManager
-     */
-    protected $sessionManager;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -52,6 +41,7 @@ class XmlImportManager
      * @var Filesystem
      */
     protected $filesystem;
+
     /**
      * @var XmlService
      */
@@ -62,7 +52,6 @@ class XmlImportManager
      *
      * @param XmlServiceProvider $xmlServiceProvider
      * @param XmlProcessor       $xmlProcessor
-     * @param SessionManager     $sessionManager
      * @param LoggerInterface    $logger
      * @param Filesystem         $filesystem
      * @param XmlService         $xmlService
@@ -70,14 +59,12 @@ class XmlImportManager
     public function __construct(
         XmlServiceProvider $xmlServiceProvider,
         XmlProcessor $xmlProcessor,
-        SessionManager $sessionManager,
         LoggerInterface $logger,
         Filesystem $filesystem,
         XmlService $xmlService
     ) {
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->xmlProcessor       = $xmlProcessor;
-        $this->sessionManager     = $sessionManager;
         $this->logger             = $logger;
         $this->filesystem         = $filesystem;
         $this->xmlService         = $xmlService;
@@ -209,12 +196,8 @@ class XmlImportManager
         $xml      = $this->loadXml($filePath);
         $xmlLines = $this->xmlService->formatUploadedXml($xml);
         $messages = $this->xmlService->getSchemaErrors($xml, $version);
-        app('session')->set('xmlLines', $xmlLines);
-        app('session')->set('messages', $messages);
-        Session::save();
-
-//        session(['xmlLines' => $xmlLines, 'messages' => $messages]);
-//        $this->sessionManager->put(['xmlLines' => $xmlLines, 'messages' => $messages]);
+        session(['xmlLines' => $xmlLines, 'messages' => $messages]);
+        session()->save();
     }
 
     /**

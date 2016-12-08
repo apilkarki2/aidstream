@@ -38,7 +38,8 @@ class XmlUploadRequest extends Request
     public function messages()
     {
         return [
-            'xml_file.mimes' => 'The uploaded file must be an Xml file.'
+            'xml_file.required' => 'You need to choose a file to upload.',
+            'xml_file.mimes'    => 'The uploaded file must be an Xml file.'
         ];
     }
 }

@@ -9,8 +9,6 @@ use App\Services\XmlImporter\Foundation\Support\Providers\TemplateServiceProvide
  */
 class XmlProcessor
 {
-//    use MapperFactory;
-
     /**
      * @var TemplateServiceProvider
      */

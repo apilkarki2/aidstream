@@ -305,7 +305,7 @@ class ActivityController extends Controller
             if (empty($settings['registry_info'][0]['publisher_id']) && empty($settings['registry_info'][0]['api_id'])) {
                 $response = ['type' => 'warning', 'code' => ['settings_registry_info', ['name' => '']]];
 
-                return redirect()->to(' / publishing - settings')->withResponse($response);
+                return redirect()->to('/publishing-settings')->withResponse($response);
             }
             $xmlService->generateActivityXml(
                 $activityData,
@@ -368,7 +368,7 @@ class ActivityController extends Controller
                 );
 
                 if ($settings->publishing_type == "segmented") {
-                    $filename = explode(' - ', $publishedFile->filename);
+                    $filename = explode('-', $publishedFile->filename);
                     $code     = str_replace('.xml', '', end($filename));
                 }
 
@@ -376,7 +376,7 @@ class ActivityController extends Controller
                     $apiCall->package_create($data);
                     $this->activityManager->updatePublishToRegister($publishedFile->id);
                 } elseif ($publishedFile['published_to_register'] == 1) {
-//                    $package = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'] . ' - ' . $code : $settings['registry_info'][0]['publisher_id'] . ' - activities';
+//                    $package = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'] . '-' . $code : $settings['registry_info'][0]['publisher_id'] . ' - activities';
                     $apiCall->package_update($data);
                 }
 
@@ -407,7 +407,7 @@ class ActivityController extends Controller
         $code         = "";
 
         if ($settings->publishing_type == "segmented") {
-            $filename = explode(' - ', $publishedFile->filename);
+            $filename = explode('-', $publishedFile->filename);
             $code     = str_replace('.xml', '', end($filename));
         }
 
@@ -427,7 +427,7 @@ class ActivityController extends Controller
             'name'           => $name,
             'author_email'   => $author_email,
             'owner_org'      => $settings['registry_info'][0]['publisher_id'],
-            'file_url'       => url(sprintf('files / xml /%s', $publishedFile->filename)),
+            'file_url'       => url(sprintf('files/xml/%s', $publishedFile->filename)),
             'geographicKey'  => $key,
             'geographicCode' => $code,
             'data_updated'   => $publishedFile->updated_at->toDateTimeString(),
@@ -451,7 +451,7 @@ class ActivityController extends Controller
                 'name'                 => $data['name'],
                 'author_email'         => $data['author_email'],
                 'owner_org'            => $data['owner_org'],
-                'license_id'           => 'other - open',
+                'license_id'           => 'other-open',
                 'resources'            => [
                     [
                         'format'   => config('xmlFiles.format'),

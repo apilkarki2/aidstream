@@ -29,7 +29,76 @@ class V2ResultDataMappingTest extends AidStreamTestCase
 
     public function testResultMapping()
     {
-        $expectedResults = [
+        $expectedResults = $this->getExpectedResults();
+
+        $this->assertEquals($expectedResults, $this->resultMapper->map($this->results, $this->template));
+    }
+
+    /**
+     * @param      $element
+     * @param bool $snakeCase
+     * @return string
+     */
+    protected function name($element, $snakeCase = false)
+    {
+        if (is_array($element)) {
+            $camelCaseString = camel_case(str_replace('{}', '', $element['name']));
+
+            return $snakeCase ? snake_case($camelCaseString) : $camelCaseString;
+        }
+
+        $camelCaseString = camel_case(str_replace('{}', '', $element));
+
+        return $snakeCase ? snake_case($camelCaseString) : $camelCaseString;
+    }
+
+    /**
+     * Filter data for Transactions Elements.
+     *
+     * @param $activities
+     * @param $elementName
+     */
+    protected function filterForResults($activities, $elementName)
+    {
+        foreach ($activities as $elements) {
+            foreach ($this->value($elements) as $element) {
+                if ($this->name($element) == $elementName) {
+                    $this->results[] = $element;
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the value from the array.
+     * If key is provided then the value is fetched from the value field of the data.
+     * If key is provided then the $fields = $data['value'] else $fields = $data.
+     * If the value is array then narrative is returned else only the value is returned.
+     * @param array $fields
+     * @param null  $key
+     * @return array|mixed|string
+     */
+    public function value(array $fields, $key = null)
+    {
+        if (!$key) {
+            return getVal($fields, ['value'], '');
+        }
+        foreach ($fields as $field) {
+            if ($this->name($field['name']) == $key) {
+                if (is_array($field['value'])) {
+                    return $this->narrative($field);
+                }
+
+                return getVal($field, ['value'], '');
+            }
+        }
+
+        return [['narrative' => '', 'language' => '']];
+    }
+
+    protected function getExpectedResults()
+    {
+        return [
             0 => [
                 'type'               => '1',
                 'aggregation_status' => '1',
@@ -206,69 +275,5 @@ class V2ResultDataMappingTest extends AidStreamTestCase
                 ]
             ]
         ];
-
-        $this->assertEquals($expectedResults, $this->resultMapper->map($this->results, $this->template));
-    }
-
-    /**
-     * @param      $element
-     * @param bool $snakeCase
-     * @return string
-     */
-    protected function name($element, $snakeCase = false)
-    {
-        if (is_array($element)) {
-            $camelCaseString = camel_case(str_replace('{}', '', $element['name']));
-
-            return $snakeCase ? snake_case($camelCaseString) : $camelCaseString;
-        }
-
-        $camelCaseString = camel_case(str_replace('{}', '', $element));
-
-        return $snakeCase ? snake_case($camelCaseString) : $camelCaseString;
-    }
-
-    /**
-     * Filter data for Transactions Elements.
-     *
-     * @param $activities
-     * @param $elementName
-     */
-    protected function filterForResults($activities, $elementName)
-    {
-        foreach ($activities as $elements) {
-            foreach ($this->value($elements) as $element) {
-                if ($this->name($element) == $elementName) {
-                    $this->results[] = $element;
-                }
-            }
-        }
-    }
-
-    /**
-     * Get the value from the array.
-     * If key is provided then the value is fetched from the value field of the data.
-     * If key is provided then the $fields = $data['value'] else $fields = $data.
-     * If the value is array then narrative is returned else only the value is returned.
-     * @param array $fields
-     * @param null  $key
-     * @return array|mixed|string
-     */
-    public function value(array $fields, $key = null)
-    {
-        if (!$key) {
-            return getVal($fields, ['value'], '');
-        }
-        foreach ($fields as $field) {
-            if ($this->name($field['name']) == $key) {
-                if (is_array($field['value'])) {
-                    return $this->narrative($field);
-                }
-
-                return getVal($field, ['value'], '');
-            }
-        }
-
-        return [['narrative' => '', 'language' => '']];
     }
 }
