@@ -74,9 +74,9 @@
                         var organization = organizations[i];
                         var logo = '';
                         var link = baseUrl + '/' + organization.org_slug;
-                        if (organization.org_data.logo_url) {
+                        if (organization.logo_url) {
                             logo = $('.has-image-logo').clone();
-                            $('a', logo).attr({href: link}).children('img').attr({src: organization.org_data.logo_url, alt: organization.name});
+                            $('a', logo).attr({href: link}).children('img').attr({src: organization.logo_url, alt: organization.name});
                         } else {
                             logo = $('.no-image-logo').clone();
                             $('span a', logo).attr({href: link}).html(organization.name);
