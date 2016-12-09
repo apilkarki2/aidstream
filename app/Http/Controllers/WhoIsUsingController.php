@@ -93,8 +93,6 @@ class WhoIsUsingController extends Controller
 
 
         return view('perfectViewer.activity-viewer', compact('organization', 'activity', 'user', 'recipientCountries'));
-
-//        dd($organizationIdExists, $activityIdExists);
     }
 
     /**
@@ -112,11 +110,9 @@ class WhoIsUsingController extends Controller
         $activitySnapshot = $this->perfectViewerManager->getSnapshotWithOrgId($organizationIdExists[0]->org_id);
 //        $organizationInfo = $this->perfectViewerManager->getOrgWithOrgId($organizationId);
 
-        $orgInfo       = json_decode($organizationIdExists[0], true)['org_data'];
         $organizations = json_decode($organizationIdExists[0], true);
         $activities    = json_decode($activitySnapshot, true);
 
-//        dd($orgInfo, $organizations, $activities);
 
 //        $data               = $this->activityManager->getDataForOrganization($organizationId);
 //        $orgInfo            = $this->orgManager->getOrganization($organizationId);
@@ -143,7 +139,7 @@ class WhoIsUsingController extends Controller
         $user = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
 
 //        return view('who-is-using-organization', compact('final_data', 'orgInfo', 'user'));
-        return view('perfectViewer.organization-viewer', compact('activities', 'orgInfo', 'organizations', 'user', 'recipientCountries'));
+        return view('perfectViewer.organization-viewer', compact('activities', 'organizations', 'user', 'recipientCountries'));
 
     }
 

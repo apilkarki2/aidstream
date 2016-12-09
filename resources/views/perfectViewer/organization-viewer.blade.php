@@ -47,9 +47,9 @@
             <div class="organisation-info">
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation name-->
-                    @if($orgInfo['logo'])
+                    @if($organizations['logo'])
                         <div class="logo">
-                            <img src="{{ $orgInfo['logo_url'] }}" alt="AbleChildAfrica" width="238" height="68">
+                            <img src="{{ $organizations['logo_url'] }}" alt="AbleChildAfrica" width="238" height="68">
                         </div>
                     @endif
                 </a>
@@ -57,7 +57,7 @@
                 <span class="organisation-name">
         <a href="#" title="AbleChildAfrica">
             <!--dynamic organisation name-->
-            {{$orgInfo['name']}}
+            {{$organizations['name']}}
         </a>
     </span>
                     <address><i class="pull-left material-icons">room</i>Unit 3 Graphite Square, London, SE11 5EE</address>

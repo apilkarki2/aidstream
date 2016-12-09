@@ -8,10 +8,9 @@ class OrganizationSnapshot extends Model
 {
     protected $table = 'organization_snapshots';
 
-    protected $fillable = ['org_id', 'transaction_totals', 'org_data', 'published_to_registry', 'org_slug'];
+    protected $fillable = ['org_id', 'transaction_totals', 'published_to_registry', 'org_slug'];
 
     protected $casts = [
         'transaction_totals' => 'json',
-        'org_data' => 'json'
     ];
 }
