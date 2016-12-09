@@ -89,8 +89,9 @@ class WhoIsUsingController extends Controller
         $user = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
 
         $organization = json_decode($organizationIdExists, true);
-        $activity = json_decode($activityIdExists, true);
+        $activity     = json_decode($activityIdExists, true);
 
+        $activity = $this->filterDescription($activity);
 
         return view('perfectViewer.activity-viewer', compact('organization', 'activity', 'user', 'recipientCountries'));
     }
@@ -108,13 +109,13 @@ class WhoIsUsingController extends Controller
         }
 
         $activitySnapshot = $this->perfectViewerManager->getSnapshotWithOrgId($organizationIdExists[0]->org_id);
+
 //        $organizationInfo = $this->perfectViewerManager->getOrgWithOrgId($organizationId);
 
         $organizations = json_decode($organizationIdExists[0], true);
         $activities    = json_decode($activitySnapshot, true);
 
-
-//        $data               = $this->activityManager->getDataForOrganization($organizationId);
+        //        $data               = $this->activityManager->getDataForOrganization($organizationId);
 //        $orgInfo            = $this->orgManager->getOrganization($organizationId);
 //        $transaction        = $this->mergeTransaction($data);
 //        $transactionType    = $this->getTransactionName($transaction);
@@ -334,7 +335,37 @@ class WhoIsUsingController extends Controller
         }
 
         $recipientCountries = array_unique($recipientCountries);
+
         return $recipientCountries;
+    }
+
+    private function getDescription($description)
+    {
+        if(is_array($description)) {
+            foreach ($description as $index => $value) {
+                if ($value['type'] == 1) {
+                    return getVal($value, ['narrative', 0, 'narrative'], '');
+                }
+                if ($value['type'] == 2) {
+                    return getVal($value, ['narrative', 0, 'narrative'], '');
+                }
+                if ($value['type'] == 3) {
+                    return getVal($value, ['narrative', 0, 'narrative'], '');
+                }
+                if ($value['type'] == 4) {
+                    return getVal($value, ['narrative', 0, 'narrative'], '');
+                }
+            }
+        }
+        return '';
+    }
+
+    private function filterDescription($activities)
+    {
+        foreach($activities as $index => $value){
+            $activities[$index]['published_data']['description'] = $this->getDescription($activities[$index]['published_data']['description']);
+        }
+        return $activities;
     }
 
 }

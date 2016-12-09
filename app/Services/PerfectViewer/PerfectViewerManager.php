@@ -82,8 +82,9 @@ class PerfectViewerManager
             $published_to_registry    = $activity->published_to_registry;
 
             //transaction and budget
-            $transactions     = $this->perfectViewerRepo->getTransactions($activityId);
-            $totalBudget      = $this->calculateBudget(getVal((array) $activity, ['budget'], []));
+            $transactions = $this->perfectViewerRepo->getTransactions($activityId);
+
+            $totalBudget      = $this->calculateBudget($activity['budget']);
             $totalTransaction = $this->calculateTransaction($transactions);
 
             //organization data
@@ -191,8 +192,7 @@ class PerfectViewerManager
         $totalBudget['currency'] = '';
 
         foreach ($budget as $index => $value) {
-            $totalBudget['value'] += getVal($value, ['value', 0, 'amount'], '');
-            $totalBudget['currency'] = getVal($value, ['value', 0, 'currency'], '');
+            $totalBudget['value'] += $this->giveCorrectValue($value);
         }
 
         return $totalBudget;
@@ -207,24 +207,24 @@ class PerfectViewerManager
 
         foreach ($transactions as $index => $transaction) {
 
-            $value = $this->giveCorrectValue($transaction);
+            $value = $this->giveCorrectValue(getVal($transaction, ['transaction'], []));
 
             switch (getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) {
 
                 case 1:
-                    $totalTransaction['total_incoming_funds'] += $value;
+                    $totalTransaction['total_incoming_funds'] += (float) $value;
                     break;
 
                 case 2:
-                    $totalTransaction['total_commitments'] += $value;
+                    $totalTransaction['total_commitments'] += (float) $value;
                     break;
 
                 case 3:
-                    $totalTransaction['total_disbursements'] += $value;
+                    $totalTransaction['total_disbursements'] += (float) $value;
                     break;
 
                 case 4:
-                    $totalTransaction['total_expenditures'] += $value;
+                    $totalTransaction['total_expenditures'] += (float) $value;
                     break;
 
                 default:
@@ -235,12 +235,12 @@ class PerfectViewerManager
         return $totalTransaction;
     }
 
-    protected function giveCorrectValue($transaction)
+    protected function giveCorrectValue($data)
     {
         $defaultCurrency = getVal($this->defaultFieldValues, ['0', 'default_currency']);
-        $currency        = getVal($transaction, ['transaction', 'value', 0, 'currency'], '');
-        $date            = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
-        $amount          = getVal($transaction, ['transaction', 'value', 0, 'amount'], '');
+        $currency        = getVal($data, ['value', 0, 'currency'], '');
+        $date            = getVal($data, ['value', 0, 'date'], '');
+        $amount          = (float) getVal($data, ['value', 0, 'amount'], '');
 
         if ($currency != 'USD') {
             if ($currency == '') {
@@ -260,7 +260,7 @@ class PerfectViewerManager
             }
         }
 
-        return 0;
+        return $amount;
     }
 
     public function organizationQueryBuilder()

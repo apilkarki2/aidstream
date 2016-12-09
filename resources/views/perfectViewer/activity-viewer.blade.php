@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <title>Activity Viewer</title>
 </head>
+
 <body>
 @include('includes.header')
 <div class="wrapper">
@@ -32,7 +33,7 @@
                     </a>
                 </span>
                 <address><i class="pull-left material-icons">room</i>Unit 3 Graphite Square, London, SE11 5EE</address>
-                <a href="#" class="see-all-activities"><i class="pull-left material-icons">arrow_back</i>See all
+                <a href="{{url('/who-is-using/'.getVal($organization, [0, 'org_slug'], ''))}}" class="see-all-activities"><i class="pull-left material-icons">arrow_back</i>See all
                     Activities</a>
             </div>
         </div>
@@ -70,22 +71,20 @@
                     <div class="activity-info activity-more-info">
                         <ul class="pull-left">
                             <li><i class="pull-left material-icons">date_range</i>
-                                <span>
-                                    <!--dynamic date-->
-                                    @if($activity[0]['published_data']['activity_date'][0]['type'] == 2)
-                                        {{getVal($activity, [0, 'published_data', 'activity_date', 0, 'date'], '')}}
-                                    @elseif($activity[0]['published_data']['activity_date'][0]['type'] == 1)
-                                        {{getVal($activity, [0, 'published_data', 'activity_date', 0, 'date'], '')}}
-                                    @else
-                                    @endif
-                                    -
-                                    @if($activity[0]['published_data']['activity_date'][0]['type'] == 4)
-                                        {{getVal($activity, [0, 'published_data', 'activity_date', 0, 'date'], '')}}
-                                    @elseif($activity[0]['published_data']['activity_date'][0]['type'] == 3)
-                                        {{getVal($activity, [0, 'published_data', 'activity_date', 0, 'date'], '')}}
-                                    @else
-                                    @endif
-                                </span>
+                                @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
+                                    <span>
+                                        @if($date['type'] == 2)
+                                            {{getVal($date, ['date'], '')}}
+                                        @elseif($date['type'] == 1)
+                                            {{getVal($date, ['date'], '')}}
+                                        @endif
+                                        @if($date['type'] == 4)
+                                            - {{getVal($date, ['date'], '')}}
+                                        @elseif($date['type'] == 3)
+                                            - {{getVal($date, ['date'], '')}}
+                                        @endif
+                                    </span>
+                                @endforeach
                             </li>
                             <li>
                                 <i class="pull-left material-icons">autorenew</i>
@@ -101,21 +100,23 @@
                             <li><a href="#"><i class="pull-left material-icons">share</i>Share</a></li>
                         </ul>
                     </div>
-                    <div class="activity-description">
-                        <p>
-                            <!--dynamic description-->
-                            {{--todoif description is empty, remove the wrapper--}}
-                            {{ getVal($activity, [0, 'published_data', 'description', 0, 'narrative'], '' )}}
-                        </p>
-                        <span class="show-more"><i class="material-icons">more_horiz</i></span>
-                    </div>
+                    @if(getVal($activity, [0, 'published_data', 'description'], '') != '')
+                        <div class="activity-description">
+                            <p>
+                                <!--dynamic description-->
+                                {{--todoif description is empty, remove the wrapper--}}
+                                {{$activity[0]['published_data']['description']}}
+                            </p>
+                            <span class="show-more"><i class="material-icons">more_horiz</i></span>
+                        </div>
+                    @endif
                     <div class="activity-sectors">
                         <span class="pull-left">Sectors:</span>
                         <ul class="pull-left">
                             <!--todocompulsory dynamic sectors-->
                             @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
-                                <li>{{getVal($sector, ['narrative', 0, 'narrative'], '')}}<i
-                                            class="pull-right material-icons">error</i>
+                                <li>{{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }}
+                                    <i class="pull-right material-icons">error</i>
                                     <div class="sector-more-info">
                                         <dl>
                                             <dt class="pull-left">Sector code:</dt>
@@ -173,8 +174,20 @@
                                         at {{getVal($transaction, ['transaction', 'value', 0, 'date'], '')}})</i>
                                 </td>
                                 <td>
-                                    <span class="provider"><i>circle</i>{{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], '')}}</span><span
-                                            class="receiver"><i>circle</i>{{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], '')}}</span>
+                                    <span class="provider"><i>circle</i>
+                                        @if($transaction['transaction']['provider_organization'][0]['narrative'][0]['narrative'])
+                                            {{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], '')}}
+                                        @else
+                                            Provider not available.
+                                        @endif
+                                    </span><span
+                                            class="receiver"><i>circle</i>
+                                        @if($transaction['transaction']['receiver_organization'][0]['narrative'][0]['narrative'])
+                                            {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], '')}}
+                                        @else
+                                            Receiver not available.
+                                        @endif
+                                    </span>
                                 </td>
                                 <td class="type">
                                     <strong>{{ $codeListHelper->getCodeNameOnly('TransactionType', getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) }}</strong>
@@ -196,7 +209,8 @@
                                 {{getVal($activity, [0, 'published_data', 'totalBudget', 'value'], 0)}}
                             </strong>
                             <span class="currency">
-                                {{getVal($activity, [0, 'published_data', 'totalBudget', 'currency'], '')}}
+                                USD
+                                {{--                                {{getVal($activity, [0, 'published_data', 'totalBudget', 'currency'], '')}}--}}
                             </span>
                             <label>Total Budget</label>
                         </div>
@@ -208,7 +222,7 @@
                                     <tr>
                                         <td>
                                             <span class="transaction-value">{{getVal($budget, ['value', 0, 'amount'], '')}} {{getVal($budget, ['value', 0, 'currency'], '')}}
-                                                GBP</span><i>(Valued at
+                                                </span><i>(Valued at
                                                 {{getVal($budget, ['value', 0, 'value_date'], '')}})</i></td>
                                         <td class="date"><i class="pull-left material-icons">date_range</i>
                                             {{getVal($budget, ['period_start', 0, 'date'], '')}}
@@ -284,15 +298,18 @@
     </footer>
 
 </div>
+<script>
+    var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
+</script>
 <script src="/js/jquery.js"></script>
 <script src="/js/d3.min.js"></script>
-{{--<script type="text/javascript" src="/js/worldMap.js"></script>--}}
+<script type="text/javascript" src="/js/worldMap.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.activity-description .show-more').click(function () {
             $(this).siblings('p').animate({
-                'max-height' : '1000px',
-                'height' : '100%'
+                'max-height': '1000px',
+                'height': '100%'
             });
             $(this).hide();
         });
