@@ -8,11 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Organization Viewer</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="/images/favicon.png"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link href="{{ asset('/css/jquery.jscrollpane.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
 </head>
 <style type="text/css">
     .bar {
@@ -40,9 +40,10 @@
 @include('includes.header')
 
 <div class="wrapper">
+    <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
-            <div class="organisation-info"> 
+            <div class="organisation-info">
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation name-->
                     @if($orgInfo['logo'])
@@ -51,85 +52,92 @@
                         </div>
                     @endif
                 </a>
+                <div class="organisation-more-info">
                 <span class="organisation-name">
         <a href="#" title="AbleChildAfrica">
             <!--dynamic organisation name-->
             {{$orgInfo['name']}}
         </a>
     </span>
-                <address><i class="pull-left material-icons">room</i>Unit 3 Graphite Square, London, SE11 5EE</address>
+                    <address><i class="pull-left material-icons">room</i>Unit 3 Graphite Square, London, SE11 5EE</address>
+                    <a href="#" class="see-all-activities"><i class="pull-left material-icons">arrow_back</i>See all Organisations</a>
+                </div>
             </div>
         </div>
     </section>
-
     <section class="col-md-12 org-main-wrapper">
-        <div class="width-940">
-            <div class="col-xs-12 col-md-8 org-activity-wrapper">
-                <h2>Activities <span class="activity-count">{{count($activities)}}</span></h2>
+        <div class="width-940" data-sticky_parent>
+            <div class="col-xs-12 col-md-8 org-activity-wrapper" data-sticky_column>
+                <h2>Activities <span class="activity-count">({{count($activities)}})</span></h2>
                 <ul class="activities-listing">
-                @foreach($activities as $index => $activity)
-                    <!--dynamic activity list-->
-                        <li>
-                            <a href="{{url('/who-is-using/'.$organizations['org_slug'].'/'.$activity['activity_id'])}}">
-                                <div class="col-md-9 pull-left activity-info-wrapper">
-                                    <h3 class="activity-name">
-                                        <!--dynamic activity name-->
-                                        {{getVal($activity, ['published_data', 'title', 0, 'narrative'])}}
-                                    </h3>
-                                    <div class="activity-publish-state">
-                                        @if($activity['activity_in_registry'])
-                                            <span class="pull-left published-in-iati">
+                    @foreach($activities as $index => $activity)
+                            <!--dynamic activity list-->
+                    <li>
+                        <a href="{{url('/who-is-using/'.$organizations['org_slug'].'/'.$activity['activity_id'])}}">
+                            <div class="col-md-9 pull-left activity-info-wrapper">
+                                <h3 class="activity-name">
+                                    <!--dynamic activity name-->
+                                    {{getVal($activity, ['published_data', 'title', 0, 'narrative'])}}
+                                </h3>
+                                <div class="activity-publish-state">
+                                    @if($activity['activity_in_registry'])
+                                        <span class="pull-left published-in-iati">
                                     <!--dynamic state-->
                                         Registered in IATI
                                     </span>
-                                        @else
-                                            <span class="pull-left unpublished-in-iati">
+                                    @else
+                                        <span class="pull-left unpublished-in-iati">
                                     <!--dynamic state-->
                                         Not Published in IATI
                                     </span>
-                                        @endif
-                                        <img src="{{asset('images/iati-logo.png')}}" alt="IATI" width="20" height="19">
-                                    </div>
-                                    <div class="iati-identifier-wrapper">IATI Identifier:
+                                    @endif
+                                    <img src="{{asset('images/iati-logo.png')}}" alt="IATI" width="20" height="19">
+                                </div>
+                                <div class="iati-identifier-wrapper">IATI Identifier:
                                         <span class="iati-identifier">
                                         <!--dynamic iati identifier-->
                                             {{getVal($activity, ['published_data', 'identifier', 'activity_identifier'], '')}}
                                     </span>
-                                    </div>
-                                    <dl>
-                                        <dt class="pull-left"><i class="material-icons">date_range</i></dt>
-                                        <dd class="pull-left">
-                                            @if($activity['published_data']['activity_date'][0]['type'] == 2)
-                                                {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
-                                            @elseif($activity['published_data']['activity_date'][0]['type'] == 1)
-                                                {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
-                                            @else
-                                            @endif
-                                            -
-                                            @if($activity['published_data']['activity_date'][0]['type'] == 4)
-                                                {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
-                                            @elseif($activity['published_data']['activity_date'][0]['type'] == 3)
-                                                {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
-                                            @else
-                                            @endif
-                                        </dd>
-                                        <dt class="pull-left"><i class="material-icons">autorenew</i></dt>
-                                        <dd class="pull-left">
-                                            {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, ['published_data', 'activity_status'], '')) }} <i>(Status)</i>
-                                        </dd>
-                                    </dl>
                                 </div>
-                                <div class="col-md-3 pull-right total-budget-wrapper">
-                                    <span>Total Budget</span>
-                                    <span class="total-budget-amount">{{getVal($activity, ['published_data', 'totalBudget', 'value'], 0)}}</span>
-                                    <span class="currency">{{getVal($activity, ['published_data', 'totalBudget', 'currency'], '')}}</span>
+                                <div class="activity-info">
+                                    <ul class="pull-left">
+                                        <li><i class="pull-left material-icons">date_range</i>
+                                <span>
+                                    @if($activity['published_data']['activity_date'][0]['type'] == 2)
+                                        {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
+                                    @elseif($activity['published_data']['activity_date'][0]['type'] == 1)
+                                        {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
+                                    @else
+                                    @endif
+                                    -
+                                    @if($activity['published_data']['activity_date'][0]['type'] == 4)
+                                        {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
+                                    @elseif($activity['published_data']['activity_date'][0]['type'] == 3)
+                                        {{getVal($activity, ['published_data', 'activity_date', 0, 'date'], '')}}
+                                    @else
+                                    @endif
+                                </span>
+                                        </li>
+                                        <li>
+                                            <i class="pull-left material-icons">autorenew</i>
+                                <span>
+                                    {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, ['published_data', 'activity_status'], '')) }}
+                                    <i>(Status)</i></span>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </a>
-                        </li>
+                            </div>
+                            <div class="col-md-3 pull-right total-budget-wrapper">
+                                <span>Total Budget</span>
+                                <span class="total-budget-amount">{{getVal($activity, ['published_data', 'totalBudget', 'value'], 0)}}</span>
+                                <span class="currency">{{getVal($activity, ['published_data', 'totalBudget', 'currency'], '')}}</span>
+                            </div>
+                        </a>
+                    </li>
                     @endforeach
                 </ul>
             </div>
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-12 col-md-4 org-main-transaction-wrapper" data-sticky_column>
                 <div class="org-transaction-wrapper">
                     <ul>
                         <li>
@@ -165,8 +173,6 @@
             </div>
         </div>
     </section>
-
-    <div id="map"></div>
     <footer>
         <div class="width-900">
             <div class="social-wrapper bottom-line">
@@ -174,7 +180,8 @@
                     <ul>
                         <li><a href="https://github.com/younginnovations/aidstream-new" class="github"
                                title="Fork us on Github">Fork us on Github</a></li>
-                        <li><a href="https://twitter.com/aidstream" class="twitter" title="Follow us on Twitter">Follow us
+                        <li><a href="https://twitter.com/aidstream" class="twitter" title="Follow us on Twitter">Follow
+                                us
                                 on Twitter</a></li>
                     </ul>
                 </div>
@@ -214,10 +221,20 @@
     </footer>
 </div>
 </body>
-<script>
-    var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
-</script>
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery-stickykit.js"></script>
 <script src="/js/d3.min.js"></script>
 <script type="text/javascript" src="/js/worldMap.js"></script>
-
+<script>
+    var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
+    $(document).ready(function(){
+        var contentHeight = $('.org-main-wrapper').height();
+        var sidebarHeight = $('.org-main-transaction-wrapper').height();
+        if (contentHeight > sidebarHeight) {
+            $('.org-main-transaction-wrapper').height(contentHeight);
+            $(".org-main-transaction-wrapper .org-transaction-wrapper").stick_in_parent();
+//        $(".org-main-transaction-wrapper").stick_in_parent();
+        }
+    });
+</script>
 </html>

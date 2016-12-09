@@ -73,6 +73,7 @@ h2 {
     background: #fff;
     border: 0;
     border-radius: 0;
+    margin-bottom: 0;
 }
 
 .navbar-brand {
@@ -781,7 +782,7 @@ footer ul li {
     }
 
     .navbar {
-        padding: 40px 30px;
+        padding: 30px;
     }
 
     .introduction-wrapper p {
@@ -1277,10 +1278,23 @@ section {
     display: inline-block;
     width: 100%; }
 
-.org-map-wrapper {
-    background: url(../images/map-bg.png) no-repeat center/cover;
+#map {
+    background: #EDF9FF;
     height: 300px;
-    padding: 50px 15px 32px; }
+    overflow: hidden;
+}
+
+.organisation-info {
+    margin-top: -260px;
+    height: 180px;
+    position: relative;
+}
+
+.organisation-more-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
 
 .organisation-logo {
     display: inline-block;
@@ -1303,14 +1317,14 @@ address {
     font-size: 18px; }
 
 .org-main-wrapper, .activity-main-wrapper {
-    margin-top: -55px; }
+    margin: -55px 0 80px; }
 
 .org-activity-wrapper, .activity-detail-wrapper {
     background: #fff;
     box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.2);
     padding: 30px 0 0;
     position: relative;
-    margin-bottom: 80px; }
+}
 .org-activity-wrapper > h2, .activity-detail-wrapper > h2 {
     font-size: 20px;
     color: rgba(72, 72, 72, 0.7);
@@ -1411,7 +1425,8 @@ address {
     background-image: linear-gradient(0deg, #5F9FBF 0%, #7FEAFF 100%);
     box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.2); }
 .org-transaction-wrapper ul {
-    padding: 0; }
+    padding: 0;
+    margin: 0;}
 .org-transaction-wrapper ul li {
     list-style: none;
     padding: 30px 32px;
