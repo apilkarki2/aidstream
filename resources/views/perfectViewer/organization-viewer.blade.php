@@ -233,7 +233,6 @@
         if (contentHeight > sidebarHeight) {
             $('.org-main-transaction-wrapper').height(contentHeight);
             $(".org-main-transaction-wrapper .org-transaction-wrapper").stick_in_parent();
-//        $(".org-main-transaction-wrapper").stick_in_parent();
         }
     });
 </script>
