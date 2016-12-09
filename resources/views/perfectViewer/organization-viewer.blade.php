@@ -9,11 +9,12 @@
     <title>Organization Viewer</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
-    <link rel="shortcut icon" type="image/png" sizes="16*16" href="/images/favicon.png"/>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
+    <link rel="stylesheet" href="{{asset('/css/bootstrap.min.css')}}">
     <link href="{{ asset('/css/jquery.jscrollpane.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
 </head>
+
 <style type="text/css">
     .bar {
         fill: #B2BEC4;
@@ -36,9 +37,9 @@
         shape-rendering: crispEdges;
     }
 </style>
+
 <body>
 @include('includes.header')
-
 <div class="wrapper">
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">

@@ -84,10 +84,15 @@ class WhoIsUsingController extends Controller
         if (count($activityIdExists) == 0) {
             throw new NotFoundHttpException();
         }
+        $recipientCountries = $this->getRecipientCountries($activityIdExists);
 
         $user = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
 
-        return view('perfectViewer.activity-viewer', compact('organizationIdExists', 'activityIdExists', 'user'));
+        $organization = json_decode($organizationIdExists, true);
+        $activity = json_decode($activityIdExists, true);
+
+
+        return view('perfectViewer.activity-viewer', compact('organization', 'activity', 'user', 'recipientCountries'));
 
 //        dd($organizationIdExists, $activityIdExists);
     }
