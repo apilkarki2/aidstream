@@ -29,7 +29,7 @@ d3.json("/data/countries.geo.json",function (countries){
                 if(countryNames[d.id2] != undefined)
                     return "#00A8FF";
                 else
-                return "#BBB";
+                return "#D9E5EB";
 
             })
             .attr("stroke","#fff")
