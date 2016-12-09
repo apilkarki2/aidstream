@@ -8,16 +8,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
     <link rel="stylesheet" href="{{asset('/css/bootstrap.min.css')}}">
     <link href="{{asset('/css/jquery.jscrollpane.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <title>Activity Viewer</title>
 </head>
-
 <body>
+@include('includes.header')
 <div class="wrapper">
-    @include('includes.header')
+    <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
             <div class="organisation-info">
@@ -91,7 +91,8 @@
                                 <i class="pull-left material-icons">autorenew</i>
                                 <span>
                                     <!--dynamic status-->
-                                    {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, [0, 'published_data', 'activity_status'], '')) }} <i>(Status)</i>
+                                    {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, [0, 'published_data', 'activity_status'], '')) }}
+                                    <i>(Status)</i>
                                     </span>
                             </li>
                         </ul>
@@ -103,6 +104,7 @@
                     <div class="activity-description">
                         <p>
                             <!--dynamic description-->
+                            {{--todoif description is empty, remove the wrapper--}}
                             {{ getVal($activity, [0, 'published_data', 'description', 0, 'narrative'], '' )}}
                         </p>
                         <span class="show-more"><i class="material-icons">more_horiz</i></span>
@@ -110,9 +112,10 @@
                     <div class="activity-sectors">
                         <span class="pull-left">Sectors:</span>
                         <ul class="pull-left">
-                            <!--dynamic sectors-->
+                            <!--todocompulsory dynamic sectors-->
                             @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
-                                <li>{{getVal($sector, ['narrative', 0, 'narrative'], '')}}<i class="pull-right material-icons">error</i>
+                                <li>{{getVal($sector, ['narrative', 0, 'narrative'], '')}}<i
+                                            class="pull-right material-icons">error</i>
                                     <div class="sector-more-info">
                                         <dl>
                                             <dt class="pull-left">Sector code:</dt>
@@ -165,16 +168,20 @@
                         <!--dynamic value-->
                         @foreach(getVal($activity, [0, 'published_data', 'transactions'], []) as $index => $transaction)
                             <tr>
-                                <td><span class="transaction-value">{{getVal($transaction, ['transaction', 'value', 0, 'amount'], '')}}</span><i>(Valued
+                                <td>
+                                    <span class="transaction-value">{{getVal($transaction, ['transaction', 'value', 0, 'amount'], '')}}</span><i>(Valued
                                         at {{getVal($transaction, ['transaction', 'value', 0, 'date'], '')}})</i>
                                 </td>
-                                <td><span class="provider"><i>circle</i>{{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], '')}}</span><span
+                                <td>
+                                    <span class="provider"><i>circle</i>{{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], '')}}</span><span
                                             class="receiver"><i>circle</i>{{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], '')}}</span>
                                 </td>
                                 <td class="type">
                                     <strong>{{ $codeListHelper->getCodeNameOnly('TransactionType', getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) }}</strong>
                                 </td>
-                                <td class="date"><i class="pull-left material-icons">date_range</i>{{getVal($transaction, ['transaction', 'transaction_date', 0, 'date'])}}</td>
+                                <td class="date"><i
+                                            class="pull-left material-icons">date_range</i>{{getVal($transaction, ['transaction', 'transaction_date', 0, 'date'])}}
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -199,7 +206,9 @@
                                 <!--dynamic value-->
                                 @foreach(getVal($activity, [0, 'published_data', 'budget'], []) as $index => $budget)
                                     <tr>
-                                        <td><span class="transaction-value">{{getVal($budget, ['value', 0, 'amount'], '')}} {{getVal($budget, ['value', 0, 'currency'], '')}} GBP</span><i>(Valued at
+                                        <td>
+                                            <span class="transaction-value">{{getVal($budget, ['value', 0, 'amount'], '')}} {{getVal($budget, ['value', 0, 'currency'], '')}}
+                                                GBP</span><i>(Valued at
                                                 {{getVal($budget, ['value', 0, 'value_date'], '')}})</i></td>
                                         <td class="date"><i class="pull-left material-icons">date_range</i>
                                             {{getVal($budget, ['period_start', 0, 'date'], '')}}
@@ -215,7 +224,9 @@
                 </div>
             </div>
             <div class="activity-other-info">
-                <div class="pull-left updated-date"><i class="pull-left material-icons">access_time</i>Updated on
+                <div class="pull-left updated-date">
+                    {{--todoif no date remove the div--}}
+                    <i class="pull-left material-icons">access_time</i>Updated on
                     <span>
                         <!--dynamic date-->
                         {{getVal($activity, ['updated_at'], '')}}
@@ -273,12 +284,15 @@
     </footer>
 
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="/js/jquery.js"></script>
+<script src="/js/d3.min.js"></script>
+{{--<script type="text/javascript" src="/js/worldMap.js"></script>--}}
 <script type="text/javascript">
     $(document).ready(function () {
         $('.activity-description .show-more').click(function () {
             $(this).siblings('p').animate({
-                height: '100%'
+                'max-height' : '1000px',
+                'height' : '100%'
             });
             $(this).hide();
         });
