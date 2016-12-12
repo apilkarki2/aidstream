@@ -92,7 +92,7 @@
                                         Not Published in IATI
                                     </span>
                                     @endif
-                                    <img src="{{asset('images/iati-logo.png')}}" alt="IATI" width="20" height="19">
+                                    <img src="{{asset('images/ic-iati-logo.png')}}" alt="IATI" width="20" height="19">
                                 </div>
                                 <div class="iati-identifier-wrapper">IATI Identifier:
                                         <span class="iati-identifier">
