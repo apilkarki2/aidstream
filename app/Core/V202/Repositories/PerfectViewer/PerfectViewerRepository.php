@@ -113,10 +113,6 @@ class PerfectViewerRepository
     public function organizationQueryBuilder()
     {
         return $this->organizationSnapshot->join('organizations', 'organizations.id', '=', 'organization_snapshots.org_id');
-//        return $this->organization
-//            ->select('organizations.*')
-//            ->join('activity_snapshots', 'organizations.id', '=', 'activity_snapshots.org_id')
-//            ->groupBy('organizations.id');
     }
 
     public function activityQueryBuilder()

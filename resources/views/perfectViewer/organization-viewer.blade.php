@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="col-md-3 pull-right total-budget-wrapper">
                                     <span>Total Budget</span>
-                                    <span class="total-budget-amount">{{getVal($activity, ['published_data', 'totalBudget', 'value'], 0)}}</span>
+                                    <span class="total-budget-amount">{{round(getVal($activity, ['published_data', 'totalBudget', 'value'], 0), 3)}}</span>
                                     <span class="currency">USD</span>
                                 </div>
                             </a>
