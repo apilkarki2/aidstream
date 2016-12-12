@@ -206,7 +206,7 @@
                         <div class="pull-left total-budget">
                             <strong>
                                 <!--dynamic value-->
-                                {{getVal($activity, [0, 'published_data', 'totalBudget', 'value'], 0)}}
+                                {{ round(getVal($activity, [0, 'published_data', 'totalBudget', 'value'], 0), 3) }}
                             </strong>
                             <span class="currency">
                                 USD
