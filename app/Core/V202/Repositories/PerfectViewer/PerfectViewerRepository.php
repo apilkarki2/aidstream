@@ -2,6 +2,7 @@
 
 use App\Models\Activity\Transaction;
 use App\Models\ActivityPublished;
+use App\Models\HistoricalExchangeRate;
 use App\Models\Organization\Organization;
 use App\Models\PerfectViewer\ActivitySnapshot;
 use App\Models\PerfectViewer\OrganizationSnapshot;
@@ -32,31 +33,40 @@ class PerfectViewerRepository
      * @var Organization
      */
     protected $organization;
+
     /**
      * @var OrganizationSnapshot
      */
-    private $organizationSnapshot;
+    protected $organizationSnapshot;
+
+    /**
+     * @var HistoricalExchangeRate
+     */
+    protected $historicalExchangeRate;
 
     /**
      * PerfectViewer constructor.
-     * @param ActivitySnapshot     $activitySnapshot
-     * @param ActivityPublished    $activityPublished
-     * @param Transaction          $transaction
-     * @param Organization         $organization
-     * @param OrganizationSnapshot $organizationSnapshot
+     * @param ActivitySnapshot       $activitySnapshot
+     * @param ActivityPublished      $activityPublished
+     * @param Transaction            $transaction
+     * @param Organization           $organization
+     * @param OrganizationSnapshot   $organizationSnapshot
+     * @param HistoricalExchangeRate $historicalExchangeRate
      */
     public function __construct(
         ActivitySnapshot $activitySnapshot,
         ActivityPublished $activityPublished,
         Transaction $transaction,
         Organization $organization,
-        OrganizationSnapshot $organizationSnapshot
+        OrganizationSnapshot $organizationSnapshot,
+        HistoricalExchangeRate $historicalExchangeRate
     ) {
         $this->activitySnapshot     = $activitySnapshot;
         $this->activityPublished    = $activityPublished;
         $this->transaction          = $transaction;
         $this->organization         = $organization;
         $this->organizationSnapshot = $organizationSnapshot;
+        $this->historicalExchangeRate = $historicalExchangeRate;
     }
 
     /**
@@ -69,6 +79,10 @@ class PerfectViewerRepository
         return $this->activitySnapshot->updateOrCreate(['activity_id' => $data['activity_id'], 'org_id' => $data['org_id']], $data);
     }
 
+    /**
+     * @param array $perfectOrg
+     * @return OrganizationSnapshot
+     */
     public function storeOrganization(array $perfectOrg)
     {
         return $this->organizationSnapshot->updateOrCreate(['org_id' => $perfectOrg['org_id']], $perfectOrg);
@@ -115,18 +129,37 @@ class PerfectViewerRepository
         return $this->organizationSnapshot->join('organizations', 'organizations.id', '=', 'organization_snapshots.org_id');
     }
 
+    /**
+     * @return ActivitySnapshot
+     */
     public function activityQueryBuilder()
     {
         return $this->activitySnapshot;
     }
 
+    /**
+     * @param $orgId
+     * @return mixed
+     */
     public function getSnapshot($orgId)
     {
         return $this->activitySnapshot->where('org_id', $orgId)->get();
     }
 
+    /**
+     * @param $orgId
+     * @return mixed
+     */
     public function getOrgWithId($orgId)
     {
         return $this->organization->where('reporting_org[0].reporting_organization_identifier', $orgId)->get();
+    }
+
+    /**
+     * @return HistoricalExchangeRate
+     */
+    public function getExchangeRatesBuilder()
+    {
+        return $this->historicalExchangeRate;
     }
 }
