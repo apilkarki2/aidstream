@@ -1,5 +1,6 @@
 <?php namespace App\Console\Commands;
 
+use App\Models\Activity\Activity;
 use App\Models\Activity\Transaction;
 use Illuminate\Console\Command;
 
@@ -10,7 +11,7 @@ class TransactionDates extends Command
      *
      * @var string
      */
-    protected $signature = 'dates {--getDate} {--getRate}';
+    protected $signature = 'dates {--getDate} {--getRate} {--getBudget}';
 
     protected $transaction;
 
@@ -22,15 +23,22 @@ class TransactionDates extends Command
     protected $description = 'Command description';
 
     /**
+     * @var Activity
+     */
+    protected $activity;
+
+    /**
      * Create a new command instance.
      *
-     * @return void
+     * @param Transaction $transaction
+     * @param Activity    $activity
      */
-    public function __construct(Transaction $transaction)
+    public function __construct(Transaction $transaction, Activity $activity)
     {
         parent::__construct();
 
         $this->transaction = $transaction;
+        $this->activity    = $activity;
     }
 
     /**
@@ -49,6 +57,12 @@ class TransactionDates extends Command
         if ($this->option('getRate')) {
             if (method_exists($this, 'getRates')) {
                 $this->getRates();
+            }
+        }
+
+        if ($this->option('getBudget')) {
+            if (method_exists($this, 'getBudgets')) {
+                $this->getBudgets();
             }
         }
     }
@@ -79,7 +93,7 @@ class TransactionDates extends Command
         $accessKey1   = "b3251f36cea97bf477c77b7fbf91d19d";
         $accessKey2   = "8095e751246688838fa6de6d12036bea";
 
-        $dates        = json_decode(file_get_contents(storage_path('dates.json')), true);
+        $dates = json_decode(file_get_contents(storage_path('dates.json')), true);
 
         $first  = array_slice($dates, 0, 1000);
         $second = array_slice($dates, 1001);
@@ -93,13 +107,56 @@ class TransactionDates extends Command
         dd(count(json_decode(file_get_contents(storage_path('exchangeRates.json')), true)), json_decode(file_get_contents(storage_path('exchangeRates.json')), true));
     }
 
-    protected function getExchangeRatesFor(array $dates, $accessKey)
+    protected function getBudgets()
+    {
+        $budgetValueDates = [];
+        $accessKey        = 'c92a72092ee24a60fc0e0cb7fd1377bf';
+
+        foreach ($this->activity->all() as $activity) {
+            if ($activity->budget) {
+                $date = getVal($activity->budget, [0, 'value', 0, 'value_date'], null);
+
+                if ($date) {
+                    $budgetValueDates[] = $date;
+                }
+            }
+        }
+
+        $budgetValueDates = array_unique($budgetValueDates);
+        $a                = json_decode(file_get_contents(storage_path('exchangeRates.json')), true);
+        $presentDates     = [];
+
+        foreach ($a as $v) {
+            if ($v) {
+                $presentDates[] = array_values(array_keys($v))[0];
+            }
+        }
+
+        $budgetExchangeRates = $this->getExchangeRatesFor($budgetValueDates, $accessKey);
+
+        file_put_contents(storage_path('budgetExchangeRates.json'), json_encode($budgetExchangeRates));
+
+        dd(count($budgetExchangeRates));
+    }
+
+    protected function getExchangeRatesFor(array $dates, $accessKey, $presentDates = null)
     {
         $exchangeRates = [];
 
+        if (!$presentDates) {
+            foreach ($dates as $date) {
+                $json            = $this->curl($date, $accessKey);
+                $exchangeRates[] = $this->clean(json_decode($json, true), $date);
+            }
+
+            return $exchangeRates;
+        }
+
         foreach ($dates as $date) {
-            $json            = $this->curl($date, $accessKey);
-            $exchangeRates[] = $this->clean(json_decode($json, true), $date);
+            if (!in_array($date, $presentDates)) {
+                $json            = $this->curl($date, $accessKey);
+                $exchangeRates[] = $this->clean(json_decode($json, true), $date);
+            }
         }
 
         return $exchangeRates;
