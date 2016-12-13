@@ -122,13 +122,13 @@
                             <ul class="pull-left">
                                 <!--todocompulsory dynamic sectors-->
                                 @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
-                                    <li>{{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }}
+                                    <li>{{ getSectorName($sector) }}
                                         <i class="pull-right material-icons">error</i>
                                         <div class="sector-more-info">
                                             <dl>
                                                 <dt class="pull-left">Sector code:</dt>
-                                                <dd class="pull-left">{{getVal($sector, ['sector_code'], '')}}
-                                                    - {{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }} </dd>
+                                                <dd class="pull-left">{{ getSectorCode($sector) }}
+                                                    - {{ getSectorName($sector) }} </dd>
                                                 <dt class="pull-left">Sector vocabulary</dt>
                                                 <dd class="pull-left">{{getVal($sector, ['sector_vocabulary'], '')}}
                                                     - {{ $codeListHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary'], '')) }}</dd>

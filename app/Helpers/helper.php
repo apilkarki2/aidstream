@@ -612,7 +612,7 @@ function getBudgetPeriod(array $budget)
  * @param       $type
  * @return string
  */
-function getDisbursementOrganizationDetails(array  $disbursement, $type)
+function getDisbursementOrganizationDetails(array $disbursement, $type)
 {
     $organization = getVal($disbursement, [$type, 0], []);
     $ref          = getVal($organization, ['ref']);
@@ -620,7 +620,7 @@ function getDisbursementOrganizationDetails(array  $disbursement, $type)
     $type         = getVal($organization, ['type']);
 
     $details = sprintf(
-            '<em>(Ref: %s , Activity id: %s , Type: %s)</em >;',
+        '<em>(Ref: %s , Activity id: %s , Type: %s)</em >;',
         checkIfEmpty($ref),
         checkIfEmpty($activity_id),
         checkIfEmpty($type)
@@ -952,7 +952,7 @@ function getDocumentLinkLanguages(array $languages)
  * @param array $orgName
  * @return string
  */
-function getFirstOrgName(array  $orgName)
+function getFirstOrgName(array $orgName)
 {
     $name     = checkIfEmpty($orgName[0]['narrative']);
     $language = checkIfEmpty(getLanguage($orgName[0]['language']));
@@ -1063,3 +1063,26 @@ function getSectorStructure($sector)
     ];
 }
 
+function getSectorName(array $sector)
+{
+    if ($sector['sector_vocabulary'] == 1) {
+        return app('App\Helpers\GetCodeName')->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], ''));
+    } elseif ($sector['sector_vocabulary'] == 2) {
+        return app('App\Helpers\GetCodeName')->getCodeNameOnly('Sector', getVal($sector, ['sector_category_code'], ''));
+    }
+
+    return app('App\Helpers\GetCodeName')->getCodeNameOnly('Sector', getVal($sector, ['sector_text'], ''));
+
+}
+
+function getSectorCode(array $sector)
+{
+    if ($sector['sector_vocabulary'] == 1) {
+        return getVal($sector, ['sector_code'], '');
+    } elseif ($sector['sector_vocabulary'] == 2) {
+        return getVal($sector, ['sector_category_code'], '');
+    }
+
+    return getVal($sector, ['sector_text'], '');
+
+}
