@@ -11,23 +11,27 @@ class HistoricalExchangeRatesSeeder extends Seeder
      */
     public function run()
     {
-        $dbModel = app()->make(\App\Models\HistoricalExchangeRate::class);
+//        $dates = $this->read(storage_path('exchangeRates.json'));
+        $budgetValueDates = $this->read(storage_path('budgetExchangeRates.json'));
 
-        $filename = storage_path('exchangeRates.json');
-        $dates = json_decode(file_get_contents($filename), true);
+//        $this->seed($dates); // already seeded
+
+        $this->seed($budgetValueDates);
+    }
+
+    protected function read($filename)
+    {
+        return json_decode(file_get_contents($filename), true);
+    }
+
+    protected function seed($dates)
+    {
+        $dbModel = app()->make(\App\Models\HistoricalExchangeRate::class);
 
         foreach ($dates as $index => $value) {
             if ($value) {
                 $date = array_first(array_keys($value), function () {return true;});
                 $exchangeRates = array_first(array_values($value), function () {return true;});
-
-                if (!$date || !$exchangeRates) {
-                    dump($value, $index);
-                }
-
-                if (!$date || !$exchangeRates) {
-                    dump($date, $exchangeRates);
-                }
 
                 $exchangeRate = $dbModel->newInstance(['date' => $date, 'exchange_rates' => $exchangeRates]);
 
