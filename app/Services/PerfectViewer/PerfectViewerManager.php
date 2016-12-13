@@ -71,9 +71,8 @@ class PerfectViewerManager
      */
     public function createSnapshot(Activity $activity)
     {
-        $this->exchangeRates = json_decode(file_get_contents(app_path('./../public/data/exchangerates.json')), true);
-
         try {
+            $this->exchangeRates = $this->perfectViewerRepo->getExchangeRatesBuilder();
 
             //activity data
             $this->defaultFieldValues = $activity->default_field_values;
@@ -94,7 +93,7 @@ class PerfectViewerManager
             $filename      = $filename->filename;
             $perfectOrg    = $this->makePerfectOrg($organization, $totalTransaction);
 
-            $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/);
+            $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget);
 
             $this->database->beginTransaction();
             $result    = $this->perfectViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
@@ -147,7 +146,7 @@ class PerfectViewerManager
     //     * @param $totalTransaction
      * @return array
      */
-    public function convertIntoJson($activity, $reporting_org, $transactions, $totalBudget/*, $totalTransaction*/)
+    public function convertIntoJson($activity, $reporting_org, $transactions, $totalBudget)
     {
         return [
             'title'                      => $activity->title,
@@ -167,7 +166,6 @@ class PerfectViewerManager
             'reporting_org'              => $reporting_org,
             'transactions'               => $transactions,
             'totalBudget'                => $totalBudget,
-            //            'totalTransaction'           => $totalTransaction
         ];
     }
 
@@ -239,13 +237,13 @@ class PerfectViewerManager
     {
         $defaultCurrency = getVal($this->defaultFieldValues, ['0', 'default_currency']);
         $currency        = getVal($data, ['value', 0, 'currency'], '');
-        $date            = getVal($data, ['value', 0, 'date'], '');
+        $date            = getVal($data, ['value', 0, 'value_date'], '');
         $amount          = (float) getVal($data, ['value', 0, 'amount'], '');
 
         if ($currency != 'USD') {
             if ($currency == '') {
                 if ($defaultCurrency != 'USD') {
-                    $eRate = getVal($this->exchangeRates, [sprintf('USD%s', $defaultCurrency)], 1);
+                    $eRate = getVal(json_decode($this->exchangeRates->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
 
                     return $amount / $eRate;
                 } else {
@@ -254,7 +252,7 @@ class PerfectViewerManager
                     }
                 }
             } else {
-                $eRate = getVal($this->exchangeRates, [sprintf('USD%s', $currency)], 1);
+                $eRate = getVal(json_decode($this->exchangeRates->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $currency)], 1);
 
                 return $amount / $eRate;
             }
