@@ -41,6 +41,7 @@
 <body>
 @include('includes.header')
 <div class="wrapper">
+    <div id="tooltip"></div>
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
@@ -60,7 +61,9 @@
             {{$organizations['name']}}
         </a>
     </span>
-                    <address><i class="pull-left material-icons">room</i>Unit 3 Graphite Square, London, SE11 5EE</address>
+                    @if($organizations['address'])
+                        <address><i class="pull-left material-icons">room</i>{{$organizations['address']}}</address>
+                    @endif
                     <a href="{{url('/who-is-using')}}" class="see-all-activities"><i class="pull-left material-icons">arrow_back</i>See all Organisations</a>
                 </div>
             </div>
@@ -69,7 +72,7 @@
     <section class="col-md-12 org-main-wrapper">
         <div class="width-940" data-sticky_parent>
             <div class="col-xs-12 col-md-8 org-activity-wrapper" data-sticky_column>
-                <h2>Activities <span class="activity-count">({{count($activities)}})</span></h2>
+                @if(count($activities) <= 0)<h2>Activities <span class="activity-count">({{count($activities)}})</span></h2>@endif
                 <ul class="activities-listing">
                 @foreach($activities as $index => $activity)
                     <!--dynamic activity list-->
@@ -94,43 +97,51 @@
                                         @endif
                                         <img src="{{asset('images/ic-iati-logo.png')}}" alt="IATI" width="20" height="19">
                                     </div>
-                                    <div class="iati-identifier-wrapper">IATI Identifier:
-                                        <span class="iati-identifier">
+                                    @if($activity['published_data']['identifier']['activity_identifier'])
+                                        <div class="iati-identifier-wrapper">IATI Identifier:
+                                            <span class="iati-identifier">
                                         <!--dynamic iati identifier-->
-                                            {{getVal($activity, ['published_data', 'identifier', 'activity_identifier'], '')}}
-                                    </span>
-                                    </div>
+                                                {{getVal($activity, ['published_data', 'identifier', 'activity_identifier'], '')}}
+                                        </span>
+                                        </div>
+                                    @endif
                                     <div class="activity-info">
                                         <ul class="pull-left">
-                                            <li><i class="pull-left material-icons">date_range</i>
-                                                @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
-                                                    <span>
+                                            @if($activity['published_data']['activity_date'])
+                                                <li><i class="pull-left material-icons">date_range</i>
+                                                    @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
+                                                        <span>
                                                         @if($date['type'] == 2)
-                                                            {{getVal($date, ['date'], '')}}
-                                                        @elseif($date['type'] == 1)
-                                                            {{getVal($date, ['date'], '')}}
-                                                        @endif
-                                                        @if($date['type'] == 4)
-                                                            - {{getVal($date, ['date'], '')}}
-                                                        @elseif($date['type'] == 3)
-                                                            - {{getVal($date, ['date'], '')}}
-                                                        @endif
+                                                                {{getVal($date, ['date'], '')}}
+                                                            @elseif($date['type'] == 1)
+                                                                {{getVal($date, ['date'], '')}}
+                                                            @endif
+                                                            @if($date['type'] == 4)
+                                                                - {{getVal($date, ['date'], '')}}
+                                                            @elseif($date['type'] == 3)
+                                                                - {{getVal($date, ['date'], '')}}
+                                                            @endif
                                                     </span>
-                                                @endforeach
-                                            </li>
-                                            <li>
-                                                <i class="pull-left material-icons">autorenew</i>
-                                                <span>
+                                                    @endforeach
+                                                </li>
+                                            @endif
+                                            @if($activity['published_data']['activity_status'])
+                                                <li>
+                                                    <i class="pull-left material-icons">autorenew</i>
+                                                    <span>
                                     {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, ['published_data', 'activity_status'], '')) }}
-                                                    <i>(Status)</i></span>
-                                            </li>
+                                                        <i>(Status)</i></span>
+                                                </li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="col-md-3 pull-right total-budget-wrapper">
-                                    <span>Total Budget</span>
-                                    <span class="total-budget-amount">{{round(getVal($activity, ['published_data', 'totalBudget', 'value'], 0), 3)}}</span>
-                                    <span class="currency">USD</span>
+                                    @if($activity['published_data']['totalBudget']['value'])
+                                        <span>Total Budget</span>
+                                        <span class="total-budget-amount">{{round(getVal($activity, ['published_data', 'totalBudget', 'value'], 0), 3)}}</span>
+                                        <span class="currency">USD</span>
+                                    @endif
                                 </div>
                             </a>
                         </li>

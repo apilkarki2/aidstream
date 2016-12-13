@@ -32,7 +32,9 @@
                         {{ getVal($organization, [0, 'name'], '')}}
                     </a>
                 </span>
-                <address><i class="pull-left material-icons">room</i>Unit 3 Graphite Square, London, SE11 5EE</address>
+                @if($organization[0]['address'])
+                    <address><i class="pull-left material-icons">room</i>{{getVal($organization, [0, 'address'])}}</address>
+                @endif
                 <a href="{{url('/who-is-using/'.getVal($organization, [0, 'org_slug'], ''))}}" class="see-all-activities"><i class="pull-left material-icons">arrow_back</i>See all
                     Activities</a>
             </div>
@@ -70,29 +72,33 @@
                     </div>
                     <div class="activity-info activity-more-info">
                         <ul class="pull-left">
-                            <li><i class="pull-left material-icons">date_range</i>
-                                @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
-                                    <span>
+                            @if($activity[0]['published_data']['activity_date'])
+                                <li><i class="pull-left material-icons">date_range</i>
+                                    @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
+                                        <span>
                                         @if($date['type'] == 2)
-                                            {{getVal($date, ['date'], '')}}
-                                        @elseif($date['type'] == 1)
-                                            {{getVal($date, ['date'], '')}}
-                                        @endif
-                                        @if($date['type'] == 4)
-                                            - {{getVal($date, ['date'], '')}}
-                                        @elseif($date['type'] == 3)
-                                            - {{getVal($date, ['date'], '')}}
-                                        @endif
+                                                {{getVal($date, ['date'], '')}}
+                                            @elseif($date['type'] == 1)
+                                                {{getVal($date, ['date'], '')}}
+                                            @endif
+                                            @if($date['type'] == 4)
+                                                - {{getVal($date, ['date'], '')}}
+                                            @elseif($date['type'] == 3)
+                                                - {{getVal($date, ['date'], '')}}
+                                            @endif
                                     </span>
-                                @endforeach
-                            </li>
+                                    @endforeach
+                                </li>
+                            @endif
                             <li>
-                                <i class="pull-left material-icons">autorenew</i>
-                                <span>
+                                @if($activity[0]['published_data']['activity_status'])
+                                    <i class="pull-left material-icons">autorenew</i>
+                                    <span>
                                     <!--dynamic status-->
-                                    {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, [0, 'published_data', 'activity_status'], '')) }}
-                                    <i>(Status)</i>
+                                        {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, [0, 'published_data', 'activity_status'], '')) }}
+                                        <i>(Status)</i>
                                     </span>
+                                @endif
                             </li>
                         </ul>
                         <ul class="pull-right links">
@@ -111,25 +117,27 @@
                         </div>
                     @endif
                     <div class="activity-sectors">
-                        <span class="pull-left">Sectors:</span>
-                        <ul class="pull-left">
-                            <!--todocompulsory dynamic sectors-->
-                            @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
-                                <li>{{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }}
-                                    <i class="pull-right material-icons">error</i>
-                                    <div class="sector-more-info">
-                                        <dl>
-                                            <dt class="pull-left">Sector code:</dt>
-                                            <dd class="pull-left">{{getVal($sector, ['sector_code'], '')}}
-                                                - {{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }} </dd>
-                                            <dt class="pull-left">Sector vocabulary</dt>
-                                            <dd class="pull-left">{{getVal($sector, ['sector_vocabulary'], '')}}
-                                                - {{ $codeListHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary'], '')) }}</dd>
-                                        </dl>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
+                        @if($activity[0]['published_data']['sector'])
+                            <span class="pull-left">Sectors:</span>
+                            <ul class="pull-left">
+                                <!--todocompulsory dynamic sectors-->
+                                @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
+                                    <li>{{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }}
+                                        <i class="pull-right material-icons">error</i>
+                                        <div class="sector-more-info">
+                                            <dl>
+                                                <dt class="pull-left">Sector code:</dt>
+                                                <dd class="pull-left">{{getVal($sector, ['sector_code'], '')}}
+                                                    - {{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }} </dd>
+                                                <dt class="pull-left">Sector vocabulary</dt>
+                                                <dd class="pull-left">{{getVal($sector, ['sector_vocabulary'], '')}}
+                                                    - {{ $codeListHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary'], '')) }}</dd>
+                                            </dl>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
                 </div>
                 <div class="activity-block participating-organisation-block">
