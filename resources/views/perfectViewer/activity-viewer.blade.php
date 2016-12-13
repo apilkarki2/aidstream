@@ -18,13 +18,14 @@
 <body>
 @include('includes.header')
 <div class="wrapper">
+    <div id="tooltip" class="tooltips">ToolTip is here!</div>
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
             <div class="organisation-info">
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation logo-->
-                    <img src="{{ $organization[0]['logo_url'] }}" alt="{{ $organization[0]['name'] }}" width="238" height="68">
+                    <img src="{{ $organization[0]['logo_url'] }}" alt="{{ $organization[0]['name'] }}" width="auto" height="68">
                 </a>
                 <span class="organisation-name">
                     <a href="#" title="AbleChildAfrica">
@@ -122,13 +123,13 @@
                             <ul class="pull-left">
                                 <!--todocompulsory dynamic sectors-->
                                 @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
-                                    <li>{{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }}
+                                    <li>{{ getSectorName($sector) }}
                                         <i class="pull-right material-icons">error</i>
                                         <div class="sector-more-info">
                                             <dl>
                                                 <dt class="pull-left">Sector code:</dt>
-                                                <dd class="pull-left">{{getVal($sector, ['sector_code'], '')}}
-                                                    - {{ $codeListHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], '')) }} </dd>
+                                                <dd class="pull-left">{{ getSectorCode($sector) }}
+                                                    - {{ getSectorName($sector) }} </dd>
                                                 <dt class="pull-left">Sector vocabulary</dt>
                                                 <dd class="pull-left">{{getVal($sector, ['sector_vocabulary'], '')}}
                                                     - {{ $codeListHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary'], '')) }}</dd>
