@@ -18,13 +18,14 @@
 <body>
 @include('includes.header')
 <div class="wrapper">
+    <div id="tooltip" class="tooltips">ToolTip is here!</div>
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
             <div class="organisation-info">
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation logo-->
-                    <img src="{{ $organization[0]['logo_url'] }}" alt="{{ $organization[0]['name'] }}" width="238" height="68">
+                    <img src="{{ $organization[0]['logo_url'] }}" alt="{{ $organization[0]['name'] }}" width="auto" height="68">
                 </a>
                 <span class="organisation-name">
                     <a href="#" title="AbleChildAfrica">

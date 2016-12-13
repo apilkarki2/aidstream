@@ -53,7 +53,7 @@
                     <!--dynamic organisation name-->
                     @if($organizations['logo'])
                         <div class="logo">
-                            <img src="{{ $organizations['logo_url'] }}" alt="{{ $organizations['name'] }}" width="238" height="68">
+                            <img src="{{ $organizations['logo_url'] }}" alt="{{ $organizations['name'] }}" width="auto" height="68">
                         </div>
                     @endif
                 </a>
