@@ -24,7 +24,7 @@
             <div class="organisation-info">
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation logo-->
-                    <img src="{{ $organization[0]['logo_url'] }}" alt="AbleChildAfrica" width="238" height="68">
+                    <img src="{{ $organization[0]['logo_url'] }}" alt="{{ $organization[0]['name'] }}" width="238" height="68">
                 </a>
                 <span class="organisation-name">
                     <a href="#" title="AbleChildAfrica">
@@ -246,15 +246,17 @@
                 </div>
             </div>
             <div class="activity-other-info">
+                @if($activity[0]['updated_at'])
                 <div class="pull-left updated-date">
                     {{--todoif no date remove the div--}}
                     <i class="pull-left material-icons">access_time</i>Updated on
                     <span>
                         <!--dynamic date-->
-                        {{getVal($activity, ['updated_at'], '')}}
+                        {{getVal($activity, [0, 'updated_at'], '')}}
                     </span>
                 </div>
-                <a href="#" class="view-xml-file">View XML file here</a>
+                @endif
+                <a href="{{'/files/xml/'.getVal($activity, [0, 'filename'], '')}}" target="_blank" class="view-xml-file">View XML file here</a>
             </div>
         </div>
     </section>

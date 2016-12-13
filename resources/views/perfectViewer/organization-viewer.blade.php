@@ -36,12 +36,15 @@
         fill: none;
         shape-rendering: crispEdges;
     }
+    .tooltips {
+        display: none;
+    }
 </style>
 
 <body>
 @include('includes.header')
 <div class="wrapper">
-    <div id="tooltip"></div>
+    <div id="tooltip" class="tooltips">ToolTip is here!</div>
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
@@ -50,7 +53,7 @@
                     <!--dynamic organisation name-->
                     @if($organizations['logo'])
                         <div class="logo">
-                            <img src="{{ $organizations['logo_url'] }}" alt="AbleChildAfrica" width="238" height="68">
+                            <img src="{{ $organizations['logo_url'] }}" alt="{{ $organizations['name'] }}" width="238" height="68">
                         </div>
                     @endif
                 </a>
