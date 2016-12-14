@@ -253,18 +253,19 @@ class PerfectViewerManager
         $currency        = getVal($data, ['value', 0, 'currency'], '');
         $date            = getVal($data, ['value', 0, 'value_date'], '');
         $amount          = (float) getVal($data, ['value', 0, 'amount'], '');
+        $dbDate          = json_decode($this->exchangeRates->where('date', $date)->first(), true) ?: [];
 
         if ($currency != 'USD') {
             if ($currency == '') {
                 if ($defaultCurrency != 'USD') {
-                    $eRate = getVal(json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
+                    $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
 
                     return $amount / $eRate;
                 }
 
                 return $amount;
             } else {
-                $eRate = getVal(json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $currency)], 1);
+                $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $currency)], 1);
 
                 return $amount / $eRate;
             }

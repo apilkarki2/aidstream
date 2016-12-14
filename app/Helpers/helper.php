@@ -1093,8 +1093,7 @@ function getSectorName(array $sector)
         return app('App\Helpers\GetCodeName')->getCodeNameOnly('Sector', getVal($sector, ['sector_category_code'], ''));
     }
 
-    return app('App\Helpers\GetCodeName')->getCodeNameOnly('Sector', getVal($sector, ['sector_text'], ''));
-
+    return app('App\Helpers\GetCodeName')->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary']));
 }
 
 function getSectorCode(array $sector)
