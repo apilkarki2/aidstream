@@ -1252,10 +1252,30 @@ section {
   width: 100%;
 }
 
-.org-map-wrapper {
-  background: url(../images/map-bg.png) no-repeat center/cover;
-  height: 300px;
-  padding: 50px 15px 32px;
+#map {
+  background: #EDF9FF;
+  height: 200px;
+  overflow: hidden;
+  svg {
+    width: 100%;
+  }
+}
+
+.tooltips {
+  display: none;
+}
+
+.organisation-info {
+  height: 180px;
+  position: relative;
+  padding: 0;
+  margin-top: -250px;
+}
+
+.organisation-more-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .organisation-logo {
@@ -1440,6 +1460,7 @@ address {
   box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.20);
   ul {
     padding: 0;
+    margin: 0;
     li {
       list-style: none;
       padding: 30px 32px;
@@ -1468,7 +1489,7 @@ footer {
 //activity-viewer
 
 .see-all-activities {
-  font-size: 16px;
+  font-size: 15px;
   color: $color_dodger_approx;
   i {
     margin: 2px 3px 0 0;
@@ -1813,6 +1834,15 @@ footer {
   .width-940 {
     width: 940px;
     margin: 0 auto;
+  }
+
+  #map {
+    height: 330px;
+    svg {
+      width: 940px;
+      float: right;
+      margin-top: -140px;
+    }
   }
 }
 

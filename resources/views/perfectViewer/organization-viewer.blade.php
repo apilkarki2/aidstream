@@ -36,9 +36,6 @@
         fill: none;
         shape-rendering: crispEdges;
     }
-    .tooltips {
-        display: none;
-    }
 </style>
 
 <body>
@@ -48,7 +45,7 @@
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
-            <div class="organisation-info">
+            <div class="col-md-4 organisation-info">
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation name-->
                     @if($organizations['logo'])
@@ -242,7 +239,7 @@
 <script>
     var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
     $(document).ready(function () {
-        var contentHeight = $('.org-main-wrapper').height();
+        var contentHeight = $('.org-activity-wrapper').height();
         var sidebarHeight = $('.org-main-transaction-wrapper').height();
         if (contentHeight > sidebarHeight) {
             $('.org-main-transaction-wrapper').height(contentHeight);

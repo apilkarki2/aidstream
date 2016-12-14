@@ -45,6 +45,8 @@ d3.json("/data/countries.geo.json", function (countries) {
             d3.select("#tooltip")
                 .style("left", absoluteMousePos[0] + "px")
                 .style("top", absoluteMousePos[1] + 80 + "px")
+                .style("background","#fff")
+                .style("padding","10px")
                 .style("position", "absolute")
                 .attr("text-anchor", "middle")
                 .attr("font-size", "14px")
