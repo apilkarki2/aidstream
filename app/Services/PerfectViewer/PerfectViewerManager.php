@@ -2,6 +2,7 @@
 
 use App\Core\V202\Repositories\PerfectViewer\PerfectViewerRepository;
 use App\Models\Activity\Activity;
+use App\Models\HistoricalExchangeRate;
 use Exception;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\DatabaseManager;
@@ -42,7 +43,12 @@ class PerfectViewerManager
     /**
      * @var
      */
-    protected $exchangeRates;
+    protected $exchangeRatesBuilder;
+
+    /**
+     * @var HistoricalExchangeRate
+     */
+    private $historicalExchangeRate;
 
     /**
      * PerfectActivityViewerManager constructor.
@@ -50,18 +56,20 @@ class PerfectViewerManager
      * @param PerfectViewerRepository $perfectViewerRepository
      * @param DatabaseManager         $databaseManager
      * @param Logger                  $logger
+     * @param HistoricalExchangeRate  $historicalExchangeRate
      */
     public function __construct(
         Guard $auth,
         PerfectViewerRepository $perfectViewerRepository,
         DatabaseManager $databaseManager,
-        Logger $logger
-
+        Logger $logger,
+        HistoricalExchangeRate $historicalExchangeRate
     ) {
-        $this->auth              = $auth;
-        $this->perfectViewerRepo = $perfectViewerRepository;
-        $this->database          = $databaseManager;
-        $this->logger            = $logger;
+        $this->auth                   = $auth;
+        $this->perfectViewerRepo      = $perfectViewerRepository;
+        $this->database               = $databaseManager;
+        $this->logger                 = $logger;
+        $this->historicalExchangeRate = $historicalExchangeRate;
     }
 
     /**
@@ -72,8 +80,8 @@ class PerfectViewerManager
     public function createSnapshot(Activity $activity)
     {
         try {
-            
-            $this->exchangeRates = $this->perfectViewerRepo->getExchangeRatesBuilder();
+
+            $this->exchangeRatesBuilder = $this->perfectViewerRepo->getExchangeRatesBuilder();
 
             //activity data
             $this->defaultFieldValues = $activity->default_field_values;
@@ -83,9 +91,14 @@ class PerfectViewerManager
 
             //transaction and budget
             $transactions = $this->perfectViewerRepo->getTransactions($activityId);
-
+            $dates        = $this->getDates($activity, $transactions);
+            $newDates     = $this->getNewDates($dates);
+            $newExchangeRates = $this->newExchangeRates($newDates);
             $totalBudget      = $this->calculateBudget($activity['budget']);
             $totalTransaction = $this->calculateTransaction($transactions);
+
+            //store new exchange rates
+            $this->storeExchangeRates($newExchangeRates);
 
             //organization data
             $organization  = $this->getOrg($orgId);
@@ -244,14 +257,14 @@ class PerfectViewerManager
         if ($currency != 'USD') {
             if ($currency == '') {
                 if ($defaultCurrency != 'USD') {
-                    $eRate = getVal(json_decode($this->exchangeRates->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
+                    $eRate = getVal(json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
 
                     return $amount / $eRate;
                 }
 
                 return $amount;
             } else {
-                $eRate = getVal(json_decode($this->exchangeRates->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $currency)], 1);
+                $eRate = getVal(json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $currency)], 1);
 
                 return $amount / $eRate;
             }
@@ -290,5 +303,80 @@ class PerfectViewerManager
             'org_slug'              => getVal($organization, [0, 'reporting_org', 0, 'reporting_organization_identifier'], ''),
             'transaction_totals'    => $totalTransaction
         ];
+    }
+
+    protected function getDates($activity, $transactions)
+    {
+        $dates = [];
+        foreach ($activity['budget'] as $budget) {
+            $dates[] = getVal($budget, ['value', 0, 'value_date'], '');
+        }
+        foreach ($transactions as $transaction) {
+            $dates[] = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
+        }
+
+        return $dates;
+    }
+
+    protected function getNewDates($dates)
+    {
+        $allDates = $this->exchangeRatesBuilder->select('date')->get()->toArray();
+
+        return array_values(array_diff($dates, array_flatten($allDates)));
+    }
+
+    protected function newExchangeRates($newDates)
+    {
+        $exchangeRates = [];
+        foreach ($newDates as $index => $newDate) {
+            $exchangeRates[] = $this->clean($this->curl($newDate), $newDate);
+        }
+
+        return $exchangeRates;
+    }
+
+    protected function curl($date)
+    {
+        $ch = curl_init('http://apilayer.net/api/historical' . '?access_key=' . 'c92a72092ee24a60fc0e0cb7fd1377bf' . '&date=' . $date . '&format=1');
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    }
+
+
+    protected function clean($json, $date)
+    {
+        $rates = [];
+
+        if (!$json) {
+            $json = (array) $json;
+        }
+
+        foreach (getVal($json, ['quotes'], []) as $key => $value) {
+            $toCurrency = str_replace('USD', '', $key);
+
+            if ($toCurrency !== '') {
+                $rates[$date][$toCurrency] = $value;
+            }
+        }
+
+        return $rates;
+    }
+
+    protected function transformExchangeRates($exchangeRate)
+    {
+        return [
+            'date' => key($exchangeRate),
+            'exchange_rates' => value($exchangeRate)
+        ];
+    }
+
+    protected function storeExchangeRates($newExchangeRates)
+    {
+        foreach($newExchangeRates as $index => $rates)
+        $this->historicalExchangeRate->store($this->transformExchangeRates($rates));
     }
 }
