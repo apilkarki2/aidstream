@@ -90,12 +90,15 @@ class PerfectViewerManager
             $published_to_registry    = $activity->published_to_registry;
 
             //transaction and budget
-            $transactions     = $this->perfectViewerRepo->getTransactions($activityId);
-            $dates            = $this->getDates($activity, $transactions);
-            $newDates         = $this->getNewDates($dates);
-            $this->newExchangeRates($newDates);
+            $transactions = $this->perfectViewerRepo->getTransactions($activityId);
+            $dates        = $this->getDates($activity, $transactions);
+            $newDates     = $this->getNewDates($dates);
+            $newExchangeRates = $this->newExchangeRates($newDates);
             $totalBudget      = $this->calculateBudget($activity['budget']);
             $totalTransaction = $this->calculateTransaction($transactions);
+
+            //store new exchange rates
+            $this->storeExchangeRates($newExchangeRates);
 
             //organization data
             $organization  = $this->getOrg($orgId);
@@ -324,6 +327,56 @@ class PerfectViewerManager
 
     protected function newExchangeRates($newDates)
     {
-        http://apilayer.net/api/historical?date=YYYY-MM-DD
+        $exchangeRates = [];
+        foreach ($newDates as $index => $newDate) {
+            $exchangeRates[] = $this->clean($this->curl($newDate), $newDate);
+        }
+
+        return $exchangeRates;
+    }
+
+    protected function curl($date)
+    {
+        $ch = curl_init('http://apilayer.net/api/historical' . '?access_key=' . 'c92a72092ee24a60fc0e0cb7fd1377bf' . '&date=' . $date . '&format=1');
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    }
+
+
+    protected function clean($json, $date)
+    {
+        $rates = [];
+
+        if (!$json) {
+            $json = (array) $json;
+        }
+
+        foreach (getVal($json, ['quotes'], []) as $key => $value) {
+            $toCurrency = str_replace('USD', '', $key);
+
+            if ($toCurrency !== '') {
+                $rates[$date][$toCurrency] = $value;
+            }
+        }
+
+        return $rates;
+    }
+
+    protected function transformExchangeRates($exchangeRate)
+    {
+        return [
+            'date' => key($exchangeRate),
+            'exchange_rates' => value($exchangeRate)
+        ];
+    }
+
+    protected function storeExchangeRates($newExchangeRates)
+    {
+        foreach($newExchangeRates as $index => $rates)
+        $this->historicalExchangeRate->store($this->transformExchangeRates($rates));
     }
 }
