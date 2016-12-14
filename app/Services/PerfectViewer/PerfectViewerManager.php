@@ -90,11 +90,11 @@ class PerfectViewerManager
             $published_to_registry    = $activity->published_to_registry;
 
             //transaction and budget
-            $transactions = $this->perfectViewerRepo->getTransactions($activityId);
-            $dates        = $this->getDates($activity, $transactions);
-            $newDates     = $this->getNewDates($dates);
+            $transactions     = $this->perfectViewerRepo->getTransactions($activityId);
+            $dates            = $this->getDates($activity, $transactions);
+            $newDates         = $this->getNewDates($dates);
             $newExchangeRates = $this->newExchangeRates($newDates);
-            $totalBudget      = $this->calculateBudget($activity['budget']);
+            $totalBudget      = $this->calculateBudget(getVal($activity->toArray(), ['budget'], []));
             $totalTransaction = $this->calculateTransaction($transactions);
 
             //store new exchange rates
@@ -126,7 +126,13 @@ class PerfectViewerManager
 
         } catch (Exception $exception) {
             $this->database->rollback();
-            $this->logger->error($exception, ['Activity_identifier' => $activity->id]);
+            $this->logger->error(
+                sprintf('Error creating snapshot due to %s', $exception->getMessage()),
+                [
+                    'Activity_identifier' => $activity->id,
+                    'trace'               => $exception->getTraceAsString()
+                ]
+            );
         }
 
         return false;
@@ -253,7 +259,7 @@ class PerfectViewerManager
         $currency        = getVal($data, ['value', 0, 'currency'], '');
         $date            = getVal($data, ['value', 0, 'value_date'], '');
         $amount          = (float) getVal($data, ['value', 0, 'amount'], '');
-        $dbDate          = json_decode($this->exchangeRates->where('date', $date)->first(), true) ?: [];
+        $dbDate          = json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true) ?: [];
 
         if ($currency != 'USD') {
             if ($currency == '') {
@@ -309,9 +315,15 @@ class PerfectViewerManager
     protected function getDates($activity, $transactions)
     {
         $dates = [];
-        foreach ($activity['budget'] as $budget) {
+
+        if (!is_array($activity)) {
+            $activity = (array) $activity;
+        }
+
+        foreach (getVal($activity, ['budget'], []) as $budget) {
             $dates[] = getVal($budget, ['value', 0, 'value_date'], '');
         }
+
         foreach ($transactions as $transaction) {
             $dates[] = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
         }
@@ -330,7 +342,7 @@ class PerfectViewerManager
     {
         $exchangeRates = [];
         foreach ($newDates as $index => $newDate) {
-            $exchangeRates[] = $this->clean($this->curl($newDate), $newDate);
+            $exchangeRates[] = $this->clean(json_decode($this->curl($newDate), true), $newDate);
         }
 
         return $exchangeRates;
@@ -370,14 +382,15 @@ class PerfectViewerManager
     protected function transformExchangeRates($exchangeRate)
     {
         return [
-            'date' => key($exchangeRate),
+            'date'           => key($exchangeRate),
             'exchange_rates' => value($exchangeRate)
         ];
     }
 
     protected function storeExchangeRates($newExchangeRates)
     {
-        foreach($newExchangeRates as $index => $rates)
-        $this->historicalExchangeRate->store($this->transformExchangeRates($rates));
+        foreach ($newExchangeRates as $index => $rates) {
+            $this->historicalExchangeRate->create($this->transformExchangeRates($rates));
+        }
     }
 }
