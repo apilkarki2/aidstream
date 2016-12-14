@@ -173,7 +173,7 @@
                         <thead>
                         <tr>
                             <th width="30%">Transaction Value</th>
-                            <th width="30%">Provider Receiver</th>
+                            <th width="30%">Provider <img src="/images/ic-provider-receiver.png" alt="" width="28" height="8"> Receiver</th>
                             <th width="20%">Type</th>
                             <th width="20%">Date</th>
                         </tr>
@@ -191,14 +191,14 @@
                                         @if($transaction['transaction']['provider_organization'][0]['narrative'][0]['narrative'])
                                             {{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], '')}}
                                         @else
-                                            Provider not available.
+                                            Provider N/A
                                         @endif
                                     </span><span
                                             class="receiver"><i>circle</i>
                                         @if($transaction['transaction']['receiver_organization'][0]['narrative'][0]['narrative'])
                                             {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], '')}}
                                         @else
-                                            Receiver not available.
+                                            Receiver N/A
                                         @endif
                                     </span>
                                 </td>
