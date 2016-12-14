@@ -1087,13 +1087,15 @@ function xmlImportIsStarted()
 
 function getSectorName(array $sector)
 {
+    $codeNameHelper = app()->make('App\Helpers\GetCodeName');
+
     if ($sector['sector_vocabulary'] == 1) {
-        return app('App\Helpers\GetCodeName')->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], ''));
+        return $codeNameHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], ''), -8);
     } elseif ($sector['sector_vocabulary'] == 2) {
-        return app('App\Helpers\GetCodeName')->getCodeNameOnly('Sector', getVal($sector, ['sector_category_code'], ''));
+        return $codeNameHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_category_code'], ''), -5);
     }
 
-    return app('App\Helpers\GetCodeName')->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary']));
+    return $codeNameHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary']));
 }
 
 function getSectorCode(array $sector)

@@ -40,9 +40,15 @@ d3.json("/data/countries.geo.json", function (countries) {
                 return d.id2;
             });
 
-        plotMap.on('mouseover', function (d) {
+        plotMap.on('click', function (d) {
             var absoluteMousePos = d3.mouse(divNode);
             d3.select("#tooltip")
+                .style("display", function() {
+                    if (countryNames[d.id2] != undefined)
+                        return "block";
+                    else
+                        return "none";
+                })
                 .style("left", absoluteMousePos[0] + "px")
                 .style("top", absoluteMousePos[1] + 80 + "px")
                 .style("background","#fff")
@@ -50,14 +56,10 @@ d3.json("/data/countries.geo.json", function (countries) {
                 .style("position", "absolute")
                 .attr("text-anchor", "middle")
                 .attr("font-size", "14px")
-                .html("<span>" + " " + d.properties.name + " (" + d.id2 + ") " + "</span>");
+                .html("<span>" + " Recipient Country: " + d.properties.name + " (" + d.id2 + ") " + "</span>");
 
             d3.select("#tooltip").classed("tooltips", false);
-        })
-            .on('mouseout', function (d) {
-                d3.select("#tooltip").classed("tooltips", true);
-            });
-
+        });
     }
 });
 

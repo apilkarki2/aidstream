@@ -7,29 +7,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
-    <meta name="description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
-    <meta name="robots" content="index,follow" />
-    <meta name="copyright"content="AidStream">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
+
+    <meta name="title" content="Activity Viewer"/>
+    <meta name="description"
+          content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
+    <meta name="robots" content="index,follow"/>
+    <meta name="copyright" content="AidStream"/>
+
+    <meta name="og:site_name" content="Aidstream"/>
+    <meta name="og:title"
+          content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'identifier', 'iati_identifier_text']) }} - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}"/>
+    <meta name="og:image" content="{{ url('images/aidstream_logo.png') }}"/>
+    <meta name="og:description" content="{{ getVal($activity, [0, 'published_data', 'description']) }}"/>
     <meta name="og:type" content="website"/>
     <meta name="og:url" content="{{ url()->current() }}"/>
-    <meta name="og:image" content="{{ url('images/aidstream_logo.png') }}"/>
-    <meta name="og:title" content="Activity Viewer"/>
-    <meta name="og:site_name" content="Aidstream"/>
-    <meta name="og:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="{{ url()->current() }}">
-    <meta name="twitter:creator" content="@aidstream">
-    <meta name="twitter:title" content="Activity Viewer">
-    <meta name="twitter:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML.">
-    <meta name="twitter:image" content="{{ url('images/aidstream_logo.png') }}"/>
-
-    {{--<meta property="og:description" content="TEST">--}}
-    {{--<meta property="og:type" content="website">--}}
-    {{--<meta property="og:url" content="{{ url()->current() }}">--}}
-    {{--<meta property="og:image" content="{{ url('images/logo-text.png') }}">--}}
+    <meta name="twitter:title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}">
+    <meta name="twitter:description" content="{{ getVal($activity, [0, 'published_data', 'description']) }}">
+    <meta name="twitter:image:src" content="{{ url('images/aidstream_logo.png') }}"/>
+    <meta name="twitter:url" content="{{ url()->current() }}"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
@@ -38,11 +37,6 @@
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <title>Activity Viewer</title>
 </head>
-<style type="text/css">
-    .tooltips {
-        display: none;
-    }
-</style>
 <body>
 @include('includes.header')
 <div class="wrapper">
@@ -50,14 +44,12 @@
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
-            <div class="organisation-info">
+            <div class="col-md-4 organisation-info">
                 <a href="#" class="organisation-logo">
-                    <!--dynamic organisation logo-->
                     <img src="{{ $organization[0]['logo_url'] }}" alt="{{ $organization[0]['name'] }}" width="auto" height="68">
                 </a>
                 <span class="organisation-name">
                     <a href="#" title="AbleChildAfrica">
-                        <!--dynamic organisation name-->
                         {{ getVal($organization, [0, 'name'], '')}}
                     </a>
                 </span>
@@ -74,25 +66,21 @@
             <div class="col-xs-12 activity-detail-wrapper">
                 <div class="activity-detail-top-wrapper">
                     <h1>
-                        <!--dynamic title-->
                         {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}
                     </h1>
                     <div class="activity-iati-info">
                         <div class="pull-left iati-identifier-wrapper">IATI Identifier:
                             <span class="iati-identifier">
-                                        <!--dynamic iati identifier-->
                                 {{ getVal($activity, [0, 'published_data', 'identifier', 'activity_identifier'], '') }}
                                     </span>
                         </div>
                         <div class="pull-right activity-publish-state">
                             @if(getVal($activity, [0, 'activity_in_registry'], false))
                                 <span class="pull-left published-in-iati">
-                                    <!--dynamic state-->
                                         Published in IATI
                                     </span>
                             @else
                                 <span class="pull-left unpublished-in-iati">
-                                    <!--dynamic state-->
                                         Not Published in IATI
                                     </span>
                             @endif
@@ -107,15 +95,23 @@
                                         <span>
                                             @if($date['type'] == 2)
                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @elseif($date['type'] == 1)
                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @endif
+                                        </span>
+                                    @endforeach
+                                    @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
+                                        <span>
                                             @if($date['type'] == 4)
                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @elseif($date['type'] == 3)
                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @endif
-                                    </span>
+                                        </span>
                                     @endforeach
                                 </li>
                             @endif
@@ -123,7 +119,6 @@
                                 @if($activity[0]['published_data']['activity_status'])
                                     <i class="pull-left material-icons">autorenew</i>
                                     <span>
-                                    <!--dynamic status-->
                                         {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, [0, 'published_data', 'activity_status'], '')) }}
                                         <i>(Status)</i>
                                     </span>
@@ -140,21 +135,19 @@
                             </li>
                         </ul>
                     </div>
-                    @if(getVal($activity, [0, 'published_data', 'description'], '') != '')
-                        <div class="activity-description">
-                            <p>
-                                <!--dynamic description-->
-                                {{--todoif description is empty, remove the wrapper--}}
-                                {{$activity[0]['published_data']['description']}}
-                            </p>
+                    <div class="activity-description">
+                        <p>
+                            {{$activity[0]['published_data']['description']}}
+                        </p>
+                        @if(getVal($activity, [0, 'published_data', 'description'], '') != '')
                             <span class="show-more"><i class="material-icons">more_horiz</i></span>
-                        </div>
-                    @endif
+                        @endif
+
+                    </div>
                     <div class="activity-sectors">
                         @if($activity[0]['published_data']['sector'])
                             <span class="pull-left">Sectors:</span>
                             <ul class="pull-left">
-                                <!--todocompulsory dynamic sectors-->
                                 @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
                                     <li>
                                         {{ getSectorName($sector) }}
@@ -186,7 +179,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!--dynamic value-->
                         @foreach(getVal($activity, [0, 'published_data', 'participating_organization'], '') as $index => $org)
                             <tr>
                                 <td>{{ getVal($org, ['narrative', 0, 'narrative'], '') }}</td>
@@ -209,7 +201,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!--dynamic value-->
                         @foreach(getVal($activity, [0, 'published_data', 'transactions'], []) as $index => $transaction)
                             <tr>
                                 <td>
@@ -248,7 +239,6 @@
                     <div class="budget-content">
                         <div class="pull-left total-budget">
                             <strong>
-                                <!--dynamic value-->
                                 {{ round(getVal($activity, [0, 'published_data', 'totalBudget', 'value'], 0), 3) }}
                             </strong>
                             <span class="currency">
@@ -259,7 +249,6 @@
                         <div class="pull-left budget-table">
                             <table>
                                 <tbody>
-                                <!--dynamic value-->
                                 @foreach(getVal($activity, [0, 'published_data', 'budget'], []) as $index => $budget)
                                     <tr>
                                         <td>
@@ -282,11 +271,9 @@
             <div class="activity-other-info">
                 @if($activity[0]['updated_at'])
                     <div class="pull-left updated-date">
-                        {{--todoif no date remove the div--}}
                         <i class="pull-left material-icons">access_time</i>Updated on
                         <span>
-                        <!--dynamic date-->
-                        {{dateFormat('M-d-Y H:i:s', getVal($activity, [0, 'updated_at'], ''))}}
+                            {{dateFormat('M-d-Y H:i:s', getVal($activity, [0, 'updated_at'], ''))}}
                     </span>
                     </div>
                 @endif
@@ -312,7 +299,6 @@
                     <ul>
                         <li><a href="{{ url('/about') }}">About</a></li>
                         <li><a href="{{ url('/who-is-using') }}">Who's using</a></li>
-                        <!--<li><a href="#">Snapshot</a></li>-->
                     </ul>
                     <ul>
                         @if(auth()->check())
@@ -350,6 +336,11 @@
 <script type="text/javascript" src="/js/worldMap.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+
+        if ($('.activity-description p').height() < 64) {
+            $('.show-more').hide();
+        }
+
         $('.activity-description .show-more').click(function () {
             $(this).siblings('p').animate({
                 'max-height': '1000px',

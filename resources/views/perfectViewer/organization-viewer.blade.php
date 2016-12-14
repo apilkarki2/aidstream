@@ -47,7 +47,6 @@
         <div class="width-940">
             <div class="col-md-4 organisation-info">
                 <a href="#" class="organisation-logo">
-                    <!--dynamic organisation name-->
                     @if($organizations['logo'])
                         <div class="logo">
                             <img src="{{ $organizations['logo_url'] }}" alt="{{ $organizations['name'] }}" width="auto" height="68">
@@ -57,7 +56,6 @@
                 <div class="organisation-more-info">
                 <span class="organisation-name">
         <a href="#" title="AbleChildAfrica">
-            <!--dynamic organisation name-->
             {{$organizations['name']}}
         </a>
     </span>
@@ -74,24 +72,20 @@
             <div class="col-xs-12 col-md-8 org-activity-wrapper" data-sticky_column>
                 @if(count($activities) <= 0)<h2>Activities <span class="activity-count">({{count($activities)}})</span></h2>@endif
                 <ul class="activities-listing">
-                @foreach($activities as $index => $activity)
-                    <!--dynamic activity list-->
+                    @foreach($activities as $index => $activity)
                         <li>
                             <a href="{{url('/who-is-using/'.$organizations['org_slug'].'/'.$activity['activity_id'])}}">
                                 <div class="col-md-9 pull-left activity-info-wrapper">
                                     <h3 class="activity-name">
-                                        <!--dynamic activity name-->
                                         {{getVal($activity, ['published_data', 'title', 0, 'narrative'])}}
                                     </h3>
                                     <div class="activity-publish-state">
                                         @if($activity['activity_in_registry'])
                                             <span class="pull-left published-in-iati">
-                                    <!--dynamic state-->
                                         Registered in IATI
                                     </span>
                                         @else
                                             <span class="pull-left unpublished-in-iati">
-                                    <!--dynamic state-->
                                         Not Published in IATI
                                     </span>
                                         @endif
@@ -100,7 +94,6 @@
                                     @if($activity['published_data']['identifier']['activity_identifier'])
                                         <div class="iati-identifier-wrapper">IATI Identifier:
                                             <span class="iati-identifier">
-                                        <!--dynamic iati identifier-->
                                                 {{getVal($activity, ['published_data', 'identifier', 'activity_identifier'], '')}}
                                         </span>
                                         </div>
@@ -111,17 +104,25 @@
                                                 <li><i class="pull-left material-icons">date_range</i>
                                                     @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
                                                         <span>
-                                                        @if($date['type'] == 2)
+                                                            @if($date['type'] == 2)
                                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @elseif($date['type'] == 1)
                                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @endif
+                                                        </span>
+                                                    @endforeach
+                                                    @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
+                                                        <span>
                                                             @if($date['type'] == 4)
                                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @elseif($date['type'] == 3)
                                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @endif
-                                                    </span>
+                                                        </span>
                                                     @endforeach
                                                 </li>
                                             @endif
@@ -154,28 +155,24 @@
                         <li>
                             <h4>Total Commitments</h4>
                             <span>
-                                <!--dynamic budget-->
                                 ${{getVal($organizations, ['transaction_totals', 'total_commitments'], 0)}}
                             </span>
                         </li>
                         <li>
                             <h4>Total Disbursements</h4>
                             <span>
-                                <!--dynamic budget-->
                                 ${{getVal($organizations, ['transaction_totals', 'total_disbursements'], 0)}}
                             </span>
                         </li>
                         <li>
                             <h4>Total Expenditures</h4>
                             <span>
-                                <!--dynamic budget-->
                                 ${{getVal($organizations, ['transaction_totals', 'total_expenditures'], 0)}}
                             </span>
                         </li>
                         <li>
                             <h4>Total Incoming Funds</h4>
                             <span>
-                                <!--dynamic budget-->
                                 ${{getVal($organizations, ['transaction_totals', 'total_incoming_funds'], 0)}}
                             </span>
                         </li>
@@ -202,7 +199,6 @@
                     <ul>
                         <li><a href="{{ url('/about') }}">About</a></li>
                         <li><a href="{{ url('/who-is-using') }}">Who's using</a></li>
-                        <!--<li><a href="#">Snapshot</a></li>-->
                     </ul>
                     <ul>
                         @if(auth()->check())
