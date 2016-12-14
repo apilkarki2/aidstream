@@ -10,18 +10,16 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
 
-    <meta name="title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}" />
-    <meta name="description" content="{{ getVal($activity, [0, 'description']) }}"/>
+    <meta name="title" content="Activity Viewer" />
+    <meta name="description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
     <meta name="robots" content="index,follow"/>
     <meta name="copyright"content="AidStream"/>
     <meta name="og:type" content="website"/>
     <meta name="og:url" content="{{ url()->current() }}"/>
     <meta name="og:image" content="{{ url('images/aidstream_logo.png') }}"/>
-    {{--<meta name="og:title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}"/>--}}
     <meta name="og:site_name" content="Aidstream"/>
-    <meta name="og:title" content="{{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}"/>
-    {{--<meta name="og:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>--}}
-    <meta name="og:description" content="{{ getVal($activity, [0, 'description']) }}"/>
+    <meta name="og:title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'identifier', 'iati_identifier_text']) }} - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}"/>
+    <meta name="og:description" content="{{ getVal($activity, [0, 'published_data', 'description']) }}"/>
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="{{ url()->current() }}">
@@ -29,11 +27,6 @@
     <meta name="twitter:title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}">
     <meta name="twitter:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML.">
     <meta name="twitter:image" content="{{ url('images/aidstream_logo.png') }}"/>
-
-    {{--<meta property="og:description" content="TEST">--}}
-    {{--<meta property="og:type" content="website">--}}
-    {{--<meta property="og:url" content="{{ url()->current() }}">--}}
-    {{--<meta property="og:image" content="{{ url('images/logo-text.png') }}">--}}
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
