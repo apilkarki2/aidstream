@@ -72,6 +72,7 @@ class PerfectViewerManager
     public function createSnapshot(Activity $activity)
     {
         try {
+            
             $this->exchangeRates = $this->perfectViewerRepo->getExchangeRatesBuilder();
 
             //activity data
@@ -246,11 +247,9 @@ class PerfectViewerManager
                     $eRate = getVal(json_decode($this->exchangeRates->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
 
                     return $amount / $eRate;
-                } else {
-                    if ($defaultCurrency == 'USD') {
-                        return $amount;
-                    }
                 }
+
+                return $amount;
             } else {
                 $eRate = getVal(json_decode($this->exchangeRates->where('date', $date)->first(), true), ['exchange_rates', sprintf('%s', $currency)], 1);
 
