@@ -41,9 +41,6 @@ d3.json("/data/countries.geo.json", function (countries) {
             });
 
         plotMap.on('mouseover', function (d) {
-            console.log('Mouse overed');
-            // var districtName = d.properties.DISTRICT.charAt(0).toUpperCase() + d.properties.DISTRICT.slice(1).toLowerCase();
-            // var districtData = valueById[d.properties.DISTRICT.toLowerCase()];
             var absoluteMousePos = d3.mouse(divNode);
             d3.select("#tooltip")
                 .style("left", absoluteMousePos[0] + "px")
@@ -51,7 +48,7 @@ d3.json("/data/countries.geo.json", function (countries) {
                 .style("position", "absolute")
                 .attr("text-anchor", "middle")
                 .attr("font-size", "14px")
-                .html("TOol tip show");
+                .html("<span>" + " " + d.properties.name + " (" + d.id2 + ") " + "</span>");
 
             d3.select("#tooltip").classed("tooltips", false);
         })

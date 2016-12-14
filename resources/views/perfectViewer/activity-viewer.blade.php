@@ -14,7 +14,11 @@
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <title>Activity Viewer</title>
 </head>
-
+<style type="text/css">
+    .tooltips {
+        display: none;
+    }
+</style>
 <body>
 @include('includes.header')
 <div class="wrapper">
