@@ -1086,3 +1086,8 @@ function getSectorCode(array $sector)
     return getVal($sector, ['sector_text'], '');
 
 }
+
+function dateFormat($format, $date)
+{
+    return date($format, strtotime($date));
+}

@@ -44,7 +44,7 @@
 <body>
 @include('includes.header')
 <div class="wrapper">
-    <div id="tooltip" class="tooltips">ToolTip is here!</div>
+    <div id="tooltip" class="tooltips"></div>
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
@@ -115,14 +115,14 @@
                                                     @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
                                                         <span>
                                                         @if($date['type'] == 2)
-                                                                {{getVal($date, ['date'], '')}}
+                                                                {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
                                                             @elseif($date['type'] == 1)
-                                                                {{getVal($date, ['date'], '')}}
+                                                                {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
                                                             @endif
                                                             @if($date['type'] == 4)
-                                                                - {{getVal($date, ['date'], '')}}
+                                                                - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
                                                             @elseif($date['type'] == 3)
-                                                                - {{getVal($date, ['date'], '')}}
+                                                                - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
                                                             @endif
                                                     </span>
                                                     @endforeach
