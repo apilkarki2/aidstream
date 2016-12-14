@@ -7,6 +7,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+    <meta name="description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
+    <meta name="robots" content="index,follow" />
+    <meta name="copyright"content="AidStream">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="og:type" content="website"/>
+    <meta name="og:url" content="{{ url()->current() }}"/>
+    <meta name="og:image" content="{{ url('images/aidstream_logo.png') }}"/>
+    <meta name="og:title" content="Activity Viewer"/>
+    <meta name="og:site_name" content="Aidstream"/>
+    <meta name="og:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="{{ url()->current() }}">
+    <meta name="twitter:creator" content="@aidstream">
+    <meta name="twitter:title" content="Activity Viewer">
+    <meta name="twitter:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML.">
+    <meta name="twitter:image" content="{{ url('images/aidstream_logo.png') }}"/>
+
+    {{--<meta property="og:description" content="TEST">--}}
+    {{--<meta property="og:type" content="website">--}}
+    {{--<meta property="og:url" content="{{ url()->current() }}">--}}
+    {{--<meta property="og:image" content="{{ url('images/logo-text.png') }}">--}}
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
     <link rel="stylesheet" href="{{asset('/css/bootstrap.min.css')}}">
@@ -81,7 +105,7 @@
                                 <li><i class="pull-left material-icons">date_range</i>
                                     @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
                                         <span>
-                                        @if($date['type'] == 2)
+                                            @if($date['type'] == 2)
                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
                                             @elseif($date['type'] == 1)
                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
@@ -108,7 +132,12 @@
                         </ul>
                         <ul class="pull-right links">
                             <li><a href="#"><i class="pull-left material-icons">mail</i>Contact</a></li>
-                            <li><a href="#"><i class="pull-left material-icons">share</i>Share</a></li>
+                            <li>
+                                <a href="#"><i class="pull-left material-icons">share</i>
+                                    <a href="javascript:shareThisPage()" target="_blank" alt="Share on Facebook">Share</a>
+                                    <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     @if(getVal($activity, [0, 'published_data', 'description'], '') != '')
@@ -127,7 +156,8 @@
                             <ul class="pull-left">
                                 <!--todocompulsory dynamic sectors-->
                                 @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
-                                    <li>{{ getSectorName($sector) }}
+                                    <li>
+                                        {{ getSectorName($sector) }}
                                         <i class="pull-right material-icons">error</i>
                                         <div class="sector-more-info">
                                             <dl>
@@ -223,7 +253,6 @@
                             </strong>
                             <span class="currency">
                                 USD
-                                {{--                                {{getVal($activity, [0, 'published_data', 'totalBudget', 'currency'], '')}}--}}
                             </span>
                             <label>Total Budget</label>
                         </div>
@@ -252,14 +281,14 @@
             </div>
             <div class="activity-other-info">
                 @if($activity[0]['updated_at'])
-                <div class="pull-left updated-date">
-                    {{--todoif no date remove the div--}}
-                    <i class="pull-left material-icons">access_time</i>Updated on
-                    <span>
+                    <div class="pull-left updated-date">
+                        {{--todoif no date remove the div--}}
+                        <i class="pull-left material-icons">access_time</i>Updated on
+                        <span>
                         <!--dynamic date-->
                         {{dateFormat('M-d-Y H:i:s', getVal($activity, [0, 'updated_at'], ''))}}
                     </span>
-                </div>
+                    </div>
                 @endif
                 <a href="{{'/files/xml/'.getVal($activity, [0, 'filename'], '')}}" target="_blank" class="view-xml-file">View XML file here</a>
             </div>
@@ -330,5 +359,21 @@
         });
     });
 </script>
+<script language="javascript">
+    var shareThisPage = function () {
+        var url = "{!! urlencode(url()->current()) !!}";
+
+        window.open("https://www.facebook.com/sharer/sharer.php?u=" + url + "&t=" + document.title, '',
+            'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+        return false;
+    };
+
+    var tweetThisPage = function () {
+        window.open("https://twitter.com/intent/tweet?url=https://aidstream.org");
+
+        return false;
+    };
+</script>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 </html>
