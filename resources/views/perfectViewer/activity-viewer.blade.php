@@ -10,22 +10,25 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
 
-    <meta name="title" content="Activity Viewer" />
-    <meta name="description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
+    <meta name="title" content="Activity Viewer"/>
+    <meta name="description"
+          content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML."/>
     <meta name="robots" content="index,follow"/>
-    <meta name="copyright"content="AidStream"/>
+    <meta name="copyright" content="AidStream"/>
     <meta name="og:type" content="website"/>
     <meta name="og:url" content="{{ url()->current() }}"/>
     <meta name="og:image" content="{{ url('images/aidstream_logo.png') }}"/>
     <meta name="og:site_name" content="Aidstream"/>
-    <meta name="og:title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'identifier', 'iati_identifier_text']) }} - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}"/>
+    <meta name="og:title"
+          content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'identifier', 'iati_identifier_text']) }} - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}"/>
     <meta name="og:description" content="{{ getVal($activity, [0, 'published_data', 'description']) }}"/>
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="{{ url()->current() }}">
     <meta name="twitter:creator" content="@aidstream">
     <meta name="twitter:title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}">
-    <meta name="twitter:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML.">
+    <meta name="twitter:description"
+          content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML.">
     <meta name="twitter:image" content="{{ url('images/aidstream_logo.png') }}"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -99,15 +102,23 @@
                                         <span>
                                             @if($date['type'] == 2)
                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @elseif($date['type'] == 1)
                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @endif
+                                        </span>
+                                    @endforeach
+                                    @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
+                                        <span>
                                             @if($date['type'] == 4)
                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @elseif($date['type'] == 3)
                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                @break
                                             @endif
-                                    </span>
+                                        </span>
                                     @endforeach
                                 </li>
                             @endif
@@ -278,7 +289,7 @@
                         <i class="pull-left material-icons">access_time</i>Updated on
                         <span>
                         <!--dynamic date-->
-                        {{dateFormat('M-d-Y H:i:s', getVal($activity, [0, 'updated_at'], ''))}}
+                            {{dateFormat('M-d-Y H:i:s', getVal($activity, [0, 'updated_at'], ''))}}
                     </span>
                     </div>
                 @endif

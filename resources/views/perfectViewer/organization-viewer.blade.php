@@ -111,17 +111,25 @@
                                                 <li><i class="pull-left material-icons">date_range</i>
                                                     @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
                                                         <span>
-                                                        @if($date['type'] == 2)
+                                                            @if($date['type'] == 2)
                                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @elseif($date['type'] == 1)
                                                                 {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @endif
+                                                        </span>
+                                                    @endforeach
+                                                    @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
+                                                        <span>
                                                             @if($date['type'] == 4)
                                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @elseif($date['type'] == 3)
                                                                 - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                                @break
                                                             @endif
-                                                    </span>
+                                                        </span>
                                                     @endforeach
                                                 </li>
                                             @endif
