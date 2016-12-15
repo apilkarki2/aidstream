@@ -103,11 +103,15 @@ class PerfectViewerRepository
      * @param $activityId
      * @return mixed
      */
-    public function getTransactions($activityId)
+    public function getTransactions($orgId)
     {
-        $transactions = $this->transaction->where('activity_id', $activityId)->get();
+        $activities = array_flatten(json_decode($this->activitySnapshot->select('activity_id')->where('org_id', $orgId)->get(), true));
 
-        return $transactions->toArray();
+        foreach($activities as $activityId){
+        $transactions[] = array_collapse($this->transaction->where('activity_id', $activityId)->get()->toArray());
+        }
+
+        return $transactions;
     }
 
     /**

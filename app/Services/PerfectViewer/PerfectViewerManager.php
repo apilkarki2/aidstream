@@ -90,7 +90,7 @@ class PerfectViewerManager
             $published_to_registry    = $activity->published_to_registry;
 
             //transaction and budget
-            $transactions     = $this->perfectViewerRepo->getTransactions($activityId);
+            $transactions     = $this->perfectViewerRepo->getTransactions($orgId);
             $dates            = $this->getDates($activity, $transactions);
             $newDates         = $this->getNewDates($dates);
             $newExchangeRates = $this->newExchangeRates($newDates);
