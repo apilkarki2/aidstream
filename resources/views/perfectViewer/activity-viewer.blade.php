@@ -35,11 +35,6 @@
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <title>Activity Viewer</title>
 </head>
-<style type="text/css">
-    .tooltips {
-        display: none;
-    }
-</style>
 <body>
 @include('includes.header')
 <div class="wrapper">
@@ -47,7 +42,7 @@
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper">
         <div class="width-940">
-            <div class="organisation-info">
+            <div class="col-md-4 organisation-info">
                 <a href="#" class="organisation-logo">
                     <!--dynamic organisation logo-->
                     <img src="{{ $organization[0]['logo_url'] }}" alt="{{ $organization[0]['name'] }}" width="auto" height="68">
