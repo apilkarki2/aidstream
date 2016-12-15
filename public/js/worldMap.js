@@ -43,6 +43,12 @@ d3.json("/data/countries.geo.json", function (countries) {
         plotMap.on('mouseover', function (d) {
             var absoluteMousePos = d3.mouse(divNode);
             d3.select("#tooltip")
+                .style("display", function() {
+                    if (countryNames[d.id2] != undefined)
+                        return "block";
+                    else
+                        return "none";
+                })
                 .style("left", absoluteMousePos[0] + "px")
                 .style("top", absoluteMousePos[1] + 80 + "px")
                 .style("background","#fff")
