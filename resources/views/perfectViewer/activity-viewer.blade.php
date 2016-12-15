@@ -22,11 +22,10 @@
     <meta name="og:description" content="{{ getVal($activity, [0, 'published_data', 'description']) }}"/>
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="{{ url()->current() }}">
-    <meta name="twitter:creator" content="@aidstream">
+    <meta name="twitter:site" content="@aidstream">
     <meta name="twitter:title" content="Activity Viewer - {{ getVal($activity, [0, 'published_data', 'title', 0, 'narrative'], '') }}">
     <meta name="twitter:description" content="AidStream is an online platform for organisations that wish to publish aid data in accordance with the International Aid Transparency Initiative(IATI) format but want to avoid dealing with the complexities of creating XML.">
-    <meta name="twitter:image" content="{{ url('images/aidstream_logo.png') }}"/>
+    <meta name="twitter:image:src" content="{{ url('images/aidstream_logo.png') }}"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
@@ -132,7 +131,7 @@
                             <li>
                                 <a href="#"><i class="pull-left material-icons">share</i>
                                     <a href="javascript:shareThisPage()" target="_blank" alt="Share on Facebook">Share</a>
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>
+                                    <a class="twitter" href="https://twitter.com/intent/tweet?url={{ url()->current() }}" target="_blank">Tweet</a>
                                 </a>
                             </li>
                         </ul>
