@@ -40,9 +40,9 @@ class WhoIsUsingController extends Controller
      */
     public function index()
     {
-        $organizationCount = $this->organizationQueryBuilder()->get()->count();
+        $organizations = $this->organizationQueryBuilder()->get();
 
-        return view('who-is-using', compact('organizationCount'));
+        return view('who-is-using', compact('organizations'));
     }
 
     /**
