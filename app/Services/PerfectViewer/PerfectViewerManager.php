@@ -48,24 +48,22 @@ class PerfectViewerManager
     /**
      * @var HistoricalExchangeRate
      */
-    private $historicalExchangeRate;
+    protected $historicalExchangeRate;
 
     /**
      * PerfectActivityViewerManager constructor.
-     * @param Guard                   $auth
+     *
      * @param PerfectViewerRepository $perfectViewerRepository
      * @param DatabaseManager         $databaseManager
      * @param Logger                  $logger
      * @param HistoricalExchangeRate  $historicalExchangeRate
      */
     public function __construct(
-        Guard $auth,
         PerfectViewerRepository $perfectViewerRepository,
         DatabaseManager $databaseManager,
         Logger $logger,
         HistoricalExchangeRate $historicalExchangeRate
     ) {
-        $this->auth                   = $auth;
         $this->perfectViewerRepo      = $perfectViewerRepository;
         $this->database               = $databaseManager;
         $this->logger                 = $logger;
@@ -73,7 +71,8 @@ class PerfectViewerManager
     }
 
     /**
-     * Creates snapshot for Perfect Activity Viewer
+     * Creates and stores snapshots, retrieves and store exchange rates with API, calculates total transaction and budgets
+     *
      * @param $activity
      * @return PerfectViewerManager|bool
      */
@@ -91,14 +90,14 @@ class PerfectViewerManager
 
             //transaction and budget
             $transactions     = $this->perfectViewerRepo->getTransactions($orgId);
-            $dates            = $this->getDates($activity, $transactions);
-            $newDates         = $this->getNewDates($dates);
-            $newExchangeRates = $this->newExchangeRates($newDates);
+//            $dates            = $this->getDates($activity, $transactions);
+//            $newDates         = $this->getNewDates($dates);
+//            $newExchangeRates = $this->newExchangeRates($newDates);
             $totalBudget      = $this->calculateBudget(getVal($activity->toArray(), ['budget'], []));
             $totalTransaction = $this->calculateTransaction($transactions);
 
             //store new exchange rates
-            $this->storeExchangeRates($newExchangeRates);
+//            $this->storeExchangeRates($newExchangeRates);
 
             //organization data
             $organization  = $this->getOrg($orgId);
@@ -107,7 +106,7 @@ class PerfectViewerManager
             $filename      = $filename->filename;
             $perfectOrg    = $this->makePerfectOrg($organization, $totalTransaction);
 
-            $perfectData = $this->convertIntoJson($activity, $reporting_org, $transactions, $totalBudget);
+            $perfectData = $this->makeArray($activity, $reporting_org, $transactions, $totalBudget);
 
             $this->database->beginTransaction();
             $result    = $this->perfectViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
@@ -139,6 +138,8 @@ class PerfectViewerManager
     }
 
     /**
+     * Transforms to ActivitySnapshot Schema for storing
+     *
      * @param $perfectData
      * @param $orgId
      * @param $activityId
@@ -158,15 +159,15 @@ class PerfectViewerManager
     }
 
     /**
-     * Converts given attributes to JSON
+     * Makes Array for published_data of Activity Snapshot Schema
+     *
      * @param $activity
      * @param $reporting_org
      * @param $transactions
      * @param $totalBudget
-    //     * @param $totalTransaction
      * @return array
      */
-    public function convertIntoJson($activity, $reporting_org, $transactions, $totalBudget)
+    public function makeArray($activity, $reporting_org, $transactions, $totalBudget)
     {
         return [
             'title'                      => $activity->title,
@@ -191,6 +192,7 @@ class PerfectViewerManager
 
     /**
      * Provides reporting organization
+     *
      * @param $orgId
      * @return
      */
@@ -201,6 +203,7 @@ class PerfectViewerManager
 
     /**
      * Calculates total budget of an activity
+     *
      * @param $budget
      * @return int|string
      */
@@ -216,6 +219,12 @@ class PerfectViewerManager
         return $totalBudget;
     }
 
+    /**
+     * Calculates total transaction amount for each kind
+     *
+     * @param $transactions
+     * @return mixed
+     */
     protected function calculateTransaction($transactions)
     {
         $totalTransaction['total_incoming_funds'] = 0;
@@ -253,6 +262,12 @@ class PerfectViewerManager
         return $totalTransaction;
     }
 
+    /**
+     * Provides correct converted rates for each exchange rates.
+     *
+     * @param $data
+     * @return float
+     */
     protected function giveCorrectValue($data)
     {
         $defaultCurrency = getVal($this->defaultFieldValues, ['0', 'default_currency']);
@@ -280,27 +295,56 @@ class PerfectViewerManager
         return $amount;
     }
 
+    /**
+     * Provides Organization and its snapshot's Query Builder
+     *
+     * @return \App\Models\PerfectViewer\OrganizationSnapshot
+     */
     public function organizationQueryBuilder()
     {
         return $this->perfectViewerRepo->organizationQueryBuilder();
     }
 
+    /**
+     * Provides Activity Snapshot Query Builder
+     *
+     * @return \App\Models\PerfectViewer\ActivitySnapshot
+     */
     public function activityQueryBuilder()
     {
         return $this->perfectViewerRepo->activityQueryBuilder();
 
     }
 
+    /**
+     * Provides Activity Snapshot form Organization Id
+     *
+     * @param $orgId
+     * @return mixed
+     */
     public function getSnapshotWithOrgId($orgId)
     {
         return $this->perfectViewerRepo->getSnapshot($orgId);
     }
 
+    /**
+     * Provides Organization from Organization Id
+     *
+     * @param $orgId
+     * @return mixed
+     */
     public function getOrgWithOrgId($orgId)
     {
         return $this->perfectViewerRepo->getOrgWithId($orgId);
     }
 
+    /**
+     * Provides Array for Activity Snapshot Schema
+     *
+     * @param $organization
+     * @param $totalTransaction
+     * @return array
+     */
     public function makePerfectOrg($organization, $totalTransaction)
     {
         return [
@@ -312,85 +356,128 @@ class PerfectViewerManager
         ];
     }
 
-    protected function getDates($activity, $transactions)
-    {
-        $dates = [];
+//    /**
+//     * Provides Dates for Published Data
+//     *
+//     * @param $activity
+//     * @param $transactions
+//     * @return array
+//     */
+//    protected function getDates($activity, $transactions)
+//    {
+//        $dates = [];
+//
+//        if (!is_array($activity)) {
+//            $activity = (array) $activity;
+//        }
+//
+//        foreach (getVal($activity, ['budget'], []) as $budget) {
+//            $dates[] = getVal($budget, ['value', 0, 'value_date'], '');
+//        }
+//
+//        foreach ($transactions as $transaction) {
+//            $dates[] = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
+//        }
+//
+//        return $dates;
+//    }
 
-        if (!is_array($activity)) {
-            $activity = (array) $activity;
-        }
+//    /**
+//     * Provides dates that are not in Exchange Rate History table
+//     *
+//     * @param $dates
+//     * @return array
+//     */
+//    protected function getNewDates($dates)
+//    {
+//        $allDates = $this->exchangeRatesBuilder->select('date')->get()->toArray();
+//
+//        return array_values(array_diff($dates, array_flatten($allDates)));
+//    }
 
-        foreach (getVal($activity, ['budget'], []) as $budget) {
-            $dates[] = getVal($budget, ['value', 0, 'value_date'], '');
-        }
+//    /**
+//     * Provides new exchange rates
+//     *
+//     * @param $newDates
+//     * @return array
+//     */
+//    protected function newExchangeRates($newDates)
+//    {
+//        $exchangeRates = [];
+//        foreach ($newDates as $index => $newDate) {
+//            $exchangeRates[] = $this->clean(json_decode($this->curl($newDate), true), $newDate);
+//        }
+//
+//        return $exchangeRates;
+//    }
 
-        foreach ($transactions as $transaction) {
-            $dates[] = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
-        }
-
-        return $dates;
-    }
-
-    protected function getNewDates($dates)
-    {
-        $allDates = $this->exchangeRatesBuilder->select('date')->get()->toArray();
-
-        return array_values(array_diff($dates, array_flatten($allDates)));
-    }
-
-    protected function newExchangeRates($newDates)
-    {
-        $exchangeRates = [];
-        foreach ($newDates as $index => $newDate) {
-            $exchangeRates[] = $this->clean(json_decode($this->curl($newDate), true), $newDate);
-        }
-
-        return $exchangeRates;
-    }
-
-    protected function curl($date)
-    {
-        $ch = curl_init('http://apilayer.net/api/historical' . '?access_key=' . 'c92a72092ee24a60fc0e0cb7fd1377bf' . '&date=' . $date . '&format=1');
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return $response;
-    }
+//    /**
+//     * Calls API for new dates
+//     *
+//     * @param $date
+//     * @return mixed
+//     */
+//    protected function curl($date)
+//    {
+//        $ch = curl_init('http://apilayer.net/api/historical' . '?access_key=' . 'c92a72092ee24a60fc0e0cb7fd1377bf' . '&date=' . $date . '&format=1');
+//
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        $response = curl_exec($ch);
+//        curl_close($ch);
+//
+//        return $response;
+//    }
 
 
-    protected function clean($json, $date)
-    {
-        $rates = [];
+//    /**
+//     * Provides only needed data from API response
+//     *
+//     * @param $json
+//     * @param $date
+//     * @return array
+//     */
+//    protected function clean($json, $date)
+//    {
+//        $rates = [];
+//
+//        if (!$json) {
+//            $json = (array) $json;
+//        }
+//
+//        foreach (getVal($json, ['quotes'], []) as $key => $value) {
+//            $toCurrency = str_replace('USD', '', $key);
+//
+//            if ($toCurrency !== '') {
+//                $rates[$date][$toCurrency] = $value;
+//            }
+//        }
+//
+//        return $rates;
+//    }
 
-        if (!$json) {
-            $json = (array) $json;
-        }
+//    /**
+//     * Transforms Exchange Rates to suitable form
+//     *
+//     * @param $exchangeRate
+//     * @return array
+//     */
+//    protected function transformExchangeRates($exchangeRate)
+//    {
+//        return [
+//            'date'           => key($exchangeRate),
+//            'exchange_rates' => value($exchangeRate)
+//        ];
+//    }
 
-        foreach (getVal($json, ['quotes'], []) as $key => $value) {
-            $toCurrency = str_replace('USD', '', $key);
-
-            if ($toCurrency !== '') {
-                $rates[$date][$toCurrency] = $value;
-            }
-        }
-
-        return $rates;
-    }
-
-    protected function transformExchangeRates($exchangeRate)
-    {
-        return [
-            'date'           => key($exchangeRate),
-            'exchange_rates' => value($exchangeRate)
-        ];
-    }
-
-    protected function storeExchangeRates($newExchangeRates)
-    {
-        foreach ($newExchangeRates as $index => $rates) {
-            $this->historicalExchangeRate->create($this->transformExchangeRates($rates));
-        }
-    }
+//    /**
+//     * Stores Exchange Rates of new dates to the table
+//     *
+//     * @param $newExchangeRates
+//     */
+//    protected function storeExchangeRates($newExchangeRates)
+//    {
+//        foreach ($newExchangeRates as $index => $rates) {
+//            $this->historicalExchangeRate->create($this->transformExchangeRates($rates));
+//        }
+//    }
 }

@@ -46,6 +46,7 @@ class PerfectViewerRepository
 
     /**
      * PerfectViewer constructor.
+     *
      * @param ActivitySnapshot       $activitySnapshot
      * @param ActivityPublished      $activityPublished
      * @param Transaction            $transaction
@@ -71,6 +72,7 @@ class PerfectViewerRepository
 
     /**
      * Create new snapshot record or updates if record already exists
+     *
      * @param array $data
      * @return ActivitySnapshot
      */
@@ -80,6 +82,8 @@ class PerfectViewerRepository
     }
 
     /**
+     * Create new organization snapshot record or updates if record already exists
+     *
      * @param array $perfectOrg
      * @return OrganizationSnapshot
      */
@@ -90,6 +94,7 @@ class PerfectViewerRepository
 
     /**
      * Provide Published Filename from organization id
+     *
      * @param $orgId
      * @return mixed
      */
@@ -100,11 +105,14 @@ class PerfectViewerRepository
 
     /**
      * Provide transaction data form activity id
-     * @param $activityId
+     *
+     * @param $orgId
      * @return mixed
      */
     public function getTransactions($orgId)
     {
+        $transactions = [];
+
         $activities = array_flatten(json_decode($this->activitySnapshot->select('activity_id')->where('org_id', $orgId)->get(), true));
 
         foreach($activities as $activityId){
@@ -116,6 +124,7 @@ class PerfectViewerRepository
 
     /**
      * Provide organization data from organization id
+     *
      * @param $orgId
      * @return mixed
      */
@@ -126,6 +135,7 @@ class PerfectViewerRepository
 
     /**
      * Provides all the organizations from Activity Snapshot
+     *
      * @return OrganizationSnapshot
      */
     public function organizationQueryBuilder()
@@ -134,6 +144,8 @@ class PerfectViewerRepository
     }
 
     /**
+     * Provides Activity Snapshot Query Builder
+     *
      * @return ActivitySnapshot
      */
     public function activityQueryBuilder()
@@ -142,6 +154,8 @@ class PerfectViewerRepository
     }
 
     /**
+     * Provides Activity Snapshot
+     *
      * @param $orgId
      * @return mixed
      */
@@ -151,6 +165,8 @@ class PerfectViewerRepository
     }
 
     /**
+     * Provides Organization
+     *
      * @param $orgId
      * @return mixed
      */
@@ -160,6 +176,8 @@ class PerfectViewerRepository
     }
 
     /**
+     * Provides ExchangeRates Query Builder
+     *
      * @return HistoricalExchangeRate
      */
     public function getExchangeRatesBuilder()
