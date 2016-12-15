@@ -14,119 +14,124 @@
 <section class="main-container">
     <div class="organisation-list-wrapper">
         <div class="col-md-12 text-center">
-            <h1>{{ $organizationCount }} organisations are using AidStream</h1>
+            <h1>{{ count($organizations) }} organisations are using AidStream</h1>
 
             <p>The organisations listed below are using AidStream.</p>
 
             <div class="organisations-list width-900">
                 <ul>
+                    @foreach($organizations as $index => $organization)
+                    <a href="{{ url('/who-is-using/'.$organization->org_slug)}}">
+                        <img src="{{ $organization->logo_url }}" alt="{{ $organization->name }}">
+                    </a>
+                    @endforeach
                 </ul>
             </div>
-            <a href="#" class="load-more">Load More</a>
+            {{--<a href="#" class="load-more">Load More</a>--}}
         </div>
     </div>
 </section>
 @include('includes.footer')
-<div class="hidden">
-    <ul class="no-image-logo">
-        <li><span><a href=""></a></span></li>
-    </ul>
-    <ul class="has-image-logo">
-        <li><a href=""><img/></a></li>
-    </ul>
-</div>
+{{--<div class="hidden">--}}
+    {{--<ul class="no-image-logo">--}}
+        {{--<li><span><a href=""></a></span></li>--}}
+    {{--</ul>--}}
+    {{--<ul class="has-image-logo">--}}
+        {{--<li><a href=""><img/></a></li>--}}
+    {{--</ul>--}}
+{{--</div>--}}
 <script type="text/javascript" src="{{url('/js/jquery.js')}}"></script>
 <script type="text/javascript" src="{{url('/js/bootstrap.min.js')}}"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var page = 0;
-        var count = 12;
+{{--<script type="text/javascript">--}}
+    {{--$(document).ready(function () {--}}
+        {{--var page = 0;--}}
+        {{--var count = 12;--}}
 
-        $('.load-more').click(function (e) {
-            e.preventDefault();
-            $('body').append('<div class="loader">.....</div>');
-            var baseUrl = '{{ url('/who-is-using') }}';
+        {{--$('.load-more').click(function (e) {--}}
+            {{--e.preventDefault();--}}
+            {{--$('body').append('<div class="loader">.....</div>');--}}
+            {{--var baseUrl = '{{ url('/who-is-using') }}';--}}
 
-            $.ajax({
-                type: 'get',
-                url: baseUrl + '/page/' + page + '/count/' + count,
-                success: function (data) {
-                    if (!data.next_page) {
-                        $('.load-more').addClass('hidden').remove();
-                    }
-                    var organizations = data.organizations;
-                    var logos = '';
-                    for (var i = 0; i < organizations.length; i++) {
-                        var organization = organizations[i];
-                        var logo = '';
-                        var link = baseUrl + '/' + organization.org_slug;
-                        if (organization.logo_url) {
-                            logo = $('.has-image-logo').clone();
-                            $('a', logo).attr({href: link}).children('img').attr({src: organization.logo_url, alt: organization.name});
-                        } else {
-                            logo = $('.no-image-logo').clone();
-                            $('span a', logo).attr({href: link}).html(organization.name);
-                        }
-                        logos += logo.html();
-                    }
-                    $('.organisations-list ul').append(logos);
-                    page++;
-                },
-                complete: function () {
-                    $('body > .loader').addClass('hidden').remove();
-                }
-            });
-        });
-        $('.load-more').trigger('click');
-    });
-    $(document).ready(function () {
-        function hamburgerMenu() {
-            $('.navbar-toggle.collapsed').click(function () {
-                $('.navbar-collapse').toggleClass('out');
-                $(this).toggleClass('collapsed');
-            });
-        }
+            {{--$.ajax({--}}
+                {{--type: 'get',--}}
+                {{--url: baseUrl + '/page/' + page + '/count/' + count,--}}
+                {{--success: function (data) {--}}
+                    {{--if (!data.next_page) {--}}
+                        {{--$('.load-more').addClass('hidden').remove();--}}
+                    {{--}--}}
+                    {{--var organizations = data.organizations;--}}
+                    {{--var logos = '';--}}
+                    {{--for (var i = 0; i < organizations.length; i++) {--}}
+                        {{--var organization = organizations[i];--}}
+                        {{--var logo = '';--}}
+                        {{--var link = baseUrl + '/' + organization.org_slug;--}}
+                        {{--if (organization.logo_url) {--}}
+                            {{--logo = $('.has-image-logo').clone();--}}
+                            {{--$('a', logo).attr({href: link}).children('img').attr({src: organization.logo_url, alt: organization.name});--}}
+                        {{--} else {--}}
+                            {{--logo = $('.no-image-logo').clone();--}}
+                            {{--$('span a', logo).attr({href: link}).html(organization.name);--}}
+                        {{--}--}}
+                        {{--logos += logo.html();--}}
+                    {{--}--}}
+                    {{--$('.organisations-list ul').append(logos);--}}
+                    {{--page++;--}}
+                {{--},--}}
+                {{--complete: function () {--}}
+                    {{--$('body > .loader').addClass('hidden').remove();--}}
+                {{--}--}}
+            {{--});--}}
+        {{--});--}}
+        {{--$('.load-more').trigger('click');--}}
+    {{--});--}}
+    {{--$(document).ready(function () {--}}
+        {{--function hamburgerMenu() {--}}
+            {{--$('.navbar-toggle.collapsed').click(function () {--}}
+                {{--$('.navbar-collapse').toggleClass('out');--}}
+                {{--$(this).toggleClass('collapsed');--}}
+            {{--});--}}
+        {{--}--}}
 
-        hamburgerMenu();
-    });
-</script>
+        {{--hamburgerMenu();--}}
+    {{--});--}}
+{{--</script>--}}
 <style type="text/css">
-    .loader {
-        position: fixed;
-        left: 0px;
-        right: 0px;
-        top: 0px;
-        bottom: 0px;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-        color: #FFFFFF;
-        text-align: center;
-        font-size: 60px;
-        letter-spacing: -16px;
-        -webkit-animation: mymove 1s infinite; /* Chrome, Safari, Opera */
-        -webkit-animation-direction: alternate;
-        animation: loading 1s infinite;
-        animation-direction: alternate;
-    }
+    /*.loader {*/
+        /*position: fixed;*/
+        /*left: 0px;*/
+        /*right: 0px;*/
+        /*top: 0px;*/
+        /*bottom: 0px;*/
+        /*background-color: rgba(0, 0, 0, 0.5);*/
+        /*z-index: 9999;*/
+        /*color: #FFFFFF;*/
+        /*text-align: center;*/
+        /*font-size: 60px;*/
+        /*letter-spacing: -16px;*/
+        /*-webkit-animation: mymove 1s infinite; !* Chrome, Safari, Opera *!*/
+        /*-webkit-animation-direction: alternate;*/
+        /*animation: loading 1s infinite;*/
+        /*animation-direction: alternate;*/
+    /*}*/
 
-    /* Chrome, Safari, Opera */
-    @-webkit-keyframes loading {
-        from {
-            letter-spacing: -16px;
-        }
-        to {
-            letter-spacing: 16px;
-        }
-    }
+     /*Chrome, Safari, Opera*/
+    /*@-webkit-keyframes loading {*/
+        /*from {*/
+            /*letter-spacing: -16px;*/
+        /*}*/
+        /*to {*/
+            /*letter-spacing: 16px;*/
+        /*}*/
+    /*}*/
 
-    @keyframes loading {
-        from {
-            letter-spacing: -16px;
-        }
-        to {
-            letter-spacing: 16px;
-        }
-    }
+    /*@keyframes loading {*/
+        /*from {*/
+            /*letter-spacing: -16px;*/
+        /*}*/
+        /*to {*/
+            /*letter-spacing: 16px;*/
+        /*}*/
+    /*}*/
 </style>
 </body>
 </html>
