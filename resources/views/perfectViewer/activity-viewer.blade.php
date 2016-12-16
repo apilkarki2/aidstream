@@ -94,10 +94,10 @@
                                     @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
                                         <span>
                                             @if($date['type'] == 2)
-                                                {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
                                             @elseif($date['type'] == 1)
-                                                {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
                                             @endif
                                         </span>
@@ -105,10 +105,10 @@
                                     @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
                                         <span>
                                             @if($date['type'] == 4)
-                                                - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                - {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
                                             @elseif($date['type'] == 3)
-                                                - {{dateFormat('M-d-Y', getVal($date, ['date'], ''))}}
+                                                - {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
                                             @endif
                                         </span>
@@ -205,7 +205,7 @@
                             <tr>
                                 <td>
                                     <span class="transaction-value">{{getVal($transaction, ['transaction', 'value', 0, 'amount'], '')}}</span><i>(Valued
-                                        at {{dateFormat('M-d-Y', getVal($transaction, ['transaction', 'value', 0, 'date'], ''))}})</i>
+                                        at {{dateFormat('M d, Y', getVal($transaction, ['transaction', 'value', 0, 'date'], ''))}})</i>
                                 </td>
                                 <td>
                                     <span class="provider"><i>circle</i>
@@ -227,7 +227,7 @@
                                     <strong>{{ $codeListHelper->getCodeNameOnly('TransactionType', getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) }}</strong>
                                 </td>
                                 <td class="date"><i
-                                            class="pull-left material-icons">date_range</i>{{dateFormat('M-d-Y', getVal($transaction, ['transaction', 'transaction_date', 0, 'date']))}}
+                                            class="pull-left material-icons">date_range</i>{{dateFormat('M d, Y', getVal($transaction, ['transaction', 'transaction_date', 0, 'date']))}}
                                 </td>
                             </tr>
                         @endforeach
@@ -254,11 +254,11 @@
                                         <td>
                                             <span class="transaction-value">{{getVal($budget, ['value', 0, 'amount'], '')}} {{getVal($budget, ['value', 0, 'currency'], '')}}
                                                 </span><i>(Valued at
-                                                {{dateFormat('M-d-Y', getVal($budget, ['value', 0, 'value_date'], ''))}})</i></td>
+                                                {{dateFormat('M d, Y', getVal($budget, ['value', 0, 'value_date'], ''))}})</i></td>
                                         <td class="date"><i class="pull-left material-icons">date_range</i>
-                                            {{dateFormat('M-d-Y', getVal($budget, ['period_start', 0, 'date'], ''))}}
+                                            {{dateFormat('M d, Y', getVal($budget, ['period_start', 0, 'date'], ''))}}
                                             -
-                                            {{dateFormat('M-d-Y', getVal($budget, ['period_end', 0, 'date'], ''))}}
+                                            {{dateFormat('M d, Y', getVal($budget, ['period_end', 0, 'date'], ''))}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -273,7 +273,7 @@
                     <div class="pull-left updated-date">
                         <i class="pull-left material-icons">access_time</i>Updated on
                         <span>
-                            {{dateFormat('M-d-Y H:i:s', getVal($activity, [0, 'updated_at'], ''))}}
+                            {{dateFormat('M d, Y H:i:s', getVal($activity, [0, 'updated_at'], ''))}}
                     </span>
                     </div>
                 @endif
