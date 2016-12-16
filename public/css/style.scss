@@ -105,7 +105,7 @@ h2 {
 }
 
 .navbar-fixed {
-  padding: 9px 30px!important;
+  padding: 9px 30px !important;
   .navbar-brand {
     background: $url_8 no-repeat left;
   }
@@ -666,7 +666,7 @@ footer {
   }
 }
 
-.modal-dialog .close span,.modal-dialog .close:hover span,.modal-dialog .close:focus span {
+.modal-dialog .close span, .modal-dialog .close:hover span, .modal-dialog .close:focus span {
   color: $color_dodger_blue_approx;
   font-size: 40px;
   display: block;
@@ -677,8 +677,8 @@ footer {
   cursor: pointer;
 }
 
-.close,.close:hover,.close:focus {
-  opacity: 1!important;
+.close, .close:hover, .close:focus {
+  opacity: 1 !important;
   font-family: Open-Sans-Regular;
 }
 
@@ -1265,6 +1265,27 @@ section {
   display: none;
 }
 
+#tooltip {
+  border-radius: 4px;
+  font-size: 12px;
+  position: relative;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  &:before {
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 5px solid $color_white;
+    content: "";
+    left: -5px;
+    position: absolute;
+  }
+  label {
+    color: rgba($color_gravel_approx,0.7);
+    display: block;
+    font: 11px 'Open-Sans-Regular';
+    margin-bottom: 3px;
+  }
+}
+
 .organisation-info {
   height: 180px;
   position: relative;
@@ -1547,7 +1568,6 @@ footer {
 .activity-description {
   p {
     line-height: 22px;
-    height: 64px;
     overflow: hidden;
   }
   .show-more {
@@ -1599,7 +1619,7 @@ footer {
 .sector-more-info {
   position: absolute;
   top: 33px;
-  left: -30%;
+  left: 0;
   background: $color_white;
   border-radius: 4px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
@@ -1607,21 +1627,29 @@ footer {
   width: 470px;
   display: none;
   z-index: 1;
-  dl {
-    dt:not(:last-of-type), dd:not(:last-of-type) {
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-    }
-    dt {
-      width: 140px;
-      padding-right: 20px;
-      color: rgba($color_gravel_approx, 0.7);
-      font-weight: normal;
-    }
-    dd {
-      width: calc(100% - 140px);
-    }
+  dl  {
+    margin-bottom: 0;
+  }
+}
+
+.sector-list {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+  &:last-of-type {
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  dt {
+    width: 140px;
+    padding-right: 20px;
+    color: rgba($color_gravel_approx, 0.7);
+    font-weight: normal;
+  }
+  dd {
+    width: calc(100% - 140px);
   }
 }
 
@@ -1817,7 +1845,7 @@ footer {
   clear: both;
   margin-bottom: 80px;
   .updated-date {
-    color: rgba($color_gravel_approx,0.7);
+    color: rgba($color_gravel_approx, 0.7);
     margin-right: 10px;
     font-size: 13px;
     i {
