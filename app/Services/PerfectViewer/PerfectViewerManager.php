@@ -89,24 +89,19 @@ class PerfectViewerManager
             $published_to_registry    = $activity->published_to_registry;
 
             //transaction and budget
-            $transactions = $this->perfectViewerRepo->getTransactions($orgId);
-//            $dates            = $this->getDates($activity, $transactions);
-//            $newDates         = $this->getNewDates($dates);
-//            $newExchangeRates = $this->newExchangeRates($newDates);
-            $totalBudget      = $this->calculateBudget(getVal($activity->toArray(), ['budget'], []));
-            $totalTransaction = $this->calculateTransaction($transactions);
-
-            //store new exchange rates
-//            $this->storeExchangeRates($newExchangeRates);
+            $transactions        = $this->perfectViewerRepo->getTransactions($orgId);
+            $totalTransaction    = $this->calculateTransaction($transactions);
+            $totalBudget         = $this->calculateBudget(getVal($activity->toArray(), ['budget'], []));
+            $activityTransaction = $this->perfectViewerRepo->getActivityTransactions($activityId);
 
             //organization data
             $organization  = $this->getOrg($orgId);
             $reporting_org = getVal($organization, [0, 'reporting_org'], []);
-            $filename      = $this->perfectViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
-            $filename      = $filename->filename;
+            $filename      = $this->perfectViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []))->filename;
             $perfectOrg    = $this->makePerfectOrg($organization, $totalTransaction);
 
-            $perfectData = $this->makeArray($activity, $reporting_org, $transactions, $totalBudget);
+            $perfectData = $this->makeArray($activity, $reporting_org, $activityTransaction, $totalBudget);
+
             $this->database->beginTransaction();
             $result    = $this->perfectViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
             $orgResult = $this->perfectViewerRepo->storeOrganization($perfectOrg);
@@ -231,35 +226,39 @@ class PerfectViewerManager
         $totalTransaction['total_disbursements']  = 0;
         $totalTransaction['total_expenditures']   = 0;
 
-        foreach ($transactions as $index => $transaction) {
+        foreach ($transactions as $index => $transactionMega) {
 
-            $value = $this->giveCorrectValue(getVal($transaction, ['transaction'], []));
+            foreach ($transactionMega as $tranIndex => $transaction) {
 
-            switch (getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) {
+                $value = $this->giveCorrectValue(getVal($transaction, ['transaction'], []));
 
-                case 1:
-                    $totalTransaction['total_incoming_funds'] += (float) $value;
-                    break;
+                switch (getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) {
 
-                case 2:
-                    $totalTransaction['total_commitments'] += (float) $value;
-                    break;
+                    case 1:
+                        $totalTransaction['total_incoming_funds'] += (float) $value;
+                        break;
 
-                case 3:
-                    $totalTransaction['total_disbursements'] += (float) $value;
-                    break;
+                    case 2:
+                        $totalTransaction['total_commitments'] += (float) $value;
+                        break;
 
-                case 4:
-                    $totalTransaction['total_expenditures'] += (float) $value;
-                    break;
+                    case 3:
+                        $totalTransaction['total_disbursements'] += (float) $value;
+                        break;
 
-                default:
-                    break;
+                    case 4:
+                        $totalTransaction['total_expenditures'] += (float) $value;
+                        break;
+
+                    default:
+                        break;
+                }
             }
         }
 
         return $totalTransaction;
     }
+
 
     protected function getDate($date)
     {
@@ -369,128 +368,4 @@ class PerfectViewerManager
         ];
     }
 
-//    /**
-//     * Provides Dates for Published Data
-//     *
-//     * @param $activity
-//     * @param $transactions
-//     * @return array
-//     */
-//    protected function getDates($activity, $transactions)
-//    {
-//        $dates = [];
-//
-//        if (!is_array($activity)) {
-//            $activity = (array) $activity;
-//        }
-//
-//        foreach (getVal($activity, ['budget'], []) as $budget) {
-//            $dates[] = getVal($budget, ['value', 0, 'value_date'], '');
-//        }
-//
-//        foreach ($transactions as $transaction) {
-//            $dates[] = getVal($transaction, ['transaction', 'value', 0, 'date'], '');
-//        }
-//
-//        return $dates;
-//    }
-
-//    /**
-//     * Provides dates that are not in Exchange Rate History table
-//     *
-//     * @param $dates
-//     * @return array
-//     */
-//    protected function getNewDates($dates)
-//    {
-//        $allDates = $this->exchangeRatesBuilder->select('date')->get()->toArray();
-//
-//        return array_values(array_diff($dates, array_flatten($allDates)));
-//    }
-
-//    /**
-//     * Provides new exchange rates
-//     *
-//     * @param $newDates
-//     * @return array
-//     */
-//    protected function newExchangeRates($newDates)
-//    {
-//        $exchangeRates = [];
-//        foreach ($newDates as $index => $newDate) {
-//            $exchangeRates[] = $this->clean(json_decode($this->curl($newDate), true), $newDate);
-//        }
-//
-//        return $exchangeRates;
-//    }
-
-//    /**
-//     * Calls API for new dates
-//     *
-//     * @param $date
-//     * @return mixed
-//     */
-//    protected function curl($date)
-//    {
-//        $ch = curl_init('http://apilayer.net/api/historical' . '?access_key=' . 'c92a72092ee24a60fc0e0cb7fd1377bf' . '&date=' . $date . '&format=1');
-//
-//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//        $response = curl_exec($ch);
-//        curl_close($ch);
-//
-//        return $response;
-//    }
-
-
-//    /**
-//     * Provides only needed data from API response
-//     *
-//     * @param $json
-//     * @param $date
-//     * @return array
-//     */
-//    protected function clean($json, $date)
-//    {
-//        $rates = [];
-//
-//        if (!$json) {
-//            $json = (array) $json;
-//        }
-//
-//        foreach (getVal($json, ['quotes'], []) as $key => $value) {
-//            $toCurrency = str_replace('USD', '', $key);
-//
-//            if ($toCurrency !== '') {
-//                $rates[$date][$toCurrency] = $value;
-//            }
-//        }
-//
-//        return $rates;
-//    }
-
-//    /**
-//     * Transforms Exchange Rates to suitable form
-//     *
-//     * @param $exchangeRate
-//     * @return array
-//     */
-//    protected function transformExchangeRates($exchangeRate)
-//    {
-//        return [
-//            'date'           => key($exchangeRate),
-//            'exchange_rates' => value($exchangeRate)
-//        ];
-//    }
-
-//    /**
-//     * Stores Exchange Rates of new dates to the table
-//     *
-//     * @param $newExchangeRates
-//     */
-//    protected function storeExchangeRates($newExchangeRates)
-//    {
-//        foreach ($newExchangeRates as $index => $rates) {
-//            $this->historicalExchangeRate->create($this->transformExchangeRates($rates));
-//        }
-//    }
 }

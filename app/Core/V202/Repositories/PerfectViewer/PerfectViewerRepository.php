@@ -62,11 +62,11 @@ class PerfectViewerRepository
         OrganizationSnapshot $organizationSnapshot,
         HistoricalExchangeRate $historicalExchangeRate
     ) {
-        $this->activitySnapshot     = $activitySnapshot;
-        $this->activityPublished    = $activityPublished;
-        $this->transaction          = $transaction;
-        $this->organization         = $organization;
-        $this->organizationSnapshot = $organizationSnapshot;
+        $this->activitySnapshot       = $activitySnapshot;
+        $this->activityPublished      = $activityPublished;
+        $this->transaction            = $transaction;
+        $this->organization           = $organization;
+        $this->organizationSnapshot   = $organizationSnapshot;
         $this->historicalExchangeRate = $historicalExchangeRate;
     }
 
@@ -115,8 +115,8 @@ class PerfectViewerRepository
 
         $activities = array_flatten(json_decode($this->activitySnapshot->select('activity_id')->where('org_id', $orgId)->get(), true));
 
-        foreach($activities as $activityId){
-        $transactions[] = array_collapse($this->transaction->where('activity_id', $activityId)->get()->toArray());
+        foreach ($activities as $activityId) {
+            $transactions[] = $this->transaction->where('activity_id', $activityId)->get()->toArray();
         }
 
         return $transactions;
@@ -183,5 +183,15 @@ class PerfectViewerRepository
     public function getExchangeRatesBuilder()
     {
         return $this->historicalExchangeRate;
+    }
+
+    /**
+     * Provides Transactions of an Activity
+     *
+     * @param $activityId
+     */
+    public function getActivityTransactions($activityId)
+    {
+        return $this->transaction->where('activity_id', $activityId)->get()->toArray();
     }
 }
