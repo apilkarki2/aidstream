@@ -218,8 +218,8 @@
                                         @else
                                             Provider N/A
                                         @endif
-                                    </span><span
-                                            class="receiver"><i>circle</i>
+                                    </span>
+                                    <span class="receiver"><i>circle</i>
                                         @if($transaction['transaction']['receiver_organization'][0]['narrative'][0]['narrative'])
                                             {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], '')}}
                                         @else
