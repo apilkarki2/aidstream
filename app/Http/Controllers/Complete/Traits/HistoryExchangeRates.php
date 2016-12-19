@@ -13,21 +13,24 @@ trait HistoryExchangeRates
      * Starts checking and creating New Exchange Rates
      *
      * @param $activity
-     * @return $this
+     * @return bool|\Exception
      */
-    protected function ExchangeRates($activity)
+    protected function exchangeRates($activity)
     {
-        $transactionModel = app()->make(Transaction::class);
+        try {
+            $transactionModel = app()->make(Transaction::class);
 
-        $transactions = $transactionModel->where('activity_id', $activity->id)->get()->toArray();
+            $transactions = $transactionModel->where('activity_id', $activity->id)->get()->toArray();
 
-        $dates = $this->getDates($activity->toArray(), $transactions);
+            $dates = $this->getDates($activity->toArray(), $transactions);
 
-        $newDates = $this->getNewDates($dates);
+            $this->getExchangeRatesForNewDates($dates);
 
-        $newExchangeRates = $this->newExchangeRates($newDates);
+            return true;
+        } catch (\Exception $exception) {
+            return $exception;
+        }
 
-        return $this->storeExchangeRates($newExchangeRates);
     }
 
     /**
@@ -60,30 +63,32 @@ trait HistoryExchangeRates
      * Provides dates that are not in Exchange Rate History table
      *
      * @param $dates
-     * @return array
+     * @return HistoryExchangeRates
      */
-    protected function getNewDates($dates)
+    protected function getExchangeRatesForNewDates(array $dates)
     {
         $exchangeRatesModel = app()->make(HistoricalExchangeRate::class);
         $allDates           = $exchangeRatesModel->select('date')->get()->toArray();
 
-        return array_values(array_diff($dates, array_flatten($allDates)));
+        $newDates = array_values(array_diff($dates, array_flatten($allDates)));
+
+        return $this->newExchangeRates($newDates);
     }
 
     /**
      * Provides new exchange rates
      *
      * @param $newDates
-     * @return array
+     * @return HistoryExchangeRates
      */
-    protected function newExchangeRates($newDates)
+    protected function newExchangeRates(array $newDates)
     {
         $exchangeRates = [];
         foreach ($newDates as $index => $newDate) {
             $exchangeRates[] = $this->clean(json_decode($this->curl($newDate), true), $newDate);
         }
 
-        return $exchangeRates;
+        return $this->storeExchangeRates($exchangeRates);
     }
 
     /**
@@ -94,7 +99,7 @@ trait HistoryExchangeRates
      */
     protected function curl($date)
     {
-        $ch = curl_init('http://apilayer.net/api/historical' . '?access_key=' . 'c92a72092ee24a60fc0e0cb7fd1377bf' . '&date=' . $date . '&format=1');
+        $ch = curl_init('http://apilayer.net/api/historical' . '?access_key=' . '452ec0946276e4e9bf9c0e5ff4e37bd2' . '&date=' . $date . '&format=1');
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
@@ -110,6 +115,7 @@ trait HistoryExchangeRates
      * @param $json
      * @param $date
      * @return array
+     * @throws \Exception
      */
     protected function clean($json, $date)
     {
@@ -129,7 +135,10 @@ trait HistoryExchangeRates
                 }
             }
         } else {
-            $rates[$date][] = "Query failed";
+            if ($json['error']['code'] == '104') {
+                throw new \Exception("User has reached or exceeded his exchangeRates API request.");
+            }
+            $this->getExchangeRatesForNewDates((array) date('Y-m-d', strtotime($date . ' -1 day')));
         }
 
         return $rates;
@@ -144,8 +153,18 @@ trait HistoryExchangeRates
     protected function transformExchangeRates($exchangeRate)
     {
         return [
-            'date'           => key($exchangeRate),
-            'exchange_rates' => value($exchangeRate)
+            'date'           => array_first(
+                array_keys($exchangeRate),
+                function () {
+                    return true;
+                }
+            ),
+            'exchange_rates' => array_first(
+                array_values($exchangeRate),
+                function () {
+                    return true;
+                }
+            )
         ];
     }
 
@@ -160,7 +179,9 @@ trait HistoryExchangeRates
         $exchangeRatesModel = app()->make(HistoricalExchangeRate::class);
 
         foreach ($newExchangeRates as $index => $rates) {
-            $exchangeRatesModel->create($this->transformExchangeRates($rates));
+            if (!empty($rates)) {
+                $exchangeRatesModel->create($this->transformExchangeRates($rates));
+            }
         }
 
         return $this;

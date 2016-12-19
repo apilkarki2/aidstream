@@ -89,7 +89,7 @@ class PerfectViewerManager
             $published_to_registry    = $activity->published_to_registry;
 
             //transaction and budget
-            $transactions     = $this->perfectViewerRepo->getTransactions($orgId);
+            $transactions = $this->perfectViewerRepo->getTransactions($orgId);
 //            $dates            = $this->getDates($activity, $transactions);
 //            $newDates         = $this->getNewDates($dates);
 //            $newExchangeRates = $this->newExchangeRates($newDates);
@@ -107,7 +107,6 @@ class PerfectViewerManager
             $perfectOrg    = $this->makePerfectOrg($organization, $totalTransaction);
 
             $perfectData = $this->makeArray($activity, $reporting_org, $transactions, $totalBudget);
-
             $this->database->beginTransaction();
             $result    = $this->perfectViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
             $orgResult = $this->perfectViewerRepo->storeOrganization($perfectOrg);
@@ -262,6 +261,11 @@ class PerfectViewerManager
         return $totalTransaction;
     }
 
+    protected function getDate($date)
+    {
+        return json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true) ?: [];
+    }
+
     /**
      * Provides correct converted rates for each exchange rates.
      *
@@ -274,24 +278,33 @@ class PerfectViewerManager
         $currency        = getVal($data, ['value', 0, 'currency'], '');
         $date            = getVal($data, ['value', 0, 'value_date'], '');
         $amount          = (float) getVal($data, ['value', 0, 'amount'], '');
-        $dbDate          = json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true) ?: [];
+
+        $dbDate = $this->getDate($date);
+
+        if (empty($dbDate)) {
+            $dbDate = json_decode($this->exchangeRatesBuilder->where('date', '<', $date)->orderBy('date', 'desc')->first(), true) ?: [];
+        }
 
         if ($currency != 'USD') {
             if ($currency == '') {
                 if ($defaultCurrency != 'USD') {
+                    //Return exchange rate for default currency not USD
                     $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
 
                     return $amount / $eRate;
                 }
 
+                //Return value for default currency USD
                 return $amount;
             } else {
+                //Return exchange rate for given currency based on USD
                 $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $currency)], 1);
 
                 return $amount / $eRate;
             }
         }
 
+        //Return USD amount
         return $amount;
     }
 
