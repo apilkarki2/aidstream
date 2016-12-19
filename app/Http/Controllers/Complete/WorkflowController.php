@@ -91,7 +91,15 @@ class WorkflowController extends Controller
 
         $this->authorize('edit_activity', $activity);
 
-        $this->ExchangeRates($activity);
+        if (($response = $this->exchangeRates($activity)) instanceof \Exception) {
+            return redirect()->back()
+                             ->withResponse(
+                                 [
+                                     'type' => 'warning',
+                                     'code' => ['message', ['message' => $response->getMessage()]]
+                                 ]
+                             );
+        }
 
         return redirect()->back()
                          ->withResponse(
