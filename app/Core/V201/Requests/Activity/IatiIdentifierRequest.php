@@ -53,7 +53,7 @@ class IatiIdentifierRequest extends ActivityBaseRequest
     public function messages()
     {
         $messages                               = [];
-        $messages['activity_identifier.not_in'] = 'The selected activity identifier is invalid and must be unique.';
+        $messages['activity_identifier.not_in'] = trans('validation.required', ['attribute' => trans('elementForm.activity_identifier')]);
 
         return $messages;
     }

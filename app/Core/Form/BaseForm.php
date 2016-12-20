@@ -63,6 +63,8 @@ class BaseForm extends Form
      */
     protected function addAddMoreButton($buttonId, $formClass, $label = 'Add More')
     {
+        $label = ($label == 'Add More') ? trans('elementForm.add_more') : $label;
+
         return $this->add(
             $buttonId,
             'button',
@@ -87,7 +89,7 @@ class BaseForm extends Form
             $buttonId,
             'button',
             [
-                'label' => 'Remove This',
+                'label' => trans('elementForm.remove_this'),
                 'attr'  => [
                     'class' => 'remove_from_collection',
                 ],
@@ -103,6 +105,8 @@ class BaseForm extends Form
      */
     protected function addNarrative($className, $label = 'Text', $data = [])
     {
+        $label = ($label == 'Text') ? trans('elementForm.text') : $label;
+
         $data['label'] = $label;
 
         return $this->addCollection('narrative', 'Activity\Narrative', $className, $data);
@@ -204,7 +208,7 @@ class BaseForm extends Form
      */
     protected function addPercentage($helpText = null)
     {
-        return $this->add('percentage', 'text', ['help_block' => $helpText]);
+        return $this->add('percentage', 'text', ['help_block' => $helpText, 'label' => trans('elementForm.percentage')]);
     }
 
     /**
@@ -221,7 +225,7 @@ class BaseForm extends Form
      */
     protected function addSaveButton()
     {
-        return $this->add('Save', 'submit', ['attr' => ['class' => 'btn btn-primary btn-form btn-submit']]);
+        return $this->add('Save', 'submit', ['label' => trans('global.save'), 'attr' => ['class' => 'btn btn-primary btn-form btn-submit']]);
     }
 
     /**

@@ -188,6 +188,7 @@
 @if($loggedInUser && $loggedInUser->userOnBoarding && (session('role_id')!= 3 && session('role_id')!= 4))
     <script src="/js/userOnBoarding.js"></script>
     <script type="text/javascript">
+                {{--        var currentLang = "{!! Request::cookie('language') !!}";--}}
         var hintStatus = "{!! ($loggedInUser->userOnBoarding->display_hints) ? 1 : 0 !!}";
         var completedTour = "{!! ($loggedInUser->userOnBoarding->completed_tour) ? 1 : 0 !!}";
 
@@ -236,16 +237,11 @@
             }
         });
 
-        UserOnBoarding.addHintLabel();
-        UserOnBoarding.dashboardTour();
-
-        if (hintStatus == 0) {
-            $('.introjs-hints').css('visibility', 'hidden');
+        if (!UserOnBoarding.loadedLocalisedFile) {
+            UserOnBoarding.getLocalisedText();
         }
 
-        if (completedTour == 0 && hintStatus == 1 && window.location.pathname == '/activity') {
-            $("[data-step='0']").trigger('click');
-        }
+
     </script>
 @endif
 <!-- End of script -->
