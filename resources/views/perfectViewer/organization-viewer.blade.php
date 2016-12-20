@@ -43,7 +43,7 @@
 <div class="wrapper">
     <div id="tooltip" class="tooltips"></div>
     <div id="map"></div>
-    <section class="col-md-12 org-map-wrapper">
+    <section class="col-md-12 org-map-wrapper pull-left">
         <div class="width-940">
             <div class="col-md-4 organisation-info">
                 <a href="#" class="organisation-logo">
@@ -69,13 +69,43 @@
     </section>
     <section class="col-md-12 org-main-wrapper">
         <div class="width-940" data-sticky_parent>
-            <div class="col-xs-12 col-md-8 org-activity-wrapper" data-sticky_column>
+            <div class="col-xs-12 col-sm-4 col-md-4 org-main-transaction-wrapper pull-right" data-sticky_column>
+                <div class="org-transaction-wrapper">
+                    <ul>
+                        <li>
+                            <h4>Total Commitments</h4>
+                            <span>
+                                ${{getVal($organizations, ['transaction_totals', 'total_commitments'], 0)}}
+                            </span>
+                        </li>
+                        <li>
+                            <h4>Total Disbursements</h4>
+                            <span>
+                                ${{getVal($organizations, ['transaction_totals', 'total_disbursements'], 0)}}
+                            </span>
+                        </li>
+                        <li>
+                            <h4>Total Expenditures</h4>
+                            <span>
+                                ${{getVal($organizations, ['transaction_totals', 'total_expenditures'], 0)}}
+                            </span>
+                        </li>
+                        <li>
+                            <h4>Total Incoming Funds</h4>
+                            <span>
+                                ${{getVal($organizations, ['transaction_totals', 'total_incoming_funds'], 0)}}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-8 org-activity-wrapper pull-left" data-sticky_column>
                 @if(count($activities) <= 0)<h2>Activities <span class="activity-count">({{count($activities)}})</span></h2>@endif
                 <ul class="activities-listing">
                     @foreach($activities as $index => $activity)
                         <li>
                             <a href="{{url('/who-is-using/'.$organizations['org_slug'].'/'.$activity['activity_id'])}}">
-                                <div class="col-md-9 pull-left activity-info-wrapper">
+                                <div class="col-sm-9 col-md-9 pull-left activity-info-wrapper">
                                     <h3 class="activity-name">
                                         {{getVal($activity, ['published_data', 'title', 0, 'narrative'])}}
                                     </h3>
@@ -137,7 +167,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col-md-3 pull-right total-budget-wrapper">
+                                <div class="col-sm-3 col-md-3 pull-right total-budget-wrapper">
                                     @if($activity['published_data']['totalBudget']['value'])
                                         <span>Total Budget</span>
                                         <span class="total-budget-amount">{{round(getVal($activity, ['published_data', 'totalBudget', 'value'], 0), 3)}}</span>
@@ -148,36 +178,6 @@
                         </li>
                     @endforeach
                 </ul>
-            </div>
-            <div class="col-xs-12 col-md-4 org-main-transaction-wrapper" data-sticky_column>
-                <div class="org-transaction-wrapper">
-                    <ul>
-                        <li>
-                            <h4>Total Commitments</h4>
-                            <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_commitments'], 0)}}
-                            </span>
-                        </li>
-                        <li>
-                            <h4>Total Disbursements</h4>
-                            <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_disbursements'], 0)}}
-                            </span>
-                        </li>
-                        <li>
-                            <h4>Total Expenditures</h4>
-                            <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_expenditures'], 0)}}
-                            </span>
-                        </li>
-                        <li>
-                            <h4>Total Incoming Funds</h4>
-                            <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_incoming_funds'], 0)}}
-                            </span>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </section>
@@ -235,12 +235,30 @@
 <script>
     var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
     $(document).ready(function () {
-        var contentHeight = $('.org-activity-wrapper').height();
-        var sidebarHeight = $('.org-main-transaction-wrapper').height();
-        if (contentHeight > sidebarHeight) {
-            $('.org-main-transaction-wrapper').height(contentHeight);
-            $(".org-main-transaction-wrapper .org-transaction-wrapper").stick_in_parent();
+        if($(window).width() > 768) {
+            var contentHeight = $('.org-activity-wrapper').height();
+            var sidebarHeight = $('.org-main-transaction-wrapper').height();
+            if (contentHeight > sidebarHeight) {
+                $('.org-main-transaction-wrapper').height(contentHeight);
+                $(".org-main-transaction-wrapper .org-transaction-wrapper").stick_in_parent();
+            }
+            else {
+                $('.org-main-transaction-wrapper').height('auto');
+            }
         }
+        $(window).resize(function(){
+            if($(window).width() > 768) {
+                var contentHeight = $('.org-activity-wrapper').height();
+                var sidebarHeight = $('.org-main-transaction-wrapper').height();
+                if (contentHeight > sidebarHeight) {
+                    $('.org-main-transaction-wrapper').height(contentHeight);
+                    $(".org-main-transaction-wrapper .org-transaction-wrapper").stick_in_parent();
+                }
+                else {
+                    $('.org-main-transaction-wrapper').height('auto');
+                }
+            }
+        });
     });
 </script>
 </html>

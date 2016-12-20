@@ -47,8 +47,8 @@ $url_8: url("../images/logo-text.svg");
 }
 
 body {
-  font: 14px/20px Open-Sans-Regular;
   color: $color_gravel_approx;
+  font: 14px/20px Open-Sans-Regular;
 }
 
 a {
@@ -59,8 +59,8 @@ a {
 }
 
 a:focus, input:focus {
-  outline: 0 !important;
   box-shadow: none;
+  outline: 0 !important;
 }
 
 h1 {
@@ -90,18 +90,18 @@ h2 {
 //navbar
 
 .navbar {
-  padding: 40px 16px 20px;
   background: $color_white;
   border: 0;
   border-radius: 0;
+  padding: 20px 16px 0;
 }
 
 .navbar-brand {
   background: $url_1 no-repeat left;
-  width: 160px;
-  height: 42px;
   display: block;
+  height: 42px;
   text-indent: -9999px;
+  width: 160px;
 }
 
 .navbar-fixed {
@@ -424,8 +424,6 @@ footer {
       img {
         line-height: normal;
         text-align: center;
-        //width: 100%;
-        //display: block;
         position: relative;
         height: 100%;
         font-family: Open-Sans-Regular;
@@ -461,18 +459,12 @@ footer {
   }
 }
 
-.load-more {
-  width: 188px;
-  line-height: 46px;
-  background: $color_alabaster_approx;
-  border-radius: 23px;
-  display: inline-block;
-  text-align: center;
-  &:hover, &:focus {
-    background: $color-dodger_blue_approx;
-    color: $color_white;
-    text-decoration: none;
-  }
+.org_list label {
+  display: none;
+}
+
+.search-org {
+  margin-bottom: 20px;
 }
 
 //about
@@ -1238,10 +1230,6 @@ a {
   }
 }
 
-header {
-  height: 64px;
-}
-
 section {
   display: inline-block;
   width: 100%;
@@ -1269,7 +1257,7 @@ section {
   border-radius: 4px;
   font-size: 12px;
   position: relative;
-  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
   &:before {
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
@@ -1279,7 +1267,7 @@ section {
     position: absolute;
   }
   label {
-    color: rgba($color_gravel_approx,0.7);
+    color: rgba($color_gravel_approx, 0.7);
     display: block;
     font: 11px 'Open-Sans-Regular';
     margin-bottom: 3px;
@@ -1287,16 +1275,15 @@ section {
 }
 
 .organisation-info {
-  height: 180px;
   position: relative;
   padding: 0;
-  margin-top: -250px;
+  margin: 40px 0 30px;
 }
 
 .organisation-more-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
 }
 
 .organisation-logo {
@@ -1326,12 +1313,11 @@ address {
 }
 
 .org-main-wrapper, .activity-main-wrapper {
-  margin-top: -55px;
+  padding: 0;
 }
 
 .org-activity-wrapper, .activity-detail-wrapper {
   background: $color_white;
-  box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.2);
   padding: 30px 0 0;
   position: relative;
   margin-bottom: 80px;
@@ -1343,7 +1329,7 @@ address {
     padding: 0 30px;
   }
   & + .col-md-4 {
-    padding-left: 20px;
+    padding: 0;
   }
 }
 
@@ -1352,6 +1338,7 @@ address {
 }
 
 .activities-listing {
+  border-bottom: 1px solid rgba(151, 151, 151, 0.2);
   padding: 0;
   margin-bottom: 0;
   > li {
@@ -1359,6 +1346,7 @@ address {
     overflow: hidden;
     border-bottom: 1px solid rgba(151, 151, 151, 0.2);
     transition: all 0.2s ease-in-out;
+    position: relative;
     &:first-child {
       a {
         padding-top: 0;
@@ -1379,21 +1367,6 @@ address {
       padding: 20px 30px;
     }
   }
-  //dl {
-  //  font-size: 13px;
-  //  color: rgba($color_gravel_approx, 0.7);
-  //  dt {
-  //    //color: rgba($color_gravel_approx,0.7);
-  //    margin-right: 2px;
-  //    .material-icons {
-  //      font-size: 18px;
-  //      margin-right: 2px;
-  //    }
-  //  }
-  //  dd {
-  //    margin-right: 14px;
-  //  }
-  //}
 }
 
 .activity-info {
@@ -1405,7 +1378,7 @@ address {
     li {
       float: left;
       list-style: none;
-      margin-right: 14px;
+      margin: 0 14px 6px 0;
       .material-icons {
         margin-right: 2px;
       }
@@ -1422,7 +1395,7 @@ address {
 }
 
 .activity-publish-state {
-  margin-bottom: 8px;
+  margin: 40px 0 8px;
   > span {
     font-size: 12px;
     color: $color_white;
@@ -1455,11 +1428,14 @@ address {
 }
 
 .total-budget-wrapper {
-  padding-right: 0;
-  text-align: right;
+  padding: 0;
+  width: 100%;
+  position: absolute;
+  bottom: 120px;
   span {
-    display: block;
-    margin-bottom: 2px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 4px 0 2px;
     &:first-of-type {
       color: #9b9b9b;
       font-size: 12px;
@@ -1476,9 +1452,14 @@ address {
   font-weight: bold;
 }
 
+.org-main-transaction-wrapper {
+  padding: 0;
+}
+
 .org-transaction-wrapper {
   background-image: linear-gradient(0deg, #5F9FBF 0%, #7FEAFF 100%);
   box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.20);
+  overflow: hidden;
   ul {
     padding: 0;
     margin: 0;
@@ -1523,7 +1504,7 @@ footer {
 }
 
 .activity-detail-top-wrapper {
-  padding: 10px 40px 30px;
+  padding: 10px 20px 30px;
   display: inline-block;
   width: 100%;
   h1 {
@@ -1627,7 +1608,7 @@ footer {
   width: 470px;
   display: none;
   z-index: 1;
-  dl  {
+  dl {
     margin-bottom: 0;
   }
 }
@@ -1658,7 +1639,7 @@ footer {
 }
 
 .activity-block {
-  padding: 40px;
+  padding: 40px 20px;
   overflow: hidden;
   h2 {
     font-size: 24px;
@@ -1858,19 +1839,86 @@ footer {
   font-size: 12px;
 }
 
+@media all and (min-width: 640px) {
+  .activity-publish-state {
+    margin-top: 0;
+  }
+
+  .total-budget-wrapper {
+    position: static;
+    width: auto;
+    text-align: right;
+    > span {
+      display: block;
+    }
+  }
+}
+
+@media all and (min-width: 768px) {
+  .org-main-wrapper, .activity-main-wrapper {
+    margin-top: -55px;
+    padding: 0 20px;
+  }
+
+  .org-activity-wrapper + .col-md-4, .activity-detail-wrapper + .col-md-4 {
+    padding-left: 20px;
+  }
+
+  .organisation-info {
+    margin: -250px 0 0;
+    height: 180px;
+  }
+
+  .organisation-more-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  .org-activity-wrapper, .activity-detail-wrapper {
+    box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .activities-listing {
+    border: 0;
+  }
+
+  .org-main-transaction-wrapper {
+    padding-left: 20px;
+  }
+
+  #map {
+    height: 330px;
+    svg {
+      margin-top: -140px;
+    }
+  }
+
+  .activity-detail-top-wrapper {
+    padding: 10px 40px 30px;
+  }
+
+  .activity-block {
+    padding: 40px;
+  }
+}
+
 @media all and (min-width: 1000px) {
   .width-940 {
     width: 940px;
     margin: 0 auto;
   }
 
-  #map {
-    height: 330px;
-    svg {
-      width: 940px;
-      float: right;
-      margin-top: -140px;
-    }
+  #map svg {
+    width: 940px;
+    float: right;
   }
 }
 
+@media all and (min-width: 480px) and (max-width: 767px) {
+  .org-transaction-wrapper ul li {
+    width: 50%;
+    float: left;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
