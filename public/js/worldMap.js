@@ -49,14 +49,14 @@ d3.json("/data/countries.geo.json", function (countries) {
                     else
                         return "none";
                 })
-                .style("left", absoluteMousePos[0] + "px")
-                .style("top", absoluteMousePos[1] + 80 + "px")
+                .style("left", absoluteMousePos[0] + 11 + "px")
+                .style("top", absoluteMousePos[1] + 130 + "px")
                 .style("background","#fff")
                 .style("padding","10px")
                 .style("position", "absolute")
                 .attr("text-anchor", "middle")
                 .attr("font-size", "14px")
-                .html("<span>" + " Recipient Country: " + d.properties.name + " (" + d.id2 + ") " + "</span>");
+                .html("<label>" + " Recipient Country: " + "</label>" + "<span>" + d.properties.name + " (" + d.id2 + ") " + "</span>");
 
             d3.select("#tooltip").classed("tooltips", false);
         });

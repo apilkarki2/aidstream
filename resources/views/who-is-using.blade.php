@@ -12,16 +12,14 @@
 <body>
 @include('includes.header')
 <section class="main-container">
-    <div class="search">
-        <label for="search">Search:</label>
-        <input id="search" type="text">
-    </div>
     <div class="organisation-list-wrapper">
         <div class="col-md-12 text-center">
             <h1>{{ count($organizations) }} organisations are using AidStream</h1>
-
             <p>The organisations listed below are using AidStream.</p>
-
+            <div class="search-org">
+                <label for="search">Search:</label>
+                <input id="search" type="text">
+            </div>
             <div class="organisations-list width-900">
                 <ul class="org_list">
                     @foreach($organizations as $index => $organization)

@@ -154,12 +154,16 @@
                                         <i class="pull-right material-icons">error</i>
                                         <div class="sector-more-info">
                                             <dl>
+                                                <div class="sector-list">
                                                 <dt class="pull-left">Sector code:</dt>
                                                 <dd class="pull-left">{{ getSectorCode($sector) }}
                                                     - {{ getSectorName($sector) }} </dd>
+                                                </div>
+                                                <div class="sector-list">
                                                 <dt class="pull-left">Sector vocabulary</dt>
                                                 <dd class="pull-left">{{getVal($sector, ['sector_vocabulary'], '')}}
                                                     - {{ $codeListHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary'], '')) }}</dd>
+                                                </div>
                                             </dl>
                                         </div>
                                     </li>
