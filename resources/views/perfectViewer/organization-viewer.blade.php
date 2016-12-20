@@ -75,25 +75,25 @@
                         <li>
                             <h4>Total Commitments</h4>
                             <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_commitments'], 0)}}
+                                ${{round(getVal($organizations, ['transaction_totals', 'total_commitments'], 0),3)}}
                             </span>
                         </li>
                         <li>
                             <h4>Total Disbursements</h4>
                             <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_disbursements'], 0)}}
+                                ${{round(getVal($organizations, ['transaction_totals', 'total_disbursements'], 0),3)}}
                             </span>
                         </li>
                         <li>
                             <h4>Total Expenditures</h4>
                             <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_expenditures'], 0)}}
+                                ${{round(getVal($organizations, ['transaction_totals', 'total_expenditures'], 0),3)}}
                             </span>
                         </li>
                         <li>
                             <h4>Total Incoming Funds</h4>
                             <span>
-                                ${{getVal($organizations, ['transaction_totals', 'total_incoming_funds'], 0)}}
+                                ${{round(getVal($organizations, ['transaction_totals', 'total_incoming_funds'], 0),3)}}
                             </span>
                         </li>
                     </ul>
@@ -235,7 +235,7 @@
 <script>
     var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
     $(document).ready(function () {
-        if($(window).width() > 768) {
+        if ($(window).width() > 768) {
             var contentHeight = $('.org-activity-wrapper').height();
             var sidebarHeight = $('.org-main-transaction-wrapper').height();
             if (contentHeight > sidebarHeight) {
@@ -246,8 +246,8 @@
                 $('.org-main-transaction-wrapper').height('auto');
             }
         }
-        $(window).resize(function(){
-            if($(window).width() > 768) {
+        $(window).resize(function () {
+            if ($(window).width() > 768) {
                 var contentHeight = $('.org-activity-wrapper').height();
                 var sidebarHeight = $('.org-main-transaction-wrapper').height();
                 if (contentHeight > sidebarHeight) {

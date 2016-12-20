@@ -146,8 +146,14 @@ class WhoIsUsingController extends Controller
     {
         $recipientCountries = [];
         foreach ($activities as $index => $activity) {
-            foreach ($activity['published_data']['transactions'] as $tranIndex => $transaction) {
-                $recipientCountries[] = getVal($transaction, ['transaction', 'recipient_country', 0, 'country_code'], '');
+            if (getVal($activity, ['published_data', 'recipient_country'], null)) {
+                foreach (getVal($activity, ['published_data', 'recipient_country'], []) as $country) {
+                    $recipientCountries[] = getVal($country, ['country_code'], '');
+                }
+            } else {
+                foreach (getVal($activity, ['published_data', 'transactions'], []) as $tranIndex => $transaction) {
+                    $recipientCountries[] = getVal($transaction, ['transaction', 'recipient_country', 0, 'country_code'], '');
+                }
             }
         }
 

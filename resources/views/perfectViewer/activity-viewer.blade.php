@@ -208,7 +208,8 @@
                         @foreach(getVal($activity, [0, 'published_data', 'transactions'], []) as $index => $transaction)
                             <tr>
                                 <td>
-                                    <span class="transaction-value">{{getVal($transaction, ['transaction', 'value', 0, 'amount'], '')}}</span><i>(Valued
+                                    <span class="transaction-value">{{getVal($transaction, ['transaction', 'value', 0, 'amount'], '')}}</span>
+                                    {{getVal($transaction, ['transaction', 'value', 0, 'currency'], '')}}<i>(Valued
                                         at {{dateFormat('M d, Y', getVal($transaction, ['transaction', 'value', 0, 'date'], ''))}})</i>
                                 </td>
                                 <td>

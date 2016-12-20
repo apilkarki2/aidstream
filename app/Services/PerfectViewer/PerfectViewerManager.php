@@ -275,8 +275,12 @@ class PerfectViewerManager
     {
         $defaultCurrency = getVal($this->defaultFieldValues, ['0', 'default_currency']);
         $currency        = getVal($data, ['value', 0, 'currency'], '');
-        $date            = getVal($data, ['value', 0, 'value_date'], '');
-        $amount          = (float) getVal($data, ['value', 0, 'amount'], '');
+        if (array_key_exists('value_date', $data['value'][0])) {
+            $date = getVal($data, ['value', 0, 'value_date'], '');
+        } else {
+            $date = getVal($data, ['value', 0, 'date'], '');
+        }
+        $amount = (float) getVal($data, ['value', 0, 'amount'], '');
 
         $dbDate = $this->getDate($date);
 
