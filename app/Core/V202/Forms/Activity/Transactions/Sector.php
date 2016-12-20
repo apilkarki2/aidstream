@@ -22,7 +22,7 @@ class Sector extends BaseForm
                 'select',
                 [
                     'choices'     => $this->getSectorVocabularyCodeList(),
-                    'empty_value' => 'Select one of the following option :',
+                    'empty_value' => trans('elementForm.select_text'),
                     'attr'        => ['class' => 'form-control sector_vocabulary']
                 ]
             )
@@ -32,8 +32,8 @@ class Sector extends BaseForm
                 'select',
                 [
                     'choices'     => $this->getSectorCodeList(),
-                    'empty_value' => 'Select one of the following option :',
-                    'label'       => 'Sector Code',
+                    'empty_value' => trans('elementForm.select_text'),
+                    'label'       => trans('elementForm.sector_code'),
                     'wrapper'     => ['class' => 'form-group hidden sector_types sector_select']
                 ]
             )
@@ -42,8 +42,8 @@ class Sector extends BaseForm
                 'select',
                 [
                     'choices'     => $this->getSectorCategoryCodeList(),
-                    'empty_value' => 'Select one of the following option :',
-                    'label'       => 'Sector Code',
+                    'empty_value' => trans('elementForm.select_text'),
+                    'label'       => trans('elementForm.sector_code'),
                     'wrapper'     => ['class' => 'form-group hidden sector_types sector_category_select']
                 ]
             )
@@ -51,8 +51,8 @@ class Sector extends BaseForm
                 'sector_text',
                 'text',
                 [
-                    'label'    => 'Sector Code',
-                    'wrapper'  => ['class' => 'form-group sector_types sector_text']
+                    'label'   => trans('elementForm.sector_code'),
+                    'wrapper' => ['class' => 'form-group sector_types sector_text']
                 ]
             )
             ->addNarrative('sector_narrative')

@@ -81,7 +81,7 @@
                                         <div class="checkbox">
                                             <label><input type="checkbox" value="edit_activity"
                                                           name=user_permission[edit] class="field1"
-                                                          @if(old('user_permission.edit'))) checked="checked" @endif >Edit</label>
+                                                          @if(old('user_permission.edit'))) checked="checked" @endif >@lang('global.edit')</label>
                                         </div>
                                         <div class="checkbox">
                                             <label><input type="checkbox" value="delete_activity"
@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                                 <label><input type="checkbox" class="hidden checkAll"/><span
-                                            class="btn btn-primary check-all-btn">Check All</span></label>
+                                            class="btn btn-primary check-all-btn">@lang('global.check_all')</span></label>
                             </div>
                             <button type="submit" class="btn btn-primary btn-form btn-submit">
                                 Sign Up

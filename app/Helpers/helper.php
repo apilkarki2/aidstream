@@ -845,7 +845,7 @@ function getTransactionProviderDetails(array $transaction, $type)
     $activityId                 = ($type == 'provider') ? $transaction['provider_activity_id'] : $transaction['receiver_activity_id'];
     $activityId                 = checkIfEmpty($activityId);
     $transactionType            = (session('version') != 'V201') ? checkIfEmpty(
-        getVal($transaction, ['type'], '<em> Not Available </em>')
+        getVal($transaction, ['type'], sprintf('<em>%s</em>'), trans('global.not_available'))
     ) : '<em>Not available</em>';
     $activityIdText             = ($type == 'provider') ? 'Provider activity id' : 'Receiver activity id';
 

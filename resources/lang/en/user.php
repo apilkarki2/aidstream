@@ -12,5 +12,6 @@ return [
     'your_information'               => 'Your Information',
     'organisation_secondary_contact' => 'Organisation Secondary Contact',
     'profile_picture'                => 'Profile Picture',
+    'user_permissions'               => 'User Permissions'
 
 ];

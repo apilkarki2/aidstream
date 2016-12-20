@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', 'Activity Result - ' . $activityData->IdentifierTitle)
+@section('title', trans('title.result').' - ' . $activityData->IdentifierTitle)
 
 @section('content')
     <div class="container main-container">
@@ -10,10 +10,10 @@
                 @include('includes.response')
                 <div class="element-panel-heading">
                     <div>
-                        <span>Edit Result</span>
+                        <span>@lang('title.edit_result')</span>
                         <div class="element-panel-heading-info"><span>{{$activityData->IdentifierTitle}}</span></div>
                         <div class="panel-action-btn">
-                            <a href="{{route('activity.result.show',[$id, $resultId])}}" class="btn btn-primary">View Result</a>
+                            <a href="{{route('activity.result.show',[$id, $resultId])}}" class="btn btn-primary">@lang('title.view_result')</a>
                         </div>
                     </div>
                 </div>

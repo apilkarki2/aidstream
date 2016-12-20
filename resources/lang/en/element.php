@@ -14,7 +14,7 @@ return [
     'contact_info'                  => 'Contact Info',
     'activity_scope'                => 'Activity Scope',
     'participating_organisations'   => 'Participating Organisations',
-    'participating_organisation'    => 'Participating_organisation',
+    'participating_organisation'    => 'Participating Organisation',
     'geopolitical_information'      => 'Geopolitical Information',
     'recipient_country'             => 'Recipient Country',
     'recipient_region'              => 'Recipient Region',
@@ -55,5 +55,4 @@ return [
     'document'                      => 'Document',
     'activity_document_links'       => 'Activity Document Links',
     'activity_results'              => 'Activity Results',
-
 ];

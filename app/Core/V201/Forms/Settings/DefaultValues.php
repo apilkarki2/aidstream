@@ -65,7 +65,7 @@ class DefaultValues extends BaseForm
         $this->addSelect(
             'default_flow_type',
             $this->getCodeList('FlowType', 'Organization'),
-            'Default Flow Type',
+            trans('elementForm.default_flow_type'),
             $this->addHelpText('activity_defaults-default_flow_type', false),
             null,
             false,
@@ -76,7 +76,7 @@ class DefaultValues extends BaseForm
         $this->addSelect(
             'default_finance_type',
             $this->getCodeList('FinanceType', 'Organization'),
-            'Default Finance Type',
+            trans('elementForm.default_finance_type'),
             $this->addHelpText('activity_defaults-default_finance_type', false),
             null,
             false,
@@ -87,7 +87,7 @@ class DefaultValues extends BaseForm
         $this->addSelect(
             'default_aid_type',
             $this->getCodeList('AidType', 'Organization'),
-            'Default Aid Type',
+            trans('elementForm.default_aid_type'),
             $this->addHelpText('activity_defaults-default_aid_type', false),
             null,
             false,
@@ -98,7 +98,7 @@ class DefaultValues extends BaseForm
         $this->addSelect(
             'default_tied_status',
             $this->getCodeList('TiedStatus', 'Organization'),
-            'Default Tied Status',
+            trans('elementForm.default_tied_status'),
             $this->addHelpText('activity_defaults-default_tied_status', false),
             null,
             false,

@@ -15,8 +15,15 @@ class DefaultFieldValuesForm extends BaseForm
     {
         $this
             ->addSelect('default_currency', $this->getCodeList('Currency', 'Organization'), 'Default Currency', $this->addHelpText('activity_defaults-default_currency', false), null, true)
-            ->addSelect('default_language', $this->getCodeList('Language', 'Organization'), 'Default Language', $this->addHelpText('activity_defaults-default_language', false), config('app.default_language'), true)
-            ->add('default_hierarchy', 'text', ['help_block' => $this->addHelpText('activity_defaults-hierarchy', false)])
+            ->addSelect(
+                'default_language',
+                $this->getCodeList('Language', 'Organization'),
+                'Default Language',
+                $this->addHelpText('activity_defaults-default_language', false),
+                config('app.default_language'),
+                true
+            )
+            ->add('default_hierarchy', 'text', ['label' => trans('elementForm.default_hierarchy'), 'help_block' => $this->addHelpText('activity_defaults-hierarchy', false)])
             ->add('linked_data_uri', 'text', ['label' => 'Linked Data Default'])
             ->addSelect(
                 'default_collaboration_type',
@@ -24,9 +31,19 @@ class DefaultFieldValuesForm extends BaseForm
                 'Default Collaboration Type',
                 $this->addHelpText('activity_defaults-default_collaboration_type', false)
             )
-            ->addSelect('default_flow_type', $this->getCodeList('FlowType', 'Organization'), 'Default Flow Type', $this->addHelpText('activity_defaults-default_flow_type', false))
-            ->addSelect('default_finance_type', $this->getCodeList('FinanceType', 'Organization'), 'Default Finance Type', $this->addHelpText('activity_defaults-default_finance_type', false))
-            ->addSelect('default_aid_type', $this->getCodeList('AidType', 'Organization'), 'Default Aid Type', $this->addHelpText('activity_defaults-default_aid_type', false))
-            ->addSelect('default_tied_status', $this->getCodeList('TiedStatus', 'Organization'), 'Default Tied Status', $this->addHelpText('activity_defaults-default_tied_status', false));
+            ->addSelect('default_flow_type', $this->getCodeList('FlowType', 'Organization'), trans('elementForm.default_flow_type'), $this->addHelpText('activity_defaults-default_flow_type', false))
+            ->addSelect(
+                'default_finance_type',
+                $this->getCodeList('FinanceType', 'Organization'),
+                trans('elementForm.default_finance_type'),
+                $this->addHelpText('activity_defaults-default_finance_type', false)
+            )
+            ->addSelect('default_aid_type', $this->getCodeList('AidType', 'Organization'), trans('elementForm.default_aid_type'), $this->addHelpText('activity_defaults-default_aid_type', false))
+            ->addSelect(
+                'default_tied_status',
+                $this->getCodeList('TiedStatus', 'Organization'),
+                trans('elementForm.default_tied_status'),
+                $this->addHelpText('activity_defaults-default_tied_status', false)
+            );
     }
 }
