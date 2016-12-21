@@ -128,10 +128,11 @@
                         <ul class="pull-right links">
                             <li><a href="#"><i class="pull-left material-icons">mail</i>Contact</a></li>
                             <li>
-                                <a href="#"><i class="pull-left material-icons">share</i>
-                                    <a href="javascript:shareThisPage()" target="_blank" alt="Share on Facebook">Share</a>
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>
-                                </a>
+                                <a href="#"><i class="pull-left material-icons">share</i>Share</a>
+                                <ul class="share-links">
+                                    <li class="facebook-share"><a href="javascript:shareThisPage()" target="_blank" alt="Share on Facebook">Facebook</a></li>
+                                    <li class="twitter-share"><a id="sister-button" href="javascript:void(0)">Tweet</a></li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
@@ -357,7 +358,6 @@
 <script type="text/javascript" src="/js/worldMap.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-
         if ($('.activity-description p').height() < 64) {
             $('.show-more').hide();
         }
@@ -380,11 +380,12 @@
         return false;
     };
 
-    var tweetThisPage = function () {
-        window.open("https://twitter.com/intent/tweet?url=https://aidstream.org");
+    var tweetUrl = 'https://twitter.com/intent/tweet?url=' + "{!! (url()->current()) !!}";
 
-        return false;
-    };
+    $('#sister-button').click(function () {
+        $(this).attr('href', tweetUrl);
+    });
+
 </script>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>

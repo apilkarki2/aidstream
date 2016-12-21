@@ -17,6 +17,7 @@ $url_6: url("../images/ic-location.svg");
 $url_7: url("../images/ic-tel.svg");
 $url_7: url("../images/ic-img.png");
 $url_8: url("../images/logo-text.svg");
+$url_9: url("../images/ic-social-sprite.svg");
 
 @font-face {
   font-family: Open-Sans-Regular;
@@ -781,7 +782,8 @@ footer {
   }
 
   .navbar {
-    padding: 40px 30px;
+    padding: 30px;
+    margin-bottom: 0;
   }
 
   .introduction-wrapper p {
@@ -1370,20 +1372,28 @@ address {
 }
 
 .activity-info {
-  ul {
+  > ul {
     font-size: 13px;
     color: rgba($color_gravel_approx, 0.7);
     padding: 0;
     margin: 0;
-    li {
+    > li {
       float: left;
       list-style: none;
       margin: 0 14px 6px 0;
       .material-icons {
         margin-right: 2px;
       }
+      & + li {
+        border-left: 1px solid #D9E5EB;
+        padding-left: 12px;
+      }
     }
   }
+}
+
+.links li:last-child {
+  width: 72px;
 }
 
 .activity-name {
@@ -1540,7 +1550,7 @@ footer {
     font-size: 20px;
     margin-right: 4px;
   }
-  li + li {
+  > li + li {
     border-left: 1px solid #D9E5EB;
     padding-left: 10px;
   }
@@ -1825,6 +1835,7 @@ footer {
 .activity-other-info {
   clear: both;
   margin-bottom: 80px;
+  padding: 0 20px;
   .updated-date {
     color: rgba($color_gravel_approx, 0.7);
     margin-right: 10px;
@@ -1837,6 +1848,43 @@ footer {
 
 .view-xml-file {
   font-size: 12px;
+}
+
+.share-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    float: left;
+    a {
+      background: $url_9 no-repeat 0 0;
+      display: block;
+      height: 14px;
+      text-indent: -9999px;
+      width: 8px;
+      &:hover {
+        background-position: 0 -22px;
+      }
+    }
+    & + li {
+      margin-left: 12px;
+    }
+  }
+}
+
+.twitter-share-button {
+  background: black;
+}
+
+.share-links .twitter-share {
+  width: 18px;
+  a {
+    width: 18px;
+    background-position: -15px 0;
+    &:hover {
+      background-position: -15px -22px;
+    }
+  }
 }
 
 @media all and (min-width: 640px) {
@@ -1900,6 +1948,10 @@ footer {
 
   .activity-block {
     padding: 40px;
+  }
+
+  .activity-other-info {
+    padding: 0;
   }
 }
 

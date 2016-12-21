@@ -568,7 +568,8 @@ footer {
     font-size: 40px; }
 
   .navbar {
-    padding: 40px 30px; }
+    padding: 30px;
+    margin-bottom: 0; }
 
   .introduction-wrapper p {
     width: 694px;
@@ -1023,17 +1024,23 @@ address {
       width: 100%;
       padding: 20px 30px; }
 
-.activity-info ul {
+.activity-info > ul {
   font-size: 13px;
   color: rgba(72, 72, 72, 0.7);
   padding: 0;
   margin: 0; }
-  .activity-info ul li {
+  .activity-info > ul > li {
     float: left;
     list-style: none;
     margin: 0 14px 6px 0; }
-    .activity-info ul li .material-icons {
+    .activity-info > ul > li .material-icons {
       margin-right: 2px; }
+    .activity-info > ul > li + li {
+      border-left: 1px solid #D9E5EB;
+      padding-left: 12px; }
+
+.links li:last-child {
+  width: 72px; }
 
 .activity-name {
   font-size: 18px;
@@ -1157,7 +1164,7 @@ footer {
   .activity-more-info .links .material-icons {
     font-size: 20px;
     margin-right: 4px; }
-  .activity-more-info li + li {
+  .activity-more-info > li + li {
     border-left: 1px solid #D9E5EB;
     padding-left: 10px; }
 
@@ -1373,7 +1380,8 @@ footer {
 
 .activity-other-info {
   clear: both;
-  margin-bottom: 80px; }
+  margin-bottom: 80px;
+  padding: 0 20px; }
   .activity-other-info .updated-date {
     color: rgba(72, 72, 72, 0.7);
     margin-right: 10px;
@@ -1383,6 +1391,34 @@ footer {
 
 .view-xml-file {
   font-size: 12px; }
+
+.share-links {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .share-links li {
+    float: left; }
+    .share-links li a {
+      background: url("../images/ic-social-sprite.svg") no-repeat 0 0;
+      display: block;
+      height: 14px;
+      text-indent: -9999px;
+      width: 8px; }
+      .share-links li a:hover {
+        background-position: 0 -22px; }
+    .share-links li + li {
+      margin-left: 12px; }
+
+.twitter-share-button {
+  background: black; }
+
+.share-links .twitter-share {
+  width: 18px; }
+  .share-links .twitter-share a {
+    width: 18px;
+    background-position: -15px 0; }
+    .share-links .twitter-share a:hover {
+      background-position: -15px -22px; }
 
 @media all and (min-width: 640px) {
   .activity-publish-state {
@@ -1429,7 +1465,10 @@ footer {
     padding: 10px 40px 30px; }
 
   .activity-block {
-    padding: 40px; } }
+    padding: 40px; }
+
+  .activity-other-info {
+    padding: 0; } }
 @media all and (min-width: 1000px) {
   .width-940 {
     width: 940px;
