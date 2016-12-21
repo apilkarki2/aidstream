@@ -155,4 +155,63 @@ return [
     'please_provide_details_administrator'        => 'Please provide details for your <strong>Administrator</strong> account.',
     'aidstream_supports_multiple'                 => '<p>AidStream supports <strong>multiple user accounts</strong> for an organisation.</p><span class="multi-user-info">You can add multiple users once your account is set up, or you can </span><span id="add-user">add additional users now.</span>',
     'verification_email_has_been_sent' => 'A Verification email has been sent to <strong>{{ session(\'email\') }}</strong>. Please click on the link in the email to verify and activate your new AidStream account.',
+    'last_updated_on'                        => 'Last Updated On',
+    'activity_identifier'                    => 'Activity Identifier',
+    'save_default_values'                    => 'Save Default Values',
+    'valid'                                  => 'Valid',
+    'invalid'                                => 'Invalid',
+    'check_all'                              => 'Check All',
+    'show'                                   => 'Show',
+    'reporting_organisation_update'          => 'Reporting organisation information can be updated in',
+    'view_result'                            => 'View Result',
+    'back_to_result_list'                    => 'Back to Result List',
+    'download_result_template'               => 'Download Result Template',
+    'result_template_text'                   => 'This template contains few basic elements that you have to fill to import into AidStream. Please make sure that you follow the structure and format of the template.
+                                    For more details, please follow <a href="https://github.com/younginnovations/aidstream-new/wiki/Activity-Creation#2-bulk-activity-import" target="_blank">here</a>.',
+    'add_transaction'                        => 'Add Transaction',
+    'back_to_transaction_list'               => 'Back to Transaction List',
+    'download_simple_transaction_template'   => 'Download Simple Transaction Template',
+    'simple_transaction_text'                => 'Contains very less information. Ideal if you are filling the information by hand.
+                                    It doesn\'t contain many transaction elements for simplicity.',
+    'download_detailed_transaction_template' => 'Download Detailed Transaction Template',
+    'detailed_transaction_text'              => 'Contains all information about transaction. Ideal if you download your existing
+                                    transaction from Download My Data page and want to update the transactions in bulk.
+                                    Manual filling can be difficult as you have to ensure you use proper code values
+                                    while filling certain fields. The first three fields (Activity_Identifier,
+                                    Activity_Title, Default_currency) are ignored during uploading. This is done to make
+                                    it consistent with transaction download via Download My Data.',
+    'confirm_to_update_activities'           => 'Do you want to update these activities??',
+    'duplicate_activity'                     => 'Duplicate Activity',
+    'add_activity'                           => 'Add Activity',
+    'activity_default_field_change'          => 'You can change the Activity Default Field Values once after you create an activity.',
+    'duplication_activity_info'              => 'You are duplicating activity:
+                        Please note that Transactions and Results are not duplicated. You have to manually add Transactions and Results to the duplicated activity.',
+    'back_to_import_activities'              => 'Back to Import Activities',
+    'duplicate_activity_identifier'          => 'Duplicate Activity identifier',
+    'import'                                 => 'Import',
+    'show_errors'                            => 'Show error(s)',
+    'download_activity_template'             => 'Download Activity Template',
+    'activity_template_text'                 => 'This template contains few basic elements that you have to fill to import into AidStream. Please make sure that you follow the structure and format of the template.
+                                    For more details, please follow <a href="https://github.com/younginnovations/aidstream-new/wiki/Activity-Creation#2-bulk-activity-import" target="_blank">here</a>.',
+    'activity_basics'                        => 'Activity Basics',
+    'activity_with_transactions'             => 'Activity with Transactions',
+    'activity_other_fields'                  => 'Activity with Other Fields',
+    'activity_with_transaction_other_fields' => 'Activity with Transactions and Other Fields',
+    'activity_csv_template_text'             => 'This template contains few basic elements that you have to fill to import into AidStream. Please make sure that you follow the structure and format of the template.
+                                    For more details, please follow <a href="https://github.com/younginnovations/aidstream-new/wiki/Activity-Creation#2-bulk-activity-import" target="_blank">here</a>',
+    'validated'                              => 'Validated',
+    'toggle_view'                            => 'Toggle View',
+    'view_data'                              => 'View Data',
+    'no_activity_log'                        => 'No Activity Log Yet',
+    'date_time'                              => 'Date Time',
+    'submit'                                 => 'Submit',
+    'publish'                                => 'Publish',
+    'deleted_data'                           => 'Deleted Data',
+    'name'                                   => 'Name',
+    'edit_permissions'                       => 'Edit Permissions',
+    'add_permissions'                        => 'Add Permissions',
+    'view_organisation_data'                 => 'View Organisation Data',
+    'status_not_available'                   => 'Status Not Available',
+    'back_to_organisation_view'              => 'Back to Organisation View',
+    'back_to_activity_list'                  => 'Back to Activity List'
 ];

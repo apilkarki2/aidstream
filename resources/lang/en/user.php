@@ -13,6 +13,6 @@ return [
     'organisation_secondary_contact' => 'Organisation Secondary Contact',
     'profile_picture'                => 'Profile Picture',
     'email_address'                  => 'E-mail Address',
-    'permission_role'                => 'Permission Role'
-
+    'permission_role'                => 'Permission Role',
+    'user_permissions'               => 'User Permissions'
 ];

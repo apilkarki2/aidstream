@@ -53,6 +53,7 @@ return [
     'exactness'                         => 'Exactness',
     'location_class'                    => 'Location Class',
     'feature_designation'               => 'Feature Designation',
+    'sector'                            => 'Sector',
     'sector_vocabulary'                 => 'Sector Vocabulary',
     'sector_code'                       => 'Sector Code',
     'significance'                      => 'Significance',
@@ -75,6 +76,7 @@ return [
     'ref'                               => 'Ref',
     'receiver_org'                      => 'Receiver Org',
     'humanitarian'                      => 'Humanitarian',
+    'transaction_reference'             => 'Transaction Reference',
     'transaction_type'                  => 'Transaction Type',
     'transaction_type_code'             => 'Transaction Type Code',
     'transaction_date'                  => 'Transaction Date',
@@ -117,6 +119,7 @@ return [
     'budget_line'                       => 'Budget Line',
     'recipient_organisation'            => 'Recipient Organisation',
     'recipient_country'                 => 'Recipient Country',
+    'recipient_region'                  => 'Recipient Region',
     'expense_line'                      => 'Expense Line',
     'select_text'                       => 'Select one of the following options',
     'remove_this'                       => 'Remove this',
@@ -130,5 +133,13 @@ return [
     'no'                                => 'No',
     'title'                             => 'Title',
     'auto_generated_identifier'         => 'This will be auto-generated as you fill activity identifier',
-    'activity_csv_file'                 => 'Activity CSV File'
+    'activity_csv_file'                 => 'Activity CSV File',
+    'true'                              => 'True',
+    'false'                             => 'False',
+    'iso_date'                          => 'Iso Date',
+    'hierarchy'                         => 'Hierarchy',
+    'reporting_organisation_type'       => 'Reporting Organisation Type',
+    'reporting_organisation_name'       => 'Reporting Organisation Name',
+    'organisation_identifier'           => 'Organisation Identifier',
+    'recipient_organisation_reference'  => 'Recipient Organisation Reference'
 ];

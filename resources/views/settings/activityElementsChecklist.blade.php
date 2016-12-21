@@ -9,7 +9,7 @@
                         required to be filled out in AidStream.</p>
                     <div class="form-group">
                         <label><input type="checkbox" class="checkAll"/><span
-                                    class="check-text">Check All</span></label>
+                                    class="check-text">@lang('global.check_all')</span></label>
                     </div>
                 </div>
                 {!! form_start($form) !!}

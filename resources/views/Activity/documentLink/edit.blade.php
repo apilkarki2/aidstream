@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', 'Activity Document Link - ' . $activityData->IdentifierTitle)
+@section('title', trans('title.document_link').' - ' . $activityData->IdentifierTitle)
 
 @section('content')
     <div class="container main-container">
@@ -10,7 +10,7 @@
                 @include('includes.response')
                 <div class="element-panel-heading">
                     <div>
-                        <span>Document Link</span>
+                        <span>@lang('element.document_link')</span>
                         <div class="element-panel-heading-info"><span>{{$activityData->IdentifierTitle}}</span></div>
                         <div class="panel-action-btn">
                             <a href="{{route('activity.document-link.show',[$id, $documentLinkId])}}" class="btn btn-primary">View Document Link</a>

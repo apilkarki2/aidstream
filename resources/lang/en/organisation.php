@@ -17,5 +17,4 @@ return [
     'organisation_information'              => 'Organisation Information',
     'organisation_information_text'         => 'Information about the <strong>organisation</strong> you want to create an account for on AidStream.',
     'if_this_is_your_organisation'          => 'If this is your organisation you may do one of the followings',
-
 ];
