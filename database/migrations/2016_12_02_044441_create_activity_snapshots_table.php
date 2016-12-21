@@ -17,7 +17,7 @@ class CreateActivitySnapshotsTable extends Migration
             function (Blueprint $table) {
                 $table->increments('id');
                 $table->integer('org_id')->unsigned();
-                $table->foreign('org_id')->references('id')->on('organization_data');
+                $table->foreign('org_id')->references('id')->on('organizations');
                 $table->integer('activity_id')->unsigned();
                 $table->foreign('activity_id')->references('id')->on('activity_data');
                 $table->json('published_data');

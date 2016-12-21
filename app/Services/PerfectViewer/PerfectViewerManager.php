@@ -296,24 +296,12 @@ class PerfectViewerManager
 
         if ($currency != 'USD') {
             if ($currency == '') {
-                if ($defaultCurrency != 'USD') {
-                    //Return exchange rate for default currency not USD
-                    $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
-
-                    return $amount / $eRate;
-                }
-
-                //Return value for default currency USD
-                return $amount;
+                return $this->eRateDefaultCurrency($defaultCurrency, $dbDate, $amount);
             } else {
-                //Return exchange rate for given currency based on USD
-                $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $currency)], 1);
-
-                return $amount / $eRate;
+                return $this->eRateCurrency($dbDate, $amount, $currency);
             }
         }
 
-        //Return USD amount
         return $amount;
     }
 
@@ -375,6 +363,50 @@ class PerfectViewerManager
             'org_slug'              => getVal($organization, [0, 'reporting_org', 0, 'reporting_organization_identifier'], ''),
             'transaction_totals'    => $totalTransaction
         ];
+    }
+
+    /**
+     * Provides Exchange Rate for Default Currency
+     * @param $defaultCurrency
+     * @param $dbDate
+     * @param $amount
+     * @return float|int
+     */
+    protected function eRateDefaultCurrency($defaultCurrency, $dbDate, $amount)
+    {
+        if ($defaultCurrency != 'USD') {
+            $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $defaultCurrency)], 1);
+
+            return $this->eRateDefaultCurrencyNotUSD($amount, $eRate);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * Provides Exchange Rate for Default Currency Not USD
+     * @param $amount
+     * @param $eRate
+     * @return float|int
+     */
+    protected function eRateDefaultCurrencyNotUSD($amount, $eRate)
+    {
+        return $amount / $eRate;
+    }
+
+    /**
+     * Provides Exchange Rate for given currency
+     *
+     * @param $dbDate
+     * @param $amount
+     * @param $currency
+     * @return float|int
+     */
+    protected function eRateCurrency($dbDate, $amount, $currency)
+    {
+        $eRate = getVal($dbDate, ['exchange_rates', sprintf('%s', $currency)], 1);
+
+        return $amount / $eRate;
     }
 
 }

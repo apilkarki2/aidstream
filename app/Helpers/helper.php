@@ -788,6 +788,10 @@ function getLocationRef($type, $target)
     return $locationRef;
 }
 
+/**
+ * @param $target
+ * @return array|string
+ */
 function getDimension($target)
 {
     $dimensions = [];
@@ -1073,6 +1077,9 @@ function getSectorStructure($sector)
 }
 
 
+/**
+ * @return bool
+ */
 function xmlImportIsStarted()
 {
     $filePath = storage_path('xmlImporter/tmp/file/' . session('org_id') . '/' . auth()->user()->id . '/status.json');
@@ -1085,6 +1092,12 @@ function xmlImportIsStarted()
 }
 
 
+/**
+ * Provides sector name
+ *
+ * @param array $sector
+ * @return mixed
+ */
 function getSectorName(array $sector)
 {
     $codeNameHelper = app()->make('App\Helpers\GetCodeName');
@@ -1098,6 +1111,12 @@ function getSectorName(array $sector)
     return $codeNameHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary']));
 }
 
+/**
+ * Provides Sector codes
+ *
+ * @param array $sector
+ * @return string
+ */
 function getSectorCode(array $sector)
 {
     if ($sector['sector_vocabulary'] == 1) {
@@ -1110,7 +1129,14 @@ function getSectorCode(array $sector)
 
 }
 
-function dateFormat($format, $date)
+/**
+ * Returns formatted date
+ *
+ * @param $format
+ * @param $date
+ * @return false|string
+ */
+function dateFormat($format = 'M d, Y', $date)
 {
     return date($format, strtotime($date));
 }

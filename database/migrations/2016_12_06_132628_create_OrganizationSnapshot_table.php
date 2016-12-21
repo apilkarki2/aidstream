@@ -17,7 +17,7 @@ class CreateOrganizationSnapshotTable extends Migration
             function (Blueprint $table) {
                 $table->increments('id');
                 $table->integer('org_id')->unsigned();
-                $table->foreign('org_id')->references('id')->on('organization_data');
+                $table->foreign('org_id')->references('id')->on('organizations');
                 $table->json('transaction_totals');
                 $table->boolean('published_to_registry');
                 $table->string('org_slug');
