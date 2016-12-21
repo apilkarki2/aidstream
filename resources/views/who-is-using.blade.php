@@ -14,6 +14,7 @@
 <section class="main-container">
     <div class="organisation-list-wrapper">
         <div class="col-md-12 text-center">
+            @include('includes.response')
             <h1>{{ count($organizations) }} organisations are using AidStream</h1>
             <p>The organisations listed below are using AidStream.</p>
             <div class="search-org">
@@ -26,7 +27,7 @@
                         <li>
                         <a href="{{ url('/who-is-using/'.$organization->org_slug)}}">
                             <label for="org_logo">{{ $organization->name }}</label>
-                            <img id="org_logo" src="{{ $organization->logo_url }}" alt="{{ $organization->org_slug }}">
+                            <img id="org_logo" src="{{ $organization->logo_url }}" alt="{{ $organization->name }}">
                         </a>
                         </li>
                     @endforeach

@@ -75,7 +75,7 @@
                                     </span>
                         </div>
                         <div class="pull-right activity-publish-state">
-                            @if(getVal($activity, [0, 'activity_in_registry'], false))
+                            @if(getVal($activity, [0, 'activity_in_registry'], null))
                                 <span class="pull-left published-in-iati">
                                         Published in IATI
                                     </span>
@@ -93,10 +93,10 @@
                                 <li><i class="pull-left material-icons">date_range</i>
                                     @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
                                         <span>
-                                            @if($date['type'] == 2)
+                                            @if(getVal($date, ['type'], 0) == 2)
                                                 {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
-                                            @elseif($date['type'] == 1)
+                                            @elseif(getVal($date, ['type'], 0) == 1)
                                                 {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
                                             @endif
@@ -104,10 +104,10 @@
                                     @endforeach
                                     @foreach(getVal($activity, [0, 'published_data', 'activity_date'], []) as $index => $date)
                                         <span>
-                                            @if($date['type'] == 4)
+                                            @if(getVal($date, ['type'], 0) == 4)
                                                 - {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
-                                            @elseif($date['type'] == 3)
+                                            @elseif(getVal($date, ['type'], 0) == 3)
                                                 - {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                 @break
                                             @endif
@@ -116,7 +116,7 @@
                                 </li>
                             @endif
                             <li>
-                                @if($activity[0]['published_data']['activity_status'])
+                                @if(getVal($activity, [0, 'published_data', 'activity_status'], null))
                                     <i class="pull-left material-icons">autorenew</i>
                                     <span>
                                         {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, [0, 'published_data', 'activity_status'], '')) }}
@@ -137,7 +137,7 @@
                     </div>
                     <div class="activity-description">
                         <p>
-                            {{$activity[0]['published_data']['description']}}
+                            {{getVal($activity, [0, 'published_data', 'description'], '')}}
                         </p>
                         @if(getVal($activity, [0, 'published_data', 'description'], '') != '')
                             <span class="show-more"><i class="material-icons">more_horiz</i></span>
@@ -145,7 +145,7 @@
 
                     </div>
                     <div class="activity-sectors">
-                        @if($activity[0]['published_data']['sector'])
+                        @if(getVal($activity, [0, 'published_data', 'sector'], null))
                             <span class="pull-left">Sectors:</span>
                             <ul class="pull-left">
                                 @foreach(getVal($activity, [0, 'published_data', 'sector'], []) as $index => $sector)
@@ -155,14 +155,14 @@
                                         <div class="sector-more-info">
                                             <dl>
                                                 <div class="sector-list">
-                                                <dt class="pull-left">Sector code:</dt>
-                                                <dd class="pull-left">{{ getSectorCode($sector) }}
-                                                    - {{ getSectorName($sector) }} </dd>
+                                                    <dt class="pull-left">Sector code:</dt>
+                                                    <dd class="pull-left">{{ getSectorCode($sector) }}
+                                                        - {{ getSectorName($sector) }} </dd>
                                                 </div>
                                                 <div class="sector-list">
-                                                <dt class="pull-left">Sector vocabulary</dt>
-                                                <dd class="pull-left">{{getVal($sector, ['sector_vocabulary'], '')}}
-                                                    - {{ $codeListHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary'], '')) }}</dd>
+                                                    <dt class="pull-left">Sector vocabulary</dt>
+                                                    <dd class="pull-left">{{getVal($sector, ['sector_vocabulary'], '')}}
+                                                        - {{ $codeListHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary'], '')) }}</dd>
                                                 </div>
                                             </dl>
                                         </div>
@@ -183,11 +183,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach(getVal($activity, [0, 'published_data', 'participating_organization'], '') as $index => $org)
+                        @foreach(getVal($activity, [0, 'published_data', 'participating_organization'], []) as $index => $org)
                             <tr>
-                                <td>{{ getVal($org, ['narrative', 0, 'narrative'], '') }}</td>
-                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationType', getVal($org, ['organization_type'], '')) }}</td>
-                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationRole', getVal($org, ['organization_role'], '')) }}</td>
+                                <td>{{ getVal($org, ['narrative', 0, 'narrative'], 'Not Available') }}</td>
+                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationType', getVal($org, ['organization_type'], 'Not Available')) }}</td>
+                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationRole', getVal($org, ['organization_role'], 'Not Available')) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -208,28 +208,32 @@
                         @foreach(getVal($activity, [0, 'published_data', 'transactions'], []) as $index => $transaction)
                             <tr>
                                 <td>
-                                    <span class="transaction-value">{{getVal($transaction, ['transaction', 'value', 0, 'amount'], '')}}</span>
-                                    {{getVal($transaction, ['transaction', 'value', 0, 'currency'], '')}}<i>(Valued
-                                        at {{dateFormat('M d, Y', getVal($transaction, ['transaction', 'value', 0, 'date'], ''))}})</i>
+                                    <span class="transaction-value">
+                                        {{getVal($transaction, ['transaction', 'value', 0, 'amount'], 'Not Available')}}
+                                    </span>
+                                    @if(getVal($transaction, ['transaction', 'value', 0, 'amount'], null))
+                                        @if(getVal($transaction, ['transaction', 'value', 0, 'currency'], null))
+                                            {{getVal($transaction, ['transaction', 'value', 0, 'currency'], 'Not Available')}}
+                                        @else
+                                            {{getVal($defaultFieldValues, [0, 'default_currency'], '')}}
+                                        @endif
+                                        @if(getVal($transaction, ['transaction', 'value', 0, 'date'], null))
+                                            <i>
+                                                (Valued at {{dateFormat('M d, Y', getVal($transaction, ['transaction', 'value', 0, 'date'], ''))}})
+                                            </i>
+                                        @endif
+                                    @endif
                                 </td>
                                 <td>
                                     <span class="provider"><i>circle</i>
-                                        @if($transaction['transaction']['provider_organization'][0]['narrative'][0]['narrative'])
-                                            {{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], '')}}
-                                        @else
-                                            Provider N/A
-                                        @endif
+                                        {{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], 'Provider N/A')}}
                                     </span>
                                     <span class="receiver"><i>circle</i>
-                                        @if($transaction['transaction']['receiver_organization'][0]['narrative'][0]['narrative'])
-                                            {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], '')}}
-                                        @else
-                                            Receiver N/A
-                                        @endif
+                                        {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], 'Receiver N/A')}}
                                     </span>
                                 </td>
                                 <td class="type">
-                                    <strong>{{ $codeListHelper->getCodeNameOnly('TransactionType', getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '')) }}</strong>
+                                    <strong>{{ $codeListHelper->getCodeNameOnly('TransactionType', getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], 'Not Available')) }}</strong>
                                 </td>
                                 <td class="date"><i
                                             class="pull-left material-icons">date_range</i>{{dateFormat('M d, Y', getVal($transaction, ['transaction', 'transaction_date', 0, 'date']))}}
@@ -257,9 +261,21 @@
                                 @foreach(getVal($activity, [0, 'published_data', 'budget'], []) as $index => $budget)
                                     <tr>
                                         <td>
-                                            <span class="transaction-value">{{getVal($budget, ['value', 0, 'amount'], '')}} {{getVal($budget, ['value', 0, 'currency'], '')}}
-                                                </span><i>(Valued at
-                                                {{dateFormat('M d, Y', getVal($budget, ['value', 0, 'value_date'], ''))}})</i></td>
+                                            <span class="transaction-value">
+                                                {{getVal($budget, ['value', 0, 'amount'], 'Not Available')}}
+                                                @if(getVal($budget, ['value', 0, 'amount'], null))
+                                                    @if(getVal($budget, ['value', 0, 'currency'], null))
+                                                        {{getVal($budget, ['value', 0, 'currency'], '')}}
+                                                    @else
+                                                        {{getVal($defaultFieldValues, [0, 'default_currency'], '')}}
+                                                    @endif
+                                                </span>
+                                            <i>
+                                                (Valued at {{dateFormat('M d, Y', getVal($budget, ['value', 0, 'value_date'], ''))}})
+                                            </i>
+                                            @endif
+
+                                        </td>
                                         <td class="date"><i class="pull-left material-icons">date_range</i>
                                             {{dateFormat('M d, Y', getVal($budget, ['period_start', 0, 'date'], ''))}}
                                             -
@@ -274,7 +290,7 @@
                 </div>
             </div>
             <div class="activity-other-info">
-                @if($activity[0]['updated_at'])
+                @if(getVal($activity, [0, 'updated_at'], null))
                     <div class="pull-left updated-date">
                         <i class="pull-left material-icons">access_time</i>Updated on
                         <span>
@@ -282,7 +298,7 @@
                     </span>
                     </div>
                 @endif
-                <a href="{{'/files/xml/'.getVal($activity, [0, 'filename'], '')}}" target="_blank" class="view-xml-file">View XML file here</a>
+                <a href="{{'/files/xml/'.getVal($activity, [0, 'filename'], '#')}}" target="_blank" class="view-xml-file">View XML file here</a>
             </div>
         </div>
     </section>

@@ -41,6 +41,7 @@
 <body>
 @include('includes.header')
 <div class="wrapper">
+    @include('includes.response')
     <div id="tooltip" class="tooltips"></div>
     <div id="map"></div>
     <section class="col-md-12 org-map-wrapper pull-left">
@@ -107,10 +108,10 @@
                             <a href="{{url('/who-is-using/'.$organizations['org_slug'].'/'.$activity['activity_id'])}}">
                                 <div class="col-sm-9 col-md-9 pull-left activity-info-wrapper">
                                     <h3 class="activity-name">
-                                        {{getVal($activity, ['published_data', 'title', 0, 'narrative'])}}
+                                        {{getVal($activity, ['published_data', 'title', 0, 'narrative'], 'Not Available')}}
                                     </h3>
                                     <div class="activity-publish-state">
-                                        @if($activity['activity_in_registry'])
+                                        @if(getVal($activity, ['activity_in_registry'], null))
                                             <span class="pull-left published-in-iati">
                                         Registered in IATI
                                     </span>
@@ -121,7 +122,7 @@
                                         @endif
                                         <img src="{{asset('images/ic-iati-logo.png')}}" alt="IATI" width="20" height="19">
                                     </div>
-                                    @if($activity['published_data']['identifier']['activity_identifier'])
+                                    @if(getVal($activity, ['published_data', 'identifier', 'activity_identifier'], null))
                                         <div class="iati-identifier-wrapper">IATI Identifier:
                                             <span class="iati-identifier">
                                                 {{getVal($activity, ['published_data', 'identifier', 'activity_identifier'], '')}}
@@ -134,10 +135,10 @@
                                                 <li><i class="pull-left material-icons">date_range</i>
                                                     @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
                                                         <span>
-                                                            @if($date['type'] == 2)
+                                                            @if(getVal($date, ['type'], 0) == 2)
                                                                 {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                                 @break
-                                                            @elseif($date['type'] == 1)
+                                                            @elseif(getVal($date, ['type'], 0) == 1)
                                                                 {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                                 @break
                                                             @endif
@@ -145,10 +146,10 @@
                                                     @endforeach
                                                     @foreach(getVal($activity, ['published_data', 'activity_date'], []) as $index => $date)
                                                         <span>
-                                                            @if($date['type'] == 4)
+                                                            @if(getVal($date, ['type'], 0) == 4)
                                                                 - {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                                 @break
-                                                            @elseif($date['type'] == 3)
+                                                            @elseif(getVal($date, ['type'], 0) == 3)
                                                                 - {{dateFormat('M d, Y', getVal($date, ['date'], ''))}}
                                                                 @break
                                                             @endif
@@ -156,7 +157,7 @@
                                                     @endforeach
                                                 </li>
                                             @endif
-                                            @if($activity['published_data']['activity_status'])
+                                            @if(getVal($activity, ['published_data', 'activity_status'], null))
                                                 <li>
                                                     <i class="pull-left material-icons">autorenew</i>
                                                     <span>
@@ -168,7 +169,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-3 col-md-3 pull-right total-budget-wrapper">
-                                    @if($activity['published_data']['totalBudget']['value'])
+                                    @if(getVal($activity, ['published_data', 'totalBudget', 'value'], null))
                                         <span>Total Budget</span>
                                         <span class="total-budget-amount">{{round(getVal($activity, ['published_data', 'totalBudget', 'value'], 0), 3)}}</span>
                                         <span class="currency">USD</span>

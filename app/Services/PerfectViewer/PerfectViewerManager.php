@@ -103,8 +103,8 @@ class PerfectViewerManager
             $perfectData = $this->makeArray($activity, $reporting_org, $activityTransaction, $totalBudget);
 
             $this->database->beginTransaction();
-            $result    = $this->perfectViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
-            $orgResult = $this->perfectViewerRepo->storeOrganization($perfectOrg);
+            $this->perfectViewerRepo->storeActivity($this->transformToSchema($perfectData, $orgId, $activityId, $published_to_registry, $filename));
+            $this->perfectViewerRepo->storeOrganization($perfectOrg);
             $this->database->commit();
 
             $this->logger->info(
@@ -226,9 +226,9 @@ class PerfectViewerManager
         $totalTransaction['total_disbursements']  = 0;
         $totalTransaction['total_expenditures']   = 0;
 
-        foreach ($transactions as $index => $transactionMega) {
+        foreach ($transactions as $index => $transactionChild) {
 
-            foreach ($transactionMega as $tranIndex => $transaction) {
+            foreach ($transactionChild as $tranIndex => $transaction) {
 
                 $value = $this->giveCorrectValue(getVal($transaction, ['transaction'], []));
 
@@ -260,6 +260,12 @@ class PerfectViewerManager
     }
 
 
+    /**
+     * Provides data for given date
+     *
+     * @param $date
+     * @return array
+     */
     protected function getDate($date)
     {
         return json_decode($this->exchangeRatesBuilder->where('date', $date)->first(), true) ?: [];
@@ -280,7 +286,7 @@ class PerfectViewerManager
         } else {
             $date = getVal($data, ['value', 0, 'date'], '');
         }
-        $amount = (float) getVal($data, ['value', 0, 'amount'], '');
+        $amount = (float) getVal($data, ['value', 0, 'amount'], 0);
 
         $dbDate = $this->getDate($date);
 
@@ -365,8 +371,7 @@ class PerfectViewerManager
     {
         return [
             'org_id'                => getVal($organization, [0, 'id'], ''),
-            'org_data'              => getVal($organization, [0], []),
-            'published_to_registry' => $organization[0]['published_to_registry'],
+            'published_to_registry' => getVal($organization, [0, 'published_to_registry'], false),
             'org_slug'              => getVal($organization, [0, 'reporting_org', 0, 'reporting_organization_identifier'], ''),
             'transaction_totals'    => $totalTransaction
         ];
