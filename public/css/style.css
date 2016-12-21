@@ -1035,12 +1035,9 @@ address {
     margin: 0 14px 6px 0; }
     .activity-info > ul > li .material-icons {
       margin-right: 2px; }
-    .activity-info > ul > li + li {
-      border-left: 1px solid #D9E5EB;
-      padding-left: 12px; }
-
-.links li:last-child {
-  width: 72px; }
+    .activity-info > ul > li:first-of-type {
+      border-right: 1px solid #D9E5EB;
+      padding-right: 12px; }
 
 .activity-name {
   font-size: 18px;
@@ -1159,7 +1156,7 @@ footer {
   overflow: hidden;
   background: #ECF9FF;
   border-radius: 4px;
-  padding: 10px;
+  padding: 10px 10px 4px;
   margin-bottom: 20px; }
   .activity-more-info .links .material-icons {
     font-size: 20px;
@@ -1392,10 +1389,31 @@ footer {
 .view-xml-file {
   font-size: 12px; }
 
+.links > li:last-child {
+  position: relative;
+  width: 72px;
+  height: 18px;
+  margin: 0 0 0 -2px; }
+  .links > li:last-child a, .links > li:last-child i {
+    opacity: 1;
+    transition: opacity 0.1s ease-in-out; }
+  .links > li:last-child:hover > a {
+    opacity: 0; }
+    .links > li:last-child:hover > a i {
+      opacity: 0; }
+
+.links > li:hover > .share-links {
+  opacity: 1; }
+
 .share-links {
   list-style: none;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  position: absolute;
+  top: 4px;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out; }
   .share-links li {
     float: left; }
     .share-links li a {

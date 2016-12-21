@@ -131,7 +131,7 @@
                                 <a href="#"><i class="pull-left material-icons">share</i>Share</a>
                                 <ul class="share-links">
                                     <li class="facebook-share"><a href="javascript:shareThisPage()" target="_blank" alt="Share on Facebook">Facebook</a></li>
-                                    <li class="twitter-share"><a id="sister-button" href="javascript:void(0)">Tweet</a></li>
+                                    <li class="twitter-share"><a id="twitter-button" href="javascript:void(0)">Tweet</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -382,7 +382,7 @@
 
     var tweetUrl = 'https://twitter.com/intent/tweet?url=' + "{!! (url()->current()) !!}";
 
-    $('#sister-button').click(function () {
+    $('#twitter-button').click(function () {
         $(this).attr('href', tweetUrl);
     });
 
