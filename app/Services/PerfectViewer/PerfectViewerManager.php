@@ -97,8 +97,10 @@ class PerfectViewerManager
             //organization data
             $organization  = $this->getOrg($orgId);
             $reporting_org = getVal($organization, [0, 'reporting_org'], []);
-            $filename      = $this->perfectViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []))->filename;
-            $perfectOrg    = $this->makePerfectOrg($organization, $totalTransaction);
+
+            $file       = $this->perfectViewerRepo->getPublishedFileName(getVal((array) $organization[0], ['id'], []));
+            $filename   = $file ? $file->filename : '';
+            $perfectOrg = $this->makePerfectOrg($organization, $totalTransaction);
 
             $perfectData = $this->makeArray($activity, $reporting_org, $activityTransaction, $totalBudget);
 
