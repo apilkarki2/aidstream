@@ -26,18 +26,24 @@ class CreateSnapshots extends Command
     protected $perfectViewerManager;
 
     protected $logger;
+    /**
+     * @var Activity
+     */
+    private $activityModel;
 
     /**
      * Create a new command instance.
      *
      * @param PerfectViewerManager $perfectViewerManager
      * @param LoggerInterface      $logger
+     * @param Activity             $activityModel
      */
-    public function __construct(PerfectViewerManager $perfectViewerManager, LoggerInterface $logger)
+    public function __construct(PerfectViewerManager $perfectViewerManager, LoggerInterface $logger, Activity $activityModel)
     {
         parent::__construct();
         $this->perfectViewerManager = $perfectViewerManager;
         $this->logger               = $logger;
+        $this->activityModel = $activityModel;
     }
 
     /**
@@ -48,25 +54,30 @@ class CreateSnapshots extends Command
     public function handle()
     {
         $activities = $this->getActivities();
-
+        $bar = $this->output->createProgressBar(count($activities));
         try {
+            $bar->setMessage('Task is in progress...');
             foreach ($activities as $activity) {
                 $this->perfectViewerManager->createSnapshot($activity);
+                $bar->advance();
             }
 
-            $this->info('Snapshots created.');
         } catch (\Exception $exception) {
+            $bar->setMessage('Exception catched.');
+
             $this->logger->error($exception->getMessage(), [
                 'trace' => $exception->getTraceAsString()
             ]);
         }
+        $bar->setMessage('Task is finished');
+        $bar->finish();
     }
 
     protected function getActivities()
     {
-        $activityModel = app()->make(Activity::class);
+//        $activityModel = app()->make(Activity::class);
 
-        return $activityModel->query()->where('activity_workflow', '=', 3)->get();
+        return $this->activityModel->query()->where('activity_workflow', '=', 3)->get();
 
 //        return $activityModel->query()->where('activity_workflow', '=', 3)->where('published_to_registry', '=', 1)->get();
     }
