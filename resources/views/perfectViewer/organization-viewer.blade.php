@@ -169,11 +169,9 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-3 col-md-3 pull-right total-budget-wrapper">
-                                    @if(getVal($activity, ['published_data', 'totalBudget', 'value'], null))
                                         <span>Total Budget</span>
                                         <span class="total-budget-amount">{{round(getVal($activity, ['published_data', 'totalBudget', 'value'], 0), 3)}}</span>
                                         <span class="currency">USD</span>
-                                    @endif
                                 </div>
                             </a>
                         </li>
