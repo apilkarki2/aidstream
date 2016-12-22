@@ -77,7 +77,7 @@ class CreateSnapshots extends Command
     {
 //        $activityModel = app()->make(Activity::class);
 
-        return $this->activityModel->query()->where('activity_workflow', '=', 3)->get();
+        return $this->activityModel->where('activity_workflow', '=', 3)->get();
 
 //        return $activityModel->query()->where('activity_workflow', '=', 3)->where('published_to_registry', '=', 1)->get();
     }
