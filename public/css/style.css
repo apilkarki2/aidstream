@@ -1479,6 +1479,12 @@ footer {
   .search-org {
     width: 450px;
     margin: 0 auto; } }
+@media all and (min-width: 640px) and (max-width: 767px) {
+  .activities-listing a > .col-xs-12:first-of-type {
+    width: 68%; }
+
+  .activities-listing a > .col-xs-12:last-of-type {
+    width: 25%; } }
 @media all and (min-width: 768px) {
   .org-main-wrapper, .activity-main-wrapper {
     margin-top: -55px;
