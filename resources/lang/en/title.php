@@ -75,5 +75,8 @@ return [
     'organisation'                   => 'Organisation',
     'organisation_data'              => 'Organisation Data',
     'import_xml'                     => 'Import Xml',
-    'imported_xml_error'             => 'Imported XML Error'
+    'imported_xml_error'             => 'Imported XML Error',
+    'settings'                       => 'Settings',
+    'register_user'                  => 'Register User',
+
 ];

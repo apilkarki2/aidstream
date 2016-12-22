@@ -1,6 +1,6 @@
 @extends('settings.settings')
 
-@section('title', 'Register User')
+@section('title', trans('title.register_user'))
 
 @section('panel-body')
     <div class="create-form create-user-form settings-form users-form">
@@ -21,12 +21,12 @@
             {!! AsForm::password(['name' => 'password_confirmation', 'parent' => 'col-sm-6', 'required' => true]) !!}
         </div>
         <div class="col-md-12 single-form-wrap">
-            {!! AsForm::select(['name' => 'permission', 'data' => $roles, 'empty_value' => 'Please select a permission',null, 'parent' => 'col-sm-6' , 'required' => true]) !!}
+            {!! AsForm::select(['name' => 'permission', 'data' => $roles, 'empty_value' => trans('setting.please_select_a_permission'),null, 'parent' => 'col-sm-6' , 'required' => true]) !!}
         </div>
         <div class="form-group">
             {{ Form::submit('Create',['class'=>'btn btn-primary btn-form btn-submit']) }}
             <a href="{{route('admin.list-users')}}" class="btn btn-cancel">
-                Cancel
+                @lang('global.cancel')
             </a>
         </div>
         {{ Form::close() }}
