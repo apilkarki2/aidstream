@@ -34,7 +34,7 @@
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
     <link rel="stylesheet" href="{{asset('/css/bootstrap.min.css')}}">
     <link href="{{asset('/css/jquery.jscrollpane.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.min.css')}}">
     <title>Activity Viewer</title>
 </head>
 <body>
@@ -358,6 +358,15 @@
 <script type="text/javascript" src="/js/worldMap.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        function hamburgerMenu() {
+            $('.navbar-toggle.collapsed').click(function () {
+                $('.navbar-collapse').toggleClass('out');
+                $(this).toggleClass('collapsed');
+            });
+        }
+
+        hamburgerMenu();
+
         if ($('.activity-description p').height() < 64) {
             $('.show-more').hide();
         }

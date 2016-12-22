@@ -43,6 +43,15 @@ h2 {
   line-height: 33px;
   margin-bottom: 20px; }
 
+::-webkit-input-placeholder {
+  color: rgba(72, 72, 72, 0.7); }
+
+::-moz-placeholder {
+  color: rgba(72, 72, 72, 0.7); }
+
+:-ms-input-placeholder {
+  color: rgba(72, 72, 72, 0.7); }
+
 .bottom-line {
   border-bottom: 1px solid #eee;
   padding-bottom: 20px;
@@ -331,9 +340,6 @@ footer {
 .org_list label {
   display: none; }
 
-.search-org {
-  margin-bottom: 20px; }
-
 .about-wrapper .screenshot {
   clear: both;
   background: #00A8FF;
@@ -536,8 +542,8 @@ footer {
     float: right; }
 
   .organisations-list ul li {
-    width: 33%; }
-
+    width: 33%; } }
+@media all and (min-width: 671px) {
   .navbar-toggle {
     display: none; }
 
@@ -770,7 +776,7 @@ text {
       min-height: 198px; }
   .organisation-detail-container .activities-detail-section .content-3 .content-item {
     padding: 35px; } }
-@media all and (max-width: 599px) {
+@media all and (max-width: 670px) {
   .navbar-default .navbar-toggle {
     background: transparent;
     border: none;
@@ -927,7 +933,8 @@ section {
   height: 200px;
   overflow: hidden; }
   #map svg {
-    width: 100%; }
+    width: 100%;
+    margin-top: -230px; }
 
 .tooltips {
   display: none; }
@@ -1391,7 +1398,6 @@ footer {
 
 .links > li:last-child {
   position: relative;
-  width: 72px;
   height: 18px;
   margin: 0 0 0 -2px; }
   .links > li:last-child a, .links > li:last-child i {
@@ -1438,6 +1444,27 @@ footer {
     .share-links .twitter-share a:hover {
       background-position: -15px -22px; }
 
+.search-org {
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 19px;
+  height: 38px;
+  margin-bottom: 40px;
+  padding: 8px 12px 12px;
+  width: 270px; }
+  .search-org label {
+    background: url("../images/ic-sprite.svg") no-repeat -148px -132px;
+    display: inline-block;
+    height: 16px;
+    margin: 2px 6px 0 0;
+    text-indent: -9999px;
+    width: 16px; }
+  .search-org input {
+    border: 0;
+    color: #484848;
+    font: 12px 'Open-Sans-Regular';
+    width: calc(100% - 30px); }
+
 @media all and (min-width: 640px) {
   .activity-publish-state {
     margin-top: 0; }
@@ -1447,7 +1474,11 @@ footer {
     width: auto;
     text-align: right; }
     .total-budget-wrapper > span {
-      display: block; } }
+      display: block; }
+
+  .search-org {
+    width: 450px;
+    margin: 0 auto; } }
 @media all and (min-width: 768px) {
   .org-main-wrapper, .activity-main-wrapper {
     margin-top: -55px;
@@ -1476,8 +1507,6 @@ footer {
 
   #map {
     height: 330px; }
-    #map svg {
-      margin-top: -140px; }
 
   .activity-detail-top-wrapper {
     padding: 10px 40px 30px; }

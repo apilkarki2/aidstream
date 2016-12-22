@@ -12,7 +12,7 @@
     <link rel="shortcut icon" type="image/png" sizes="16*16" href="{{asset('/images/favicon.png')}}"/>
     <link rel="stylesheet" href="{{asset('/css/bootstrap.min.css')}}">
     <link href="{{ asset('/css/jquery.jscrollpane.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.min.css')}}">
 </head>
 
 <style type="text/css">
@@ -106,7 +106,7 @@
                     @foreach($activities as $index => $activity)
                         <li>
                             <a href="{{url('/who-is-using/'.$organizations['org_slug'].'/'.$activity['activity_id'])}}">
-                                <div class="col-sm-9 col-md-9 pull-left activity-info-wrapper">
+                                <div class="col-xs-12 col-sm-9 col-md-9 pull-left activity-info-wrapper">
                                     <h3 class="activity-name">
                                         {{getVal($activity, ['published_data', 'title', 0, 'narrative'], 'Not Available')}}
                                     </h3>
@@ -168,7 +168,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 col-md-3 pull-right total-budget-wrapper">
+                                <div class="col-xs-12 col-sm-3 col-md-3 pull-right total-budget-wrapper">
                                     @if(getVal($activity, ['published_data', 'totalBudget', 'value'], null))
                                         <span>Total Budget</span>
                                         <span class="total-budget-amount">{{round(getVal($activity, ['published_data', 'totalBudget', 'value'], 0), 3)}}</span>
@@ -236,18 +236,16 @@
 <script>
     var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};
     $(document).ready(function () {
-        if ($(window).width() > 768) {
-            var contentHeight = $('.org-activity-wrapper').height();
-            var sidebarHeight = $('.org-main-transaction-wrapper').height();
-            if (contentHeight > sidebarHeight) {
-                $('.org-main-transaction-wrapper').height(contentHeight);
-                $(".org-main-transaction-wrapper .org-transaction-wrapper").stick_in_parent();
-            }
-            else {
-                $('.org-main-transaction-wrapper').height('auto');
-            }
+        function hamburgerMenu() {
+            $('.navbar-toggle.collapsed').click(function () {
+                $('.navbar-collapse').toggleClass('out');
+                $(this).toggleClass('collapsed');
+            });
         }
-        $(window).resize(function () {
+
+        hamburgerMenu();
+
+        function sidebarStick() {
             if ($(window).width() > 768) {
                 var contentHeight = $('.org-activity-wrapper').height();
                 var sidebarHeight = $('.org-main-transaction-wrapper').height();
@@ -255,10 +253,16 @@
                     $('.org-main-transaction-wrapper').height(contentHeight);
                     $(".org-main-transaction-wrapper .org-transaction-wrapper").stick_in_parent();
                 }
-                else {
-                    $('.org-main-transaction-wrapper').height('auto');
-                }
             }
+            else {
+                $('.org-main-transaction-wrapper').height('auto');
+            }
+        }
+
+        sidebarStick();
+
+        $(window).resize(function () {
+            sidebarStick();
         });
     });
 </script>

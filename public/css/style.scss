@@ -18,6 +18,7 @@ $url_7: url("../images/ic-tel.svg");
 $url_7: url("../images/ic-img.png");
 $url_8: url("../images/logo-text.svg");
 $url_9: url("../images/ic-social-sprite.svg");
+$url_10: url("../images/ic-sprite.svg");
 
 @font-face {
   font-family: Open-Sans-Regular;
@@ -76,6 +77,18 @@ h2 {
   font-weight: normal;
   line-height: 33px;
   margin-bottom: 20px;
+}
+
+::-webkit-input-placeholder {
+  color: rgba($color_gravel_approx, 0.7);
+}
+
+::-moz-placeholder {
+  color: rgba($color_gravel_approx, 0.7);
+}
+
+:-ms-input-placeholder {
+  color: rgba($color_gravel_approx, 0.7);
 }
 
 .bottom-line {
@@ -464,10 +477,6 @@ footer {
   display: none;
 }
 
-.search-org {
-  margin-bottom: 20px;
-}
-
 //about
 .about-wrapper .screenshot {
   clear: both;
@@ -739,7 +748,9 @@ footer {
   .organisations-list ul li {
     width: 33%;
   }
+}
 
+@media all and (min-width: 671px) {
   .navbar-toggle {
     display: none;
   }
@@ -1054,7 +1065,7 @@ text {
   }
 }
 
-@media all and (max-width: 599px) {
+@media all and (max-width: 670px) {
   .navbar-default .navbar-toggle {
     background: transparent;
     border: none;
@@ -1248,6 +1259,7 @@ section {
   overflow: hidden;
   svg {
     width: 100%;
+    margin-top: -230px;
   }
 }
 
@@ -1848,10 +1860,9 @@ footer {
 
 .links > li:last-child {
   position: relative;
-  width: 72px;
   height: 18px;
   margin: 0 0 0 -2px;
-  a,i {
+  a, i {
     opacity: 1;
     transition: opacity 0.1s ease-in-out;
   }
@@ -1911,6 +1922,30 @@ footer {
   }
 }
 
+.search-org {
+  background-color: $color_white;
+  border: 1px solid #e5e5e5;
+  border-radius: 19px;
+  height: 38px;
+  margin-bottom: 40px;
+  padding: 8px 12px 12px;
+  width: 270px;
+  label {
+    background: $url_10 no-repeat -148px -132px;
+    display: inline-block;
+    height: 16px;
+    margin: 2px 6px 0 0;
+    text-indent: -9999px;
+    width: 16px;
+  }
+  input {
+    border: 0;
+    color: $color_gravel_approx;
+    font: 12px 'Open-Sans-Regular';
+    width: calc(100% - 30px);
+  }
+}
+
 @media all and (min-width: 640px) {
   .activity-publish-state {
     margin-top: 0;
@@ -1923,6 +1958,11 @@ footer {
     > span {
       display: block;
     }
+  }
+
+  .search-org {
+    width: 450px;
+    margin: 0 auto;
   }
 }
 
@@ -1961,9 +2001,6 @@ footer {
 
   #map {
     height: 330px;
-    svg {
-      margin-top: -140px;
-    }
   }
 
   .activity-detail-top-wrapper {
