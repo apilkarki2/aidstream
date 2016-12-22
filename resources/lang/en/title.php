@@ -2,6 +2,7 @@
 
 //<title></title>
 return [
+    'welcome_to_aidstream'           => 'Welcome To AidStream',
     'aidstream_register'             => 'AidStream - Register',
     'aidstream_forgot_password'      => 'Aidstream - Forgot Password',
     'aidstream_create_password'      => 'AidStream - Create Password',

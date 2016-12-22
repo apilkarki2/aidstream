@@ -2,6 +2,7 @@
 
 //Buttons, Workflow Status, Menus, Header, Footer
 return [
+    'welcome_to_aidstream'                        => 'Welcome to AidStream',
     'aidstream'                                   => 'Aidstream',
     'toggle_navigation'                           => 'Toggle Navigation',
     'about'                                       => 'About',
@@ -25,6 +26,10 @@ return [
     'view_activity'                               => 'View Activity',
     'add_new document_link'                       => 'Add New Document Link',
     'not_added'                                   => 'You haven\'t added any :type yet',
+    'thank_you_for_choosing_aidstream'            => 'Thank you for choosing AidStream to publish your organisation\'s data to the IATI Registry.',
+    'please_set_up_your_account'                  => 'Please set up your account to get started',
+    'setup_my_account'                            => 'Setup my Account',
+    'will_setup_later_go_to_dashboard'            => 'I\'ll setup this later,',
     'add_new_result'                              => 'Add new Result',
     'upload_results'                              => 'Upload Results',
     'url'                                         => 'URL',
