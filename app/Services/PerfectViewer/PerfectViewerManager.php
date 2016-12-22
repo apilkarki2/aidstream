@@ -84,7 +84,7 @@ class PerfectViewerManager
             $orgId                      = $activity->organization_id;
             $activityId                 = $activity->id;
             $publishedToRegistry        = $activity->published_to_registry;
-            $organization               = $this->getOrg($orgId)->toArray();
+            $organization               = $this->getOrg($orgId);
 
             $this->storeActivitySnapshot($activityId, $organization, $activity, $orgId, $publishedToRegistry);
 
@@ -392,15 +392,6 @@ class PerfectViewerManager
         return $amount / $eRate;
     }
 
-    /**
-     * Store Activity Snapshots
-     *
-     * @param $activityId
-     * @param $organization
-     * @param $activity
-     * @param $orgId
-     * @param $publishedToRegistry
-     */
     protected function storeActivitySnapshot($activityId, $organization, $activity, $orgId, $publishedToRegistry)
     {
         $activityTransaction = $this->perfectViewerRepo->getActivityTransactions($activityId);
@@ -416,17 +407,13 @@ class PerfectViewerManager
         $this->database->commit();
     }
 
-    /**
-     * Store Organisation Snapshot
-     *
-     * @param $orgId
-     * @param $organization
-     */
     protected function storeOrganizationSnapshot($orgId, $organization)
     {
         $transactions     = $this->perfectViewerRepo->getTransactions($orgId);
         $totalTransaction = $this->calculateTransaction($transactions);
-        $perfectOrg       = $this->makePerfectOrg($organization, $totalTransaction);
+
+        $perfectOrg = $this->makePerfectOrg($organization, $totalTransaction);
+
 
         $this->database->beginTransaction();
         $this->perfectViewerRepo->storeOrganization($perfectOrg);

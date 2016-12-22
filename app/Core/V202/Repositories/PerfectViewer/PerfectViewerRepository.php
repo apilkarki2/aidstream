@@ -104,7 +104,7 @@ class PerfectViewerRepository
     }
 
     /**
-     * Provide transaction data form activity snapshots
+     * Provide transaction data form activity snapshot tables
      *
      * @param $orgId
      * @return mixed

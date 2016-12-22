@@ -62,6 +62,7 @@ class CreateSnapshots extends Command
                 $bar->advance();
             }
 
+            $this->info('Snapshots Created');
         } catch (\Exception $exception) {
             $bar->setMessage('Exception catched.');
 
