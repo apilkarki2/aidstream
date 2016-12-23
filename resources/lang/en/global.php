@@ -231,4 +231,5 @@ return [
     <a href="mailto:support@aidstream">support@aidstream.org</a> and we\'ll get back to you. To learn more about how to use AidStream, simply log in to your new account.',
     'thank_you_for_verifying_your_email_long_text' => 'Thank you for verifying your email address. This email address will be used to recover your organisation’s account in the case that the administrator login credentials are lost or there is a
     change or loss of administrator.',
+
 ];
