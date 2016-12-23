@@ -23,6 +23,10 @@ return [
     'please_insert_a_valid_twitter_username_example' => 'Please insert a valid twitter username. Example:',
     'organisation_telephone_number'                  => 'Organisation Telephone Number',
     'organisation_logo'                              => 'Organisation Logo',
-    ''
+    'organisation_user_identifier'                   => 'Organisation User Identifier',
+    'your_organisation_user_identifier_prefix'       => 'Your organisation user identifier will be used as a prefix for all the AidStream users in your organisation. We recommend that you use a short abbreviation that uniquely identifies your organisation. If your organisation is \'Acme Bellus Foundation\', your organisation user identifier should be \'abf\', depending upon it\'s availability.',
+    'this_will_be_auto_generated'                    => 'This will be auto-generated as you fill Organisation User Identifier.',
+    'aidstream_will_create_default'                  => 'AidStream will create a default username with your Organisation User Identifier as prefix. You will not be able to change \'_admin\' part of the username. This user will have administrative privilege and can create multiple AidStream users with different set of permissions.',
+
 
 ];

@@ -78,5 +78,8 @@ return [
     'imported_xml_error'             => 'Imported XML Error',
     'settings'                       => 'Settings',
     'register_user'                  => 'Register User',
-
+    'change_username'                => 'Change Username',
+    'edit_profile'                   => 'Edit Profile',
+    'profile'                        => 'Profile',
+    'change_password'                => 'Change Password',
 ];

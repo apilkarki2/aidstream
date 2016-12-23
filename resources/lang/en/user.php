@@ -14,5 +14,23 @@ return [
     'profile_picture'                => 'Profile Picture',
     'email_address'                  => 'E-mail Address',
     'permission_role'                => 'Permission Role',
-    'user_permissions'               => 'User Permissions'
+    'user_permissions'               => 'User Permissions',
+    'change_picture'                 => 'Change Picture',
+    'upload_your_profile_picture'    => 'Upload your Profile Picture',
+    'edit_profile'                   => 'Edit Profile',
+    'change_password'                => 'Change Password',
+    'secondary_contact'              => 'Secondary Contact',
+    'language'                       => 'Language',
+    'associated_organisation'        => 'Associated Organisation',
+    'edit_organisation'              => 'Edit Organisation',
+    'country'                        => 'Country',
+    'address'                        => 'Address',
+    'website'                        => 'Website',
+    'telephone'                      => 'Telephone',
+    'twitter'                        => 'Twitter',
+    'current_password'               => 'Current Password',
+    'enter_your_current_password'    => 'Enter your current password.',
+    'new_password'                   => 'New Password',
+
+
 ];
