@@ -92,5 +92,7 @@ return [
     'org_recipient_region_budget'       => 'Organisation Recipient Region Budget',
     'org_total_expenditure'             => 'Organisation Total Expenditure',
     'add_document_link'                 => 'Add Document Link',
-    'activity_document_link'            => 'Activity Document Link'
+    'activity_document_link'            => 'Activity Document Link',
+    'activity_viewer'                   => 'Activity Viewer',
+
 ];

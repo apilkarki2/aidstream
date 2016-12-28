@@ -3,16 +3,16 @@
         <div class="social-wrapper bottom-line">
             <div class="col-md-12 text-center">
                 <ul>
-                    <li><a href="https://github.com/younginnovations/aidstream-new" class="github" title="Fork us on Github">Fork us on Github</a></li>
-                    <li><a href="https://twitter.com/aidstream" class="twitter" title="Follow us on Twitter">Follow us on Twitter</a></li>
+                    <li><a href="https://github.com/younginnovations/aidstream-new" class="github" title="Fork us on Github">@lang('global.fork_us_on_github')</a></li>
+                    <li><a href="https://twitter.com/aidstream" class="twitter" title="Follow us on Twitter">@lang('global.follow_us_on_twitter')</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-nav bottom-line">
             <div class="col-md-12">
                 <ul>
-                    <li><a href="{{ url('/about') }}">About</a></li>
-                    <li><a href="{{ url('/who-is-using') }}">Who's Using It?</a></li>
+                    <li><a href="{{ url('/about') }}">@lang('global.about')</a></li>
+                    <li><a href="{{ url('/who-is-using') }}">@lang('global.who_is_using')</a></li>
                     <li><a href="https://github.com/younginnovations/aidstream-new/wiki/User-Guide" target="_blank">User Guide</a></li>
                     <!--<li><a href="#">Snapshot</a></li>-->
                 </ul>

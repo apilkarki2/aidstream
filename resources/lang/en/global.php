@@ -243,6 +243,14 @@ return [
     'upload_document_text'                         => "You can upload your document here. Once your document is uploaded,a link will be provided. You can then select the link to use it.",
     'choose_your_document'                         => 'Please choose your document',
     'add_organisation'                             => 'Add organisation name in another language',
-    'true'                                         => 'True'
+    'true'                                         => 'True',
+        'contact' => 'Contact',
+    'share' => 'Share',
+    'role' => 'Role',
+    'transaction' => 'Transaction',
+
+
+
+
 ];
 
