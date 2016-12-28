@@ -25,5 +25,9 @@ return [
     provided a back up contact for account recovery, we have also sent a verification
     email to that address. Please ask all additional users to check their email inbox and follow the instructions in our
     emails.',
-    'add_the_publisher_id'                   => 'Now that your AidStream account is live, add the Publisher ID and API Key which the IATI Registry provided when you registered with them and you can instantly start publishing your data through AidStream.'
+    'add_the_publisher_id'                   => 'Now that your AidStream account is live, add the Publisher ID and API Key which the IATI Registry provided when you registered with them and you can instantly start publishing your data through AidStream.',
+    'email_address_forgotten_text'           => ' If you have forgotten which email address you used to Register with AidStream, please select your account type to continue.',
+    'your_full_name'                         => 'Your Full Name',
+    'your_email_address'                     => 'Your E-mail Address',
+    'your_message'                           => 'Your Message',
 ];

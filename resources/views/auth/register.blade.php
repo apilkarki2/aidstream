@@ -23,7 +23,7 @@
     @yield('head')
 </head>
 <body>
-@include('includes.header')
+@include('includes.header_home')
 <div class="login-wrapper">
     {{--    <div class="language-select-wrapper">
             <label for="" class="pull-left">Language</label>

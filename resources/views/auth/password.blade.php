@@ -23,7 +23,7 @@
 
 </head>
 <body>
-@include('includes.header')
+@include('includes.header_home')
 <div class="login-wrapper">
     {{--		    <div class="language-select-wrapper">
                     <label for="" class="pull-left">Language</label>
@@ -82,7 +82,7 @@
                             </div>
                             <div class="organisation-account-wrapper">
                                 <p class="text-center">
-                                   @lang('email_address_forgotten_text')
+                                   @lang('registration.email_address_forgotten_text')
                                 </p>
                                 <p>
                                     @if(session('same_identifier_org_id'))

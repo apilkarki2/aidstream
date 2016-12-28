@@ -23,7 +23,7 @@
 
 </head>
 <body>
-@include('includes.header')
+@include('includes.header_home')
 <div class="register-wrapper">
     {{--		    <div class="language-select-wrapper">
                     <label for="" class="pull-left">Language</label>
@@ -63,9 +63,9 @@
                         <div class="text-danger">{{ session('error_message') }}</div>
                         {{ Form::open(['method' => 'post', 'id' => 'form-contact']) }}
                         <div class="login-form-group">
-                            {!! AsForm::text(['name' => 'full_name', 'label' => 'Your Full Name','required' => true]) !!}
-                            {!! AsForm::email(['name' => 'email', 'label' => 'Your E-mail Address', 'required' => true]) !!}
-                            {!! AsForm::textarea(['name' => 'message', 'label' => 'Your Message','required' => true]) !!}
+                            {!! AsForm::text(['name' => 'full_name', 'label' => trans('registration.your_full_name'),'required' => true]) !!}
+                            {!! AsForm::email(['name' => 'email', 'label' => trans('registration.your_email_address'), 'required' => true]) !!}
+                            {!! AsForm::textarea(['name' => 'message', 'label' => trans('registration.your_message'),'required' => true]) !!}
                         </div>
                         {{ Form::button('Submit', ['class' => 'btn btn-primary btn-submit btn-form-default', 'type' => 'submit']) }}
                         {{ Form::close() }}

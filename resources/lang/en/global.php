@@ -137,7 +137,6 @@ return [
     'this_will_reset_your_password'                => 'This will reset your password and log you into AidStream.',
     'your'                                         => 'Your',
     'send_password_reset_link'                     => 'Send Password Reset Link',
-    'email_address_forgotten_text'                 => ' If you have forgotten which email address you used to Register with AidStream, please select your account type to continue.',
     'user_account'                                 => 'User Account',
     'contact_administrator'                        => 'Contact Administrator',
     'administrator_account'                        => 'Administrator Account',
