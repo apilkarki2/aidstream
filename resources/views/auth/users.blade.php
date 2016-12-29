@@ -6,15 +6,15 @@
 
     <div class="input-wrapper">
         <div class="col-xs-12 col-md-12">
-            {!! AsForm::text(['name' => 'users[username]', 'help' => 'registration_admin_username', 'class' => 'username', 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6', 'attr' => ['readonly' => 'readonly', 'id' => 'username']]) !!}
+            {!! AsForm::text(['name' => 'users[username]', 'help' => 'registration_admin_username', 'class' => 'username', 'label'=>trans('user.username'), 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6', 'attr' => ['readonly' => 'readonly', 'id' => 'username']]) !!}
         </div>
         <div class="col-xs-12 col-md-12">
-            {!! AsForm::password(['name' => 'users[password]', 'class' => 'password', 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
-            {!! AsForm::password(['name' => 'users[confirm_password]', 'class' => 'confirm_password', 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
+            {!! AsForm::password(['name' => 'users[password]', 'class' => 'password', 'label' => trans('user.password'), 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
+            {!! AsForm::password(['name' => 'users[confirm_password]', 'class' => 'confirm_password', 'label' => trans('user.confirm_password'), 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
         </div>
         <div class="col-xs-12 col-md-12">
-            {!! AsForm::text(['name' => 'users[first_name]', 'class' => 'first_name', 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
-            {!! AsForm::text(['name' => 'users[last_name]', 'class' => 'last_name', 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
+            {!! AsForm::text(['name' => 'users[first_name]', 'class' => 'first_name', 'label' => trans('user.first_name'), 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
+            {!! AsForm::text(['name' => 'users[last_name]', 'class' => 'last_name', 'label' => trans('user.last_name'), 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
         </div>
         <div class="col-xs-12 col-md-12">
             {!! AsForm::email(['name' => 'users[email]', 'class' => 'email', 'label' => trans('user.email_address'), 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
@@ -28,7 +28,7 @@
         @endforeach
     </div>
     <div class="auth-info-wrapper">
-       @lang('global.aidstream_supports_multiple')
+        @lang('global.aidstream_supports_multiple')
     </div>
 </div>
 {{ Form::button(trans('global.back_to_organisation_information'), ['class' => 'btn btn-primary btn-back btn-tab pull-left', 'type' => 'button',  'data-tab-trigger' => '#tab-organization']) }}

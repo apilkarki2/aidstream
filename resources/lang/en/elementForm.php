@@ -15,7 +15,7 @@ return [
     'owner_organisation_narrative'               => 'Owner Organisation Narrative',
     'language'                                   => 'Language',
     'languages'                                  => 'Languages',
-    'add_more'                                   => 'Add more',
+    'add_more'                                   => 'Add More',
     'description_type'                           => 'Description Type',
     'activity_status'                            => 'Activity Status',
     'activity_date_type'                         => 'Activity Date Type',

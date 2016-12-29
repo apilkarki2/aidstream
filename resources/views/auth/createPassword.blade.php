@@ -58,11 +58,11 @@
 
                         {{ Form::open(['url' => route('create-password', [$verification_code]), 'method' => 'post']) }}
 
-                        {!! AsForm::password(['name' => 'password', 'required' => true]) !!}
-                        {!! AsForm::password(['name' => 'confirm_password', 'required' => true]) !!}
+                        {!! AsForm::password(['name' => 'password', 'required' => true, 'label' => trans('user.password')]) !!}
+                        {!! AsForm::password(['name' => 'confirm_password', 'required' => true, 'label' => trans('user.confirm_password')]) !!}
 
                         <div class="col-md-12 text-center">
-                            {{ Form::button('Create Password', ['class' => 'btn btn-primary btn-submit btn-register', 'type' => 'submit']) }}
+                            {{ Form::button(trans('global.create_password'), ['class' => 'btn btn-primary btn-submit btn-register', 'type' => 'submit']) }}
                         </div>
 
                         {{ Form::close() }}
@@ -74,7 +74,7 @@
     </div>
 </div>
 @include('includes.footer')
-        <!-- Scripts -->
+<!-- Scripts -->
 @if(env('APP_ENV') == 'local')
     <script type="text/javascript" src="{{url('/js/jquery.js')}}"></script>
     <script type="text/javascript" src="{{url('/js/bootstrap.min.js')}}"></script>
@@ -90,6 +90,7 @@
                 $(this).toggleClass('collapsed');
             });
         }
+
         hamburgerMenu();
     });
 </script>

@@ -21,10 +21,11 @@ class Sector extends BaseForm
                 'sector_vocabulary',
                 'select',
                 [
-                    'choices'     => $this->getSectorVocabularyCodeList(),
-                    'empty_value' => trans('elementForm.select_text'),
+                    'choices'       => $this->getSectorVocabularyCodeList(),
+                    'empty_value'   => trans('elementForm.select_text'),
                     'default_value' => '1',
-                    'attr'        => ['class' => 'form-control sector_vocabulary']
+                    'attr'          => ['class' => 'form-control sector_vocabulary'],
+                    'label'         => trans('elementForm.sector_vocabulary')
                 ]
             )
             ->add('vocabulary_uri', 'text', ['label' => 'Vocabulary URI'])
