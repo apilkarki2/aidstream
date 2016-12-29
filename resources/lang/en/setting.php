@@ -39,6 +39,7 @@ return [
     'segmented'                             => 'Segmented',
     'save_activities_checklist'             => 'Save Activities Checklist',
     'select_version'                        => 'Select Version',
-    'reporting_organisation_info'           => 'Reporting Organisation Info'
+    'reporting_organisation_info'           => 'Reporting Organisation Info',
+    'publishing_type' => 'Publishing Type',
 ];
 
