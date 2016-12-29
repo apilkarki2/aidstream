@@ -954,7 +954,7 @@ class ActivityController extends Controller
         if ($status == "Unlinked") {
             $message = trans('error.activity_not_published_to_registry');
         } elseif ($status == "Linked") {
-            $message = trans('success.activity_published_to_registry') . "<a href='/files/xml/$filename'>$filename</a>";
+            $message = trans('success.activity_published_to_registry') . ' ' . "<a href='/files/xml/$filename'>$filename</a>";
         } else {
             $message = trans('error.republish_activity');
         }

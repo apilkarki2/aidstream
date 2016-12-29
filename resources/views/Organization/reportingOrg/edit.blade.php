@@ -9,7 +9,7 @@
             <div class="col-xs-9 col-md-9 col-lg-9 content-wrapper">
                 @include('includes.response')
                 <div class="panel-content-heading">
-                    <div>@lang('element.reporting_organsation')
+                    <div>@lang('element.reporting_organisation')
                         <div class="panel-action-btn">
                             <a href="{{route('organization.show', $organizationId)}}" class="btn btn-primary">@lang('global.view_organisation_data')
                             </a>

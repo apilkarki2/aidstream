@@ -230,6 +230,6 @@ return [
     'type_of_relationship'                       => 'Type of Relationship',
     'reporting_org_internal_activity_identifier' => 'Reporting Organisation\'s Internal Activity Identifier',
     'linked_data_default'                        => 'Linked Data Default',
-
+    'reporting_organisation_language'            => 'Reporting Organisation Language'
 ];
 

@@ -111,7 +111,7 @@ class DefaultValues extends BaseForm
             'save',
             'submit',
             [
-                'label'   => transpose('global.save_default_values'),
+                'label'   => trans('global.save_default_values'),
                 'attr'    => ['class' => 'btn btn-primary btn-submit btn-form'],
                 'wrapper' => ['class' => 'form-group']
 

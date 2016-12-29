@@ -142,7 +142,7 @@ class Transaction extends ActivityBaseRequest
         $messages = [];
         foreach ($formFields as $typeIndex => $type) {
             $typeForm                                                          = sprintf('%s.transaction_type.%s', $formBase, $typeIndex);
-            $messages[sprintf('%s.transaction_type_code.required', $typeForm)] = trans('validation.required', ['attribute' => trans('elementForm.transaction_Type')]);
+            $messages[sprintf('%s.transaction_type_code.required', $typeForm)] = trans('validation.required', ['attribute' => trans('elementForm.transaction_type')]);
         }
 
         return $messages;

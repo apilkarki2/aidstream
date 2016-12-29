@@ -219,7 +219,7 @@
                         <div class="col-xs-12 col-md-12 hidden">
                             {{ Form::hidden('type') }}
                             {!! AsForm::text(['name' => 'search_org', 'class' => 'search_org ignore_change', 'label' => false]) !!}
-                            {{ Form::button('Search Organisation', ['class' => 'btn btn-primary btn-search', 'type' => 'button']) }}
+                            {{ Form::button(trans('registration.search_organisation'), ['class' => 'btn btn-primary btn-search', 'type' => 'button']) }}
                             {{ Form::hidden('similar_organization') }}
                         </div>
                         <div class="org-list-container clickable-org hidden">

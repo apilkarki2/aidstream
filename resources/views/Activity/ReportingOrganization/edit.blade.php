@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             <br/>
-                            <div class="activity-description"><span>@lang('global.reporting_organisation_update')<a href="{{ route('settings') }}">@lang('global.settings')</a>.</span></div>
+                            <div class="activity-description"><span>@lang('global.reporting_organisation_update') <a href="{{ route('settings') }}">@lang('global.settings')</a>.</span></div>
                         </div>
                     </div>
                 </div>

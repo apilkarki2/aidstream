@@ -25,6 +25,8 @@ return [
     'total_expenditures'          => 'Total Expenditures',
     'total_incoming_funds'        => 'Total Incoming Funds',
     'search'                      => 'Search',
-    'search_organisations'        => 'Search Organisations'
+    'search_organisations'        => 'Search Organisations',
+    'contact'                     => 'Contact',
+    'share'                       => 'Share',
 
 ];

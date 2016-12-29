@@ -52,8 +52,9 @@ class IatiIdentifierRequest extends ActivityBaseRequest
      */
     public function messages()
     {
-        $messages                               = [];
-        $messages['activity_identifier.not_in'] = trans('validation.required', ['attribute' => trans('elementForm.activity_identifier')]);
+        $messages                                 = [];
+        $messages['activity_identifier.not_in']   = trans('validation.code_list', ['attribute' => trans('elementForm.activity_identifier')]);
+        $messages['activity_identifier.required'] = trans('validation.required', ['attribute' => trans('elementForm.activity_identifier')]);
 
         return $messages;
     }

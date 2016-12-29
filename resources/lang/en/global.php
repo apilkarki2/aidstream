@@ -146,9 +146,9 @@ return [
     'recover_account_organisation_name'            => 'To help us recover your account details,please enter the name of your organisation in the field below.',
     'search_organisation'                          => 'Search Organisation',
     'search_organisation_text'                     => 'Our database contains the following organisation/s which match the name of the organisation you entered. If one of them is your organisation, please click to select it.',
-    'none_of_the_results_match_organisation_text'  => 'None of the results above match my organisation. I would like to <a href="{{ url(\'/register\') }}">register</a> my organisation for an Aidstream account.',
+    'none_of_the_results_match_organisation_text'  => 'None of the results above match my organisation. I would like to <a href=":url">register</a> my organisation for an Aidstream account.',
     'database_doesnt_contain_organisation_text'    => 'Our database doesn\'t contain the name of the organisation you entered.',
-    'would_you_like_to_register_text'              => 'Would you like to <a href="{{ url(\'/register\') }}">register</a> your organisation for an AidStream account?',
+    'would_you_like_to_register_text'              => 'Would you like to <a href=":url">register</a> your organisation for an AidStream account?',
     'contact_support_at'                           => 'Contact Support at',
     'contact_support_for'                          => 'Contact Support for assistance',
     'seems_there_are_similar_organisations'        => 'It seems there are account(s) on AidStream with same/similar organisation name you have entered during registration. To help us recover your account details,please enter the name of your organisation in the field below.',
@@ -156,7 +156,7 @@ return [
     'back_to_organisation_information'             => 'Back to Organisation Information',
     'please_provide_details_administrator'         => 'Please provide details for your <strong>Administrator</strong> account.',
     'aidstream_supports_multiple'                  => '<p>AidStream supports <strong>multiple user accounts</strong> for an organisation.</p><span class="multi-user-info">You can add multiple users once your account is set up, or you can </span><span id="add-user">add additional users now.</span>',
-    'verification_email_has_been_sent'             => 'A Verification email has been sent to <strong>{{ session(\'email\') }}</strong>. Please click on the link in the email to verify and activate your new AidStream account.',
+    'verification_email_has_been_sent'             => 'A Verification email has been sent to',
     'last_updated_on'                              => 'Last Updated On',
     'activity_identifier'                          => 'Activity Identifier',
     'save_default_values'                          => 'Save Default Values',
@@ -251,6 +251,7 @@ return [
     'organisations'                                => 'Organisations',
     'organisations_have_published_their'           => 'organisations</strong> have published their activities through <strong>AidStream</strong></h2>
             <p>The organisations listed below are using AidStream.</p>',
+
 
 ];
 

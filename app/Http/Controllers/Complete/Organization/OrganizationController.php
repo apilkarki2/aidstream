@@ -92,7 +92,7 @@ class OrganizationController extends Controller
         }
 
         if (!isset($organization->reporting_org[0])) {
-            $response = ['type' => 'warning', 'code' => ['settings', ['name' => 'organization']]];
+            $response = ['type' => 'warning', 'code' => ['settings', ['name' => 'elementForm.organisation']]];
 
             return redirect('/settings')->withResponse($response);
         }
@@ -337,7 +337,7 @@ class OrganizationController extends Controller
     {
         $response = ($method) ? [
             'type' => 'success',
-            'code' => ['updated', ['name' => trans(sprintf('element.%s', $field))]]
+            'code' => ['updated', ['name' => $field]]
         ] : [
             'type' => 'danger',
             'code' => [
@@ -493,7 +493,7 @@ class OrganizationController extends Controller
     protected function getMessageForOrganizationData($status, $filename)
     {
         if ($status == "Linked") {
-            $message = trans('success.organisation_data_published_to_registry') . "<a href='/files/xml/$filename'>$filename</a>";
+            $message = trans('success.organisation_data_published_to_registry') . ' ' . "<a href='/files/xml/$filename'>$filename</a>";
         } elseif ($status == "Unlinked") {
             $message = trans('error.org_data_not_published_to_registry');
         } else {

@@ -82,7 +82,7 @@
                                         </ul>
                                     </div>
                                     <div class="col-md-12 text-center org-list-notification">
-                                        <p>@lang('global.none_of_the_results_match_organisation_text')</p>
+                                        <p>@lang('global.none_of_the_results_match_organisation_text', ['url' => url('/register')])</p>
                                     </div>
                                 </div>
                             </div>

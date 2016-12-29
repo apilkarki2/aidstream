@@ -86,7 +86,7 @@ class RecipientRegionBudget extends OrganizationBaseRequest
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm                                                                              = sprintf('%s.recipient_region.%s', $formBase, $recipientRegionIndex);
             $messages[sprintf('%s.recipient_region.%s.vocabulary_uri.url', $formBase, $recipientRegionIndex)] = trans('validation.url');
-            $messages[sprintf('%s.recipient_region.%s.code.required', $formBase, $recipientRegionIndex)]      = trans('validation.code', ['attribute' => trans('elementForm.code')]);
+            $messages[sprintf('%s.recipient_region.%s.code.required', $formBase, $recipientRegionIndex)]      = trans('validation.required', ['attribute' => trans('elementForm.code')]);
             $messages                                                                                         = array_merge(
                 $messages,
                 $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm)

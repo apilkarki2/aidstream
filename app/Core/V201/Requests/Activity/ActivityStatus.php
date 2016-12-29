@@ -41,7 +41,7 @@ class ActivityStatus extends Request
     public function messages()
     {
         $messages                                  = [];
-        $messages['activity_status' . '.required'] = trans('validation.required', ['attribute' => trans('element.acivity_scope')]);
+        $messages['activity_status' . '.required'] = trans('validation.required', ['attribute' => trans('element.activity_scope')]);
 
         return $messages;
     }

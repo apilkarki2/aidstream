@@ -7,11 +7,11 @@
             {!! form_rest($form) !!}
             <div class="col-md-12 col-xs-12">
                 {!! AsForm::text(['name'=>'user_identifier', 'required' => true,'label'=>trans('organisation.organisation_name_abbreviation'), 'parent'=>'col-xs-12 col-sm-6 col-md-6']) !!}
-                {!! AsForm::select(['name'=>'organization_type','data' => $organizationTypes, 'value' => getVal((array) $organization->reporting_org, [ 0 ,'reporting_organization_type']),'empty_value' => trans('select_one_of_the_following_options') ,'required' => true,'parent'=>'col-xs-12 col-sm-6 col-md-6']) !!}
+                {!! AsForm::select(['name'=>'organization_type','data' => $organizationTypes, 'value' => getVal((array) $organization->reporting_org, [ 0 ,'reporting_organization_type']),'empty_value' => trans('global.select_one_of_the_following_options') ,'required' => true,'parent'=>'col-xs-12 col-sm-6 col-md-6']) !!}
             </div>
             <div class="col-md-12 col-xs-12">
                 {!! AsForm::text(['name' => 'address','parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
-                {!! AsForm::select(['name' => 'country','data' => $countries,'empty_value' => trans('select_one_of_the_following_options'),'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6','id' => 'country']) !!}
+                {!! AsForm::select(['name' => 'country','data' => $countries,'empty_value' => trans('global.select_one_of_the_following_options'),'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6','id' => 'country']) !!}
             </div>
             <h2>IATI @lang('organisation.organisational_identifier')</h2>
             <div class="col-md-12 col-xs-12">

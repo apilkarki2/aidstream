@@ -188,7 +188,6 @@
 @if($loggedInUser && $loggedInUser->userOnBoarding && (session('role_id')!= 3 && session('role_id')!= 4))
     <script src="/js/userOnBoarding.js"></script>
     <script type="text/javascript">
-                {{--        var currentLang = "{!! Request::cookie('language') !!}";--}}
         var hintStatus = "{!! ($loggedInUser->userOnBoarding->display_hints) ? 1 : 0 !!}";
         var completedTour = "{!! ($loggedInUser->userOnBoarding->completed_tour) ? 1 : 0 !!}";
 

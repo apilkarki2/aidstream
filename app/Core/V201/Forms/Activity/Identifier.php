@@ -13,7 +13,7 @@ class Identifier extends BaseForm
                 'activity_identifier',
                 'text',
                 [
-                    'labe'       => trans('elementForm.activity_identifier'),
+                    'label'       => trans('elementForm.activity_identifier'),
                     'wrapper'    => ['class' => 'col-xs-12 col-sm-6'],
                     'attr'       => ['class' => 'noSpace'],
                     'required'   => true,
