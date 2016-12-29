@@ -31,7 +31,7 @@ class DefaultFieldValuesForm extends BaseForm
                 true
             )
             ->add('default_hierarchy', 'text', ['label' => trans('elementForm.default_hierarchy'), 'help_block' => $this->addHelpText('activity_defaults-hierarchy', false)])
-            ->add('linked_data_uri', 'text', ['label' => 'Linked Data Default'])
+            ->add('linked_data_uri', 'text', ['label' => trans('elementForm.linked_data_default')])
             ->addSelect(
                 'default_collaboration_type',
                 $this->getCodeList('CollaborationType', 'Organization'),

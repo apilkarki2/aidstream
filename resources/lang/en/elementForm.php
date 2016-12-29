@@ -228,6 +228,8 @@ return [
     'period_target_value'                        => 'Period Target Value',
     'default_collaboration_type'                 => 'Default Collaboration Type',
     'type_of_relationship'                       => 'Type of Relationship',
-    'reporting_org_internal_activity_identifier' => 'Reporting Organisation\'s Internal Activity Identifier'
+    'reporting_org_internal_activity_identifier' => 'Reporting Organisation\'s Internal Activity Identifier',
+    'linked_data_default'                        => 'Linked Data Default',
+
 ];
 

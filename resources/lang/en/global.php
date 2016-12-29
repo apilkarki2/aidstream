@@ -244,13 +244,13 @@ return [
     'choose_your_document'                         => 'Please choose your document',
     'add_organisation'                             => 'Add organisation name in another language',
     'true'                                         => 'True',
-        'contact' => 'Contact',
-    'share' => 'Share',
-    'role' => 'Role',
-    'transaction' => 'Transaction',
-
-
-
+    'contact'                                      => 'Contact',
+    'share'                                        => 'Share',
+    'role'                                         => 'Role',
+    'transaction'                                  => 'Transaction',
+    'organisations'                                => 'Organisations',
+    'organisations_have_published_their'           => 'organisations</strong> have published their activities through <strong>AidStream</strong></h2>
+            <p>The organisations listed below are using AidStream.</p>',
 
 ];
 
