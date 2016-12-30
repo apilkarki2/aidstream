@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', trans('title.total_expenditure'))
+@section('title', trans('title.org_total_expenditure'))
 @section('content')
     <div class="container main-container">
         <div class="row">

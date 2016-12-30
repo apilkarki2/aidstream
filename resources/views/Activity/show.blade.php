@@ -38,10 +38,10 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <input type="hidden" name="activity_workflow" value="{{ $activity_workflow + 1 }}">
                         @if($activity_workflow == 2)
-                            <input type="button" value="Mark as {{ $btn_text }}" class="btn_confirm"
-                                   data-title="Confirmation" data-message="Are you sure you want to Publish?">
+                            <input type="button" value="{{trans('global.mark_as')}} {{ trans(sprintf('global.%s',strtolower($btn_text))) }}" class="btn_confirm"
+                                   data-title="Confirmation" data-message={{trans('global.are_you_sure_to_publish')}}>
                         @else
-                            <input type="submit" value="Mark as {{ $btn_text }}">
+                            <input type="submit" value="{{trans('global.mark_as')}} {{ trans(sprintf('global.%s',strtolower($btn_text )))}}">
                         @endif
                     </form>
                 @else

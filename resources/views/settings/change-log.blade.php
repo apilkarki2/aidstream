@@ -76,11 +76,11 @@
                         @else
                             <div class="changelog-message">
                                 @lang('setting.in_your_settings_page') {{ ucfirst(getVal($settings, ['registry_info', 0, 'publish_files'])) }} @lang('setting.to_automatically_update_iati_registry')
-                                @lang('setting.please_go_to_the')
+                                @lang('setting.please_go_to_the',['route' => route('list-published-files')])
                             </div>
                         @endif
                         <form action="{{ route('change-segmentation') }}" method="POST" class="form-group">
-                            <p>@lang('setting.do_you_want_to_continue')</p>
+                            <p>@lang('setting.do_you_want_to_continue',['segmentation' => ucfirst($changes['segmentation'])])</p>
                             <input type="hidden" value="{{ csrf_token() }}" name="_token">
                             <input type="hidden" value="{{ $organizationId }}" name="organizationId">
                             <input type="hidden" value="{{ json_encode($changes) }}" name="changes">

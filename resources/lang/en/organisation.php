@@ -28,5 +28,7 @@ return [
     'this_will_be_auto_generated'                    => 'This will be auto-generated as you fill Organisation User Identifier.',
     'aidstream_will_create_default'                  => 'AidStream will create a default username with your Organisation User Identifier as prefix. You will not be able to change \'_admin\' part of the username. This user will have administrative privilege and can create multiple AidStream users with different set of permissions.',
     'organisation_url'                               => 'Organisation Url',
-    'select_an_agency'                               => 'Select an Agency'
+    'select_an_agency'                               => 'Select an Agency',
+    'address'                                        => 'Address',
+    'country'                                        => 'Country'
 ];

@@ -4,6 +4,7 @@
 return [
     'identification'                => 'Identification',
     'reporting_organisation'        => 'Reporting Organisation',
+    'reporting_organization'        => 'Reporting Organisation',
     'activity_identifier'           => 'Activity Identifier',
     'other_identifier'              => 'Other Identifier',
     'basic_activity_information'    => 'Basic Activity Information',
@@ -15,6 +16,8 @@ return [
     'activity_scope'                => 'Activity Scope',
     'participating_organisations'   => 'Participating Organisations',
     'participating_organisation'    => 'Participating Organisation',
+    'participating_organizations'   => 'Participating Organisation',
+    'participating_organization'    => 'Participating Organisation',
     'geopolitical_information'      => 'Geopolitical Information',
     'recipient_country'             => 'Recipient Country',
     'recipient_region'              => 'Recipient Region',

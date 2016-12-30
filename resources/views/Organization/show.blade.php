@@ -24,7 +24,8 @@
                 ?>
                 <div class="element-panel-heading">
                     <div><span class="pull-left">Organisation</span></div>
-                    <div class="view-xml-btn org-xml-btn"><span class="pull-left"><a href="{{route('view.organizationXml', ['orgId' => $id])}}">View IATI XML file</a></span></div>
+                    <div class="view-xml-btn org-xml-btn"><span class="pull-left"><a href="{{route('view.organizationXml', ['orgId' => $id])}}">@lang('global.view_iati_xml_file')</a></span>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-md-8 col-lg-8 element-content-wrapper">
                     <div class="activity-status activity-status-{{ $status_label[$status] }}">

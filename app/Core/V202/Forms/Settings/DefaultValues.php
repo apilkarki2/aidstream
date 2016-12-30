@@ -107,7 +107,15 @@ class DefaultValues extends BaseForm
                 ? ['wrapper' => ['class' => 'form-group col-sm-6 hidden']]
                 : ['wrapper' => ['class' => 'form-group col-sm-6']]
         );
-        $this->addSelect('humanitarian', ['1' => trans('elementForm.yes'), '0' => trans('elementForm.no')], null, null, null, false, ['wrapper' => ['class' => 'form-group col-sm-6']])
+        $this->addSelect(
+            'humanitarian',
+            ['1' => trans('elementForm.yes'), '0' => trans('elementForm.no')],
+            trans('elementForm.humanitarian'),
+            null,
+            null,
+            false,
+            ['wrapper' => ['class' => 'form-group col-sm-6']]
+        )
              ->add(
                  'save',
                  'submit',

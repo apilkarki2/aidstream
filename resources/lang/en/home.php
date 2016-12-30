@@ -24,7 +24,7 @@ return [
                 piece of cake!',
     'an_email_containing_your_account'   => 'An email containing your account details has been sent to the secondary or "backup" contact for your organisation,"{{ session(\'secondary_contact_name\') }}". Please contact
                             them directly.',
-    'if_you_need_any_help'               => 'If you need any help, <a href="{{ route(\'contact\', [\'has-secondary-contact-support\']) }}">contact the AidStream support team</a>.',
+    'if_you_need_any_help'               => 'If you need any help, <a href=":route">contact the AidStream support team</a>.',
 
 
 ];

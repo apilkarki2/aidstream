@@ -55,7 +55,7 @@
                                                 <span class="help-text"
                                                       title="AidStream will create a default username with your User Identifier as prefix."
                                                       data-toggle="tooltip" data-placement="top">
-                                                   AidStream will create a default username with your Organisation Identifier as suffix.
+                                                   AidStream will create a default username with your @lang('element.organisation_identifier') as suffix.
                                                 </span>
                                         </div>
                                     </div>

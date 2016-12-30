@@ -20,7 +20,7 @@ return [
     'search_for_same_organisation_name'      => 'Search for same/similar organisation name on AidStream.',
     'recognise_organisation'                 => 'If you recognise one of the organisations below as yours, please click on it to continue.',
     'none_results_match_organisation_text'   => 'None of the results above match my organisation. I would like to <a data-value="">continue with registration</a>.',
-    'thank_you_for_verifying_your_email'     => 'Thank you for verifying your email address. You have successfully created an account for {{ $user->organization->name }} and associated the following user accounts with it:',
+    'thank_you_for_verifying_your_email'     => 'Thank you for verifying your email address. You have successfully created an account for :organisation_name and associated the following user accounts with it:',
     'for_any_accounts_you_have+created'      => 'For any accounts you have created other than your own, we have sent a verification email to those users. If you
     provided a back up contact for account recovery, we have also sent a verification
     email to that address. Please ask all additional users to check their email inbox and follow the instructions in our

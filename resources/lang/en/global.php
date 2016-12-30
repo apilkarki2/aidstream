@@ -251,7 +251,16 @@ return [
     'organisations'                                => 'Organisations',
     'organisations_have_published_their'           => 'organisations</strong> have published their activities through <strong>AidStream</strong></h2>
             <p>The organisations listed below are using AidStream.</p>',
-
-
+    'update_available'                             => 'Update available',
+    'upgrade_to_iati_version'                      => 'Upgrade to IATI version',
+    'iati_version'                                 => 'IATI version ',
+    'using_latest_version'                         => 'You’re using latest IATI version',
+    'are_you_sure_to_publish'                      => 'Are you sure you want to Publish?',
+    'mark_as'                                      => 'Mark as-esp',
+    'create'                                       => 'Create',
+    'view_document_link'                           => 'View Document Link',
+    'upload'                                       => 'Upload',
+    'organisation_file'                            => 'Organisation File',
+    'activity_file'                                => 'Activity File'
 ];
 

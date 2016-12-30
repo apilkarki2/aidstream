@@ -1,6 +1,6 @@
 @inject('code', 'App\Helpers\GetCodeName')
 
-<p>@lang('registration.thank_you_for_verifying_your_email')</p>
+<p>@lang('registration.thank_you_for_verifying_your_email',['organisation_name' => $user->organization->name])</p>
 <ul>
     @foreach($users as $orgUser)
         <li>
@@ -15,11 +15,11 @@
 {{--<li><strong>Editor Account:</strong> test</li>--}}
 {{--</ul>--}}
 <p>
-    @lang('registration.thank_you_for_verifying_your_email')</p>
+    @lang('registration.thank_you_for_verifying_your_email',['organisation_name' => $user->organization->name])</p>
 {{ Form::open(['url' => route('save-registry-info', [$user->verification_code]), 'method' => 'post']) }}
 <div class="save-registry-block">
     <p>
-@lang('registration.add_the_publisher_id')
+        @lang('registration.add_the_publisher_id')
     </p>
 
     <div class="col-xs-12 col-md-12">

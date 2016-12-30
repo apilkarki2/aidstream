@@ -109,7 +109,7 @@ class BaseForm extends Form
 
         $data['label'] = $label;
 
-        return $this->addCollection('narrative', 'Activity\Narrative', $className, $data);
+        return $this->addCollection('narrative', 'Activity\Narrative', $className, $data, trans('elementForm.narrative'));
     }
 
     /**

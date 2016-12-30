@@ -45,7 +45,7 @@ class Transaction extends BaseForm
     {
         $this
             ->add('reference', 'text', ['label' => trans('elementForm.reference')])
-            ->addSelect('humanitarian', ['1' => trans('elementForm.yes'), '0' => trans('elementForm.no')])
+            ->addSelect('humanitarian', ['1' => trans('elementForm.yes'), '0' => trans('elementForm.no')], trans('elementForm.humanitarian'))
             ->addTransactionType()
             ->addTransactionDate()
             ->addValue()

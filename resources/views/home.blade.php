@@ -19,7 +19,7 @@
         <div class="col-md-12 text-center">
             {{--<h1>Publish your Aid data in <a href="http://iatistandard.org/">IATI format</a> effortlessly</h1>--}}
 
-            <h1>@lang('home.effortlessly_publish_your_aid_data')</h1>
+            <h1>@lang('home.effortlessly_publish_your_aid_data',['route' => 'http://iatistandard.org/'])</h1>
 
             {{--<p>AidStream is an online platform for organisations that wish to publish aid data in the International Aid--}}
             {{--Transparency Initiative(IATI) format without getting into complexities of IATI. </p>--}}
@@ -127,7 +127,7 @@
                             @lang('home.an_email_containing_your_account')
                         </p>
                         <p>
-                            @lang('home.if_you_need_any_help')
+                            @lang('home.if_you_need_any_help',['route' => route('contact', ['has-secondary-contact-support'])])
                         </p>
                     </div>
                 </div>
