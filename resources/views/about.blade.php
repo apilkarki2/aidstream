@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/style.min.css">
 </head>
 <body>
-@include('includes.header_home')
+@include('includes.header')
 <section class="main-container">
     <div class="introduction-wrapper about-wrapper">
         <div class="col-md-12 text-center">

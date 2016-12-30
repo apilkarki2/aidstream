@@ -121,7 +121,7 @@
                                     <i class="pull-left material-icons">@lang('perfectViewer.autorenew')</i>
                                     <span>
                                         {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, [0, 'published_data', 'activity_status'], '')) }}
-                                        <i>(@lang('perfectViewer.status')</i>
+                                        <i>(@lang('perfectViewer.status'))</i>
                                     </span>
                                 @endif
                             </li>
@@ -305,7 +305,6 @@
         </div>
     </section>
     @include('includes.footer')
-
 </div>
 <script>
     var recipientCountries = {!!json_encode(array_flip($recipientCountries))!!};

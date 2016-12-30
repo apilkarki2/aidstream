@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', trans('title.activity_sector').' - ' . $activityData->IdentifierTitle)
+@section('title', trans('title.sector').' - ' . $activityData->IdentifierTitle)
 
 @section('content')
     <div class="container main-container">

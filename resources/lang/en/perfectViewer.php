@@ -14,7 +14,7 @@ return [
     'organisation_name'           => 'Organisation Name',
     'provider'                    => 'Provider',
     'receiver'                    => 'Receiver',
-    'sector'                      => 'Sector',
+    'sector'                      => 'Sectors',
     'budget'                      => 'Budget',
     'total_budget'                => 'Total Budget',
     'updated_on'                  => 'Updated on',
@@ -28,5 +28,4 @@ return [
     'search_organisations'        => 'Search Organisations',
     'contact'                     => 'Contact',
     'share'                       => 'Share',
-
 ];

@@ -153,7 +153,7 @@
                                                     <i class="pull-left material-icons">autorenew</i>
                                                     <span>
                                     {{ $codeListHelper->getCodeNameOnly('ActivityStatus', getVal($activity, ['published_data', 'activity_status'], '')) }}
-                                                        <i>(@lang('status.Status')</i></span>
+                                                        <i>(@lang('perfectViewer.status'))</i></span>
                                                 </li>
                                             @endif
                                         </ul>
