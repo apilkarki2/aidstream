@@ -26,7 +26,7 @@ class DocumentLink extends BaseForm
                 [
                     'tag'           => 'em',
                     'label'         => false,
-                    'default_value' => trans('url_text')
+                    'default_value' => trans('elementForm.url_text')
                 ]
             )
             ->addCollection('title', 'Activity\Title', '', [], trans('elementForm.title'))

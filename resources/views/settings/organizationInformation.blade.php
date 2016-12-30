@@ -15,7 +15,7 @@
             </div>
             <h2>IATI @lang('organisation.organisational_identifier')</h2>
             <div class="col-md-12 col-xs-12">
-                {!! AsForm::select(['name' => 'registration_agency', 'data' => $registrationAgency,'required' => true, 'label' => trans('organisation_registration_agency'),'parent' => 'col-xs-12 col-sm-6 col-md-6', 'id' => 'registration_agency', 'empty_value' => trans('global.select_an_agency'), 'attr' => ['data-agency' => json_encode($registrationAgency)]]) !!}
+                {!! AsForm::select(['name' => 'registration_agency', 'data' => $registrationAgency,'required' => true, 'label' => trans('organisation.organisation_registration_agency'),'parent' => 'col-xs-12 col-sm-6 col-md-6', 'id' => 'registration_agency', 'empty_value' => trans('global.select_an_agency'), 'attr' => ['data-agency' => json_encode($registrationAgency)]]) !!}
                 {!! AsForm::text(['name' => 'registration_number', 'required'=> true, 'label' => trans('organisation.organisation_registration_number'),'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
             </div>
             <div class="col-md-12 col-xs-12 single-form-wrap">

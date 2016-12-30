@@ -104,7 +104,7 @@ class OrganizationBaseRequest extends Request
         $messages = [];
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm                                     = $formBase . '.value.' . $valueKey;
-            $messages[$valueForm . '.amount.required']     = trans('validation.unique', ['attribute' => trans('elementForm.amount')]);
+            $messages[$valueForm . '.amount.required']     = trans('validation.required', ['attribute' => trans('elementForm.amount')]);
             $messages[$valueForm . '.amount.numeric']      = trans('validation.numeric', ['attribute' => trans('elementForm.amount')]);
             $messages[$valueForm . '.value_date.required'] = trans('validation.required', ['attribute' => trans('elementForm.value_date')]);
             $messages[$valueForm . '.value_date.date']     = trans('validation.date', ['attribute' => trans('elementForm.value_date')]);
