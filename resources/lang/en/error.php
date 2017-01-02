@@ -52,4 +52,12 @@ return [
     'publisher_not_found'                                    => 'Could not publish to registry. (Publisher not found. <a href="/settings">Please check you publisher Id.</a>)',
     'failed_to_submit_query'                                 => 'Failed to submit your query. Please try again.',
     'select_activities_to_be_imported'                       => 'Select activities to be imported',
+    'not_authorized'                                         => 'Not Authorized',
+    'error_budget_create'                                    => 'Error occurred during creation of budget',
+    'error_transaction_update'                               => 'Error updating transaction',
+    'error_transaction_create'                               => 'Error creating transaction',
+    'error_transaction_delete'                               => 'Error deleting transaction',
+    '404_not_found'                                          => '<span><b>404! Not Found</b><br>The requested url cannot be found in our system.</span>',
+    'not_available_for_v201'                                 => 'Sorry this feature is not available for V201. Please upgrade to latest version to download.',
+    'upgrade_not_completed'                                  => 'Upgrade could not be completed.'
 ];

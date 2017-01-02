@@ -36,21 +36,31 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
-            require app_path('Http/routes/organization.php');
-            require app_path('Http/routes/activity.php');
-            require app_path('Http/routes/wizard/activity.php');
-            require app_path('Http/routes/superAdmin.php');
-            require app_path('Http/routes/organizationGroup.php');
-            require app_path('Http/routes/user.php');
-            require app_path('Http/routes/download.php');
-            require app_path('Http/routes/Superadmin/publishedFilesCorrection.php');
-            require app_path('Http/routes/settings.php');
-            require app_path('Http/routes/userOnBoarding.php');
-            require app_path('Http/routes/import/import.php');
-            require app_path('Http/routes/import/result/importresult.php');
-            require app_path('Http/routes/xmlImport.php');
-        });
+        $router->group(
+            ['namespace' => $this->namespace],
+            function ($router) {
+                require app_path('Http/routes.php');
+                require app_path('Http/routes/organization.php');
+                require app_path('Http/routes/activity.php');
+                require app_path('Http/routes/wizard/activity.php');
+                require app_path('Http/routes/superAdmin.php');
+                require app_path('Http/routes/organizationGroup.php');
+                require app_path('Http/routes/user.php');
+                require app_path('Http/routes/download.php');
+                require app_path('Http/routes/Superadmin/publishedFilesCorrection.php');
+                require app_path('Http/routes/settings.php');
+                require app_path('Http/routes/userOnBoarding.php');
+                require app_path('Http/routes/import/import.php');
+                require app_path('Http/routes/import/result/importresult.php');
+                require app_path('Http/routes/xmlImport.php');
+                require app_path('Http/routes/Lite/lite.php');
+                require app_path('Http/routes/Lite/settings.php');
+                require app_path('Http/routes/Lite/users.php');
+                require app_path('Http/routes/Lite/workflow.php');
+                require app_path('Http/routes/Lite/profile.php');
+                require app_path('Http/routes/Lite/publishedFiles.php');
+                require app_path('Http/routes/Lite/download.php');
+            }
+        );
     }
 }

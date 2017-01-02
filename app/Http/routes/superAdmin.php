@@ -115,5 +115,12 @@ $router->group(
                 'uses' => 'OrganizationController@exportOrganizationInfo'
             ]
         );
+        $router->post(
+            'admin/change/system_version/{orgId}',
+            [
+                'as'         => 'admin.change.system_version',
+                'uses'       => 'OrganizationController@changeSystemVersion'
+            ]
+        );
     }
 );
