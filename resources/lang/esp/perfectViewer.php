@@ -1,0 +1,32 @@
+<?php
+
+return [
+    'see_all_activities'          => 'See all Activities-esp',
+    'iati_identifier'             => 'IATI Identifier-esp',
+    'published_in_iati'           => 'Published in IATI-esp',
+    'not_published_in_iati'       => 'Not Published in IATI-esp',
+    'date_range'                  => 'date_range-esp',
+    'autorenew'                   => 'autorenew-esp',
+    'status'                      => 'Status-esp',
+    'sector_code'                 => 'Sector code-esp',
+    'sector_vocabulary'           => 'Sector vocabulary-esp',
+    'participating_organisations' => 'Participating Organisations-esp',
+    'organisation_name'           => 'Organisation Name-esp',
+    'provider'                    => 'Provider-esp',
+    'receiver'                    => 'Receiver-esp',
+    'sector'                      => 'Sectors-esp',
+    'budget'                      => 'Budget-esp',
+    'total_budget'                => 'Total Budget-esp',
+    'updated_on'                  => 'Updated on-esp',
+    'view_xml_file_here'          => 'View XML file here-esp',
+    'see_all_organisations'       => 'See all Organisations-esp',
+    'total_commitments'           => 'Total Commitments-esp',
+    'total_disbursements'         => 'Total Disbursements-esp',
+    'total_expenditures'          => 'Total Expenditures-esp',
+    'total_incoming_funds'        => 'Total Incoming Funds-esp',
+    'search'                      => 'Search-esp',
+    'search_organisations'        => 'Search Organisations-esp',
+    'contact'                     => 'Contact-esp',
+    'share'                       => 'Share-esp',
+    'valued_at'                   => 'Valued at-esp'
+];

@@ -8,9 +8,6 @@ $(document).ready(function () {
         })
     };
 
-    callAsync('/localisedFormText', 'get').success(function (data) {
-        localisedData = JSON.parse(data);
-    });
 
     function listDocuments(data) {
         if (data) {
@@ -35,6 +32,10 @@ $(document).ready(function () {
     }
 
     $('#upload_document').on('show.bs.modal', function (e) {
+        callAsync('/localisedFormText', 'get').success(function (data) {
+            localisedData = JSON.parse(data);
+        });
+
         $.ajax({
             type: 'GET',
             url: '/document/list',
