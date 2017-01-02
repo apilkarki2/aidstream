@@ -1682,7 +1682,7 @@ class XmlValidator
                 $this->factory->getMessagesForPeriodEnd($budget['period_end'], $budgetBase),
                 $this->getMessagesForValue($budget['value'], $budgetBase)
             );
-            $messages[$budgetBase . '.period_end.0.date.before']  = trans('validation.before', ['attribute' => trans('elementForm.period_end'), 'values' => trans('elementForm.period_start')]);
+            $messages[$budgetBase . '.period_end.0.date.before']  = trans('validation.before', ['attribute' => trans('elementForm.period_end'), 'date' => trans('elementForm.period_start')]);
 
         }
 

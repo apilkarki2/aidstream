@@ -231,7 +231,7 @@
                                         {{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], @trans('perfectViewer.provider'). ' N/A')}}
                                     </span>
                                     <span class="receiver"><i>circle</i>
-                                        {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'],  @trans('perfectViewer.receiver'). ' N/A'))}}
+                                        {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'],  @trans('perfectViewer.receiver'). ' N/A')}}
                                     </span>
                                 </td>
                                 <td class="type">

@@ -73,7 +73,7 @@ return [
         "array"   => "The :attribute must contain :size items.",
     ],
     "unique"                                    => "The :attribute should be unique.",
-    "url"                                       => "'Enter valid URL. eg. http://example.com",
+    "url"                                       => "Enter valid URL. eg. http://example.com",
     "timezone"                                  => "The :attribute must be a valid zone.",
     /* Custom validation messages */
     "exclude_operators"                         => "Symbols are not allowed.",

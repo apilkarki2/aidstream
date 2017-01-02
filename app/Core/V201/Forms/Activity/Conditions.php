@@ -13,7 +13,7 @@ class Conditions extends BaseForm
         $this
             ->addSelect(
                 'condition_attached',
-                ['0' => trans('elementForm.yes'), '1' => trans('elementForm.yes')],
+                ['0' => trans('elementForm.no'), '1' => trans('elementForm.yes')],
                 trans('elementForm.condition_attached'),
                 $this->addHelpText('Activity_Conditions-attached'),
                 null,

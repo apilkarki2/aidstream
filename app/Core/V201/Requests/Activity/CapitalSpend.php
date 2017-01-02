@@ -34,8 +34,8 @@ class CapitalSpend extends Request
     {
         $messages['capital_spend.required'] = trans('validation.required', ['attribute' => trans('element.capital_spend')]);
         $messages['capital_spend.numeric']  = trans('validation.numeric', ['attribute' => trans('element.capital_spend')]);
-        $messages['capital_spend.max']      = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend')]);
-        $messages['capital_spend.min']      = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend')]);
+        $messages['capital_spend.max']      = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend'), 'max' => 100]);
+        $messages['capital_spend.min']      = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend'), 'min' => 0]);
 
         return $messages;
     }

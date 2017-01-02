@@ -349,7 +349,7 @@ class ActivityBaseRequest extends Request
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date']     = trans('validation.date', ['attribute' => trans('elementForm.period_end')]);
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after']    = trans(
                 'validation.after',
-                ['attribute' => trans('elementForm.period_end'), 'values' => trans('elementForm.period_start')]
+                ['attribute' => trans('elementForm.period_end'), 'date' => trans('elementForm.period_start')]
             );
         }
 
