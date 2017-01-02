@@ -187,7 +187,7 @@ class BaseForm extends Form
         $options = [
             'choices'       => $choices,
             'label'         => $label,
-            'empty_value'   => 'Select one of the following options',
+            'empty_value'   => trans('elementForm.select_text'),
             'default_value' => $defaultValue,
             'help_block'    => $helpText,
             'required'      => $required

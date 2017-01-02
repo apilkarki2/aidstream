@@ -28,7 +28,7 @@ class Sector extends BaseForm
                     'label'         => trans('elementForm.sector_vocabulary')
                 ]
             )
-            ->add('vocabulary_uri', 'text', ['label' => 'Vocabulary URI'])
+            ->add('vocabulary_uri', 'text', ['label' => trans('elementForm.vocabulary_uri')])
             ->add(
                 'sector_code',
                 'select',

@@ -22,7 +22,7 @@
             {{ Form::hidden('organization[agency_website]', null, ['class' => 'form-control agency_website', 'id' => 'organization[agency_website]']) }}
         </div>
         <div class="col-xs-12 col-md-12">
-            {!! AsForm::text(['name' => 'organization[registration_number]', 'class' => 'registration_number', 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
+            {!! AsForm::text(['name' => 'organization[registration_number]', 'class' => 'registration_number', 'label' => trans('organisation.registration_number'), 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6']) !!}
             {!! AsForm::text(['name' => 'organization[organization_identifier]', 'help' => 'registration_org_identifier', 'label' => trans('organisation.organisational_iati_identifier'), 'class' => 'organization_identifier', 'id' => 'organization[organization_identifier]', 'required' => true, 'parent' => 'col-xs-12 col-sm-6 col-md-6', 'attr' => ['readonly' => 'readonly']]) !!}
         </div>
     </div>

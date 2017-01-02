@@ -28,4 +28,6 @@ return [
     'search_organisations'        => 'Search Organisations',
     'contact'                     => 'Contact',
     'share'                       => 'Share',
+    'valued_at'                   => 'Valued at',
+    'not_available'               => 'Not Available',
 ];

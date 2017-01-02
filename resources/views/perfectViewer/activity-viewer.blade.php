@@ -187,9 +187,9 @@
                         <tbody>
                         @foreach(getVal($activity, [0, 'published_data', 'participating_organization'], []) as $index => $org)
                             <tr>
-                                <td>{{ getVal($org, ['narrative', 0, 'narrative'], 'Not Available') }}</td>
-                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationType', getVal($org, ['organization_type'], 'Not Available')) }}</td>
-                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationRole', getVal($org, ['organization_role'], 'Not Available')) }}</td>
+                                <td>{{ getVal($org, ['narrative', 0, 'narrative'], @trans('perfectViewer.not_available')) }}</td>
+                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationType', getVal($org, ['organization_type'], @trans('perfectViewer.not_available'))) }}</td>
+                                <td>{{ $codeListHelper->getCodeNameOnly('OrganisationRole', getVal($org, ['organization_role'], @trans('perfectViewer.not_available'))) }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -211,31 +211,31 @@
                             <tr>
                                 <td>
                                     <span class="transaction-value">
-                                        {{getVal($transaction, ['transaction', 'value', 0, 'amount'], 'Not Available')}}
+                                        {{getVal($transaction, ['transaction', 'value', 0, 'amount'], @trans('perfectViewer.not_available'))}}
                                     </span>
                                     @if(getVal($transaction, ['transaction', 'value', 0, 'amount'], null))
                                         @if(getVal($transaction, ['transaction', 'value', 0, 'currency'], null))
-                                            {{getVal($transaction, ['transaction', 'value', 0, 'currency'], 'Not Available')}}
+                                            {{getVal($transaction, ['transaction', 'value', 0, 'currency'], @trans('perfectViewer.not_available'))}}
                                         @else
                                             {{getVal($defaultFieldValues, [0, 'default_currency'], '')}}
                                         @endif
                                         @if(getVal($transaction, ['transaction', 'value', 0, 'date'], null))
                                             <i>
-                                                (Valued at {{dateFormat('M d, Y', getVal($transaction, ['transaction', 'value', 0, 'date'], ''))}})
+                                                (@lang('perfectViewer.valued_at') {{dateFormat('M d, Y', getVal($transaction, ['transaction', 'value', 0, 'date'], ''))}})
                                             </i>
                                         @endif
                                     @endif
                                 </td>
                                 <td>
                                     <span class="provider"><i>circle</i>
-                                        {{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], 'Provider N/A')}}
+                                        {{getVal($transaction, ['transaction', 'provider_organization', 0, 'narrative', 0, 'narrative'], @trans('perfectViewer.provider'). ' N/A')}}
                                     </span>
                                     <span class="receiver"><i>circle</i>
-                                        {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'], 'Receiver N/A')}}
+                                        {{getVal($transaction, ['transaction', 'receiver_organization', 0, 'narrative', 0, 'narrative'],  @trans('perfectViewer.receiver'). ' N/A'))}}
                                     </span>
                                 </td>
                                 <td class="type">
-                                    <strong>{{ $codeListHelper->getCodeNameOnly('TransactionType', getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], 'Not Available')) }}</strong>
+                                    <strong>{{ $codeListHelper->getCodeNameOnly('TransactionType', getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], @trans('perfectViewer.not_available'))) }}</strong>
                                 </td>
                                 <td class="date"><i
                                             class="pull-left material-icons">date_range</i>{{dateFormat('M d, Y', getVal($transaction, ['transaction', 'transaction_date', 0, 'date']))}}
@@ -273,7 +273,7 @@
                                                     @endif
                                                 </span>
                                             <i>
-                                                (Valued at {{dateFormat('M d, Y', getVal($budget, ['value', 0, 'value_date'], ''))}})
+                                                (@lang('perfectViewer.valued_at') {{dateFormat('M d, Y', getVal($budget, ['value', 0, 'value_date'], ''))}})
                                             </i>
                                             @endif
 
