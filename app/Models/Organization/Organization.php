@@ -2,6 +2,7 @@
 
 use App\Models\ActivityPublished;
 use App\Models\OrganizationPublished;
+use App\Models\SystemVersion;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -144,5 +145,15 @@ class Organization extends Model
     public function getNameAttribute()
     {
         return ($name = getVal((array) $this->reporting_org, [0, 'narrative', 0, 'narrative'])) ? $name : 'No Name';
+    }
+
+    /**
+     * An Organization belongs to SystemVersion.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function systemVersion()
+    {
+        return $this->belongsTo(SystemVersion::class, 'system_version_id');
     }
 }
