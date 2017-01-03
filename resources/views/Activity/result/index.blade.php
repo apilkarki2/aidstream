@@ -15,6 +15,7 @@
                             <div class="panel-action-btn">
                                 <a href="{{ route('activity.result.create', $id) }}" class="btn btn-primary add-new-btn">@lang('global.add_new_result')</a>
                                 <a href="{{ route('activity.result.upload-csv', $id) }}" class="btn btn-primary add-new-btn">@lang('global.upload_results')</a>
+                                <a href="{{ route('activity.show', $id) }}" class="btn btn-primary">@lang('global.view_activity')</a>
                             </div>
                         @endif
                     </div>

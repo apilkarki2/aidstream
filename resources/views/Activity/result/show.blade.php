@@ -7,7 +7,7 @@
 @section('activity-content')
     <div class="element-panel-heading">
         <div>
-            <span>@lang('element.results')</span>
+            <span>@lang('element.result')</span>
             <div class="element-panel-heading-info">
                 <span>{{$activityData->IdentifierTitle}}</span>
             </div>
@@ -90,9 +90,9 @@
                             </div>
                             <div class="element-info">
                                 <div class="period-label">
-                                    <span>@lang('global.period')</span>
-                                    <span>@lang('global.target_value')</span>
-                                    <span>@lang('global.actual_value')</span>
+                                    <span>@lang('elementForm.period')</span>
+                                    <span>@lang('elementForm.target_value')</span>
+                                    <span>@lang('elementForm.actual_value')</span>
                                 </div>
                                 @foreach(getIndicatorPeriod($indicator['measure'] , $indicator['period']) as $period)
                                     <div class="period-value">

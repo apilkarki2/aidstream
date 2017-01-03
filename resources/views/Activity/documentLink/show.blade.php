@@ -12,8 +12,7 @@
                 <span>{{$activityData->IdentifierTitle}}</span>
             </div>
             <div class="panel-action-btn">
-                <a href="{{route('activity.show',$id)}}" class="btn btn-primary">@lang('global.view_activity')</a>
-            </div>
+                <a href="{{route('activity.document-link.show',[$id, $documentLinkId])}}" class="btn btn-primary">@lang('global.view_document_link')</a>            </div>
         </div>
     </div>
     <div class="col-xs-12 col-md-8 col-lg-8 element-content-wrapper">
@@ -27,7 +26,7 @@
                     </div>
                 </div>
                 <div class="activity-element-list">
-                    <div class="activity-element-label">@lang('elementForm.document_link')</div>
+                    <div class="activity-element-label">@lang('element.document_link')</div>
                     <div class="activity-element-info">{!! getClickableLink($documentLink['document_link']['url']) !!}</div>
                 </div>
                 <div class="activity-element-list">

@@ -11,6 +11,9 @@
                 @include('includes.response')
                 <div class="element-panel-heading">
                     <div>@lang('title.document_links')
+                        <div class="panel-action-btn">
+                            <a href="{{route('activity.show',$id)}}" class="btn btn-primary">@lang('global.view_activity')</a>
+                        </div>
                         @if(count($documentLinks) > 0)
                             <div class="panel-action-btn">
                                 <a href="{{ route('activity.document-link.create', $id) }}" class="btn btn-primary add-new-btn">@lang('global.add_new document_link')</a>
@@ -73,7 +76,7 @@
                             @else
                                 <div class="text-center no-data no-result-data">
                                     @lang('global.not_added',['type' => 'document']).
-                                    <a href="{{ route('activity.document-link.create', $id) }}" class="btn btn-primary">@lang('global.add_new document_link')</a>
+                                    <a href="{{ route('activity.document-link.create', $id) }}" class="btn btn-primary">@lang('global.add_new_document_link')</a>
                                 </div>
                             @endif
                         </div>
