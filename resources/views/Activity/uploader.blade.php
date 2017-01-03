@@ -44,7 +44,7 @@
                                     </ul>
                                 </div>
                                 <div>
-                                    @lang('activity_csv_template_text').
+                                    @lang('global.activity_csv_template_text').
                                 </div>
                             </div>
                         </div>
