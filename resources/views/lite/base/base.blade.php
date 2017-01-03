@@ -141,7 +141,7 @@
     <div class="row">
         @yield('sub-content')
         @yield('content')
-    <div>
+    </div>
 </div>
 
 <div class="scroll-top">
