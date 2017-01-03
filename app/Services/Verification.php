@@ -258,8 +258,8 @@ class Verification
      */
     protected function login($code)
     {
-        $organization            = $this->user->where('verification_code', $code)->first()->organization;
         $user                    = $this->user->where('verification_code', $code)->first();
+        $organization            = $user->organization;
         $user->verification_code = null;
         $user->save();
 

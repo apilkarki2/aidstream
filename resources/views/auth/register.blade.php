@@ -58,6 +58,16 @@
                         {{--*/ $regInfo = (array) (old() ? old() : session('reg_info')); /*--}}
                         {{ Form::model($regInfo, ['url' => route('registration.register'), 'method' => 'post', 'id' => 'from-registration']) }}
 
+                        <div>
+
+                            {!! AsForm::select(['name' => 'systemVersion','label' => 'System Version','data' => $systemVersions]) !!}
+                            {{--<select name="systemVersion">--}}
+                            {{----}}
+                            {{--@foreach($systemVersions as $id => $version)--}}
+                            {{--<option value="{{$id}}">{{$version}}</option>--}}
+                            {{--@endforeach--}}
+                            {{--</select>--}}
+                        </div>
 
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane clearfix active" id="tab-organization">
@@ -265,7 +275,7 @@
     $(document).ready(function () {
         Registration.localised();
         @if($tab = session('tab'))
-                checkSimilarOrg = false;
+            checkSimilarOrg = false;
         @if($tab == '#tab-verification')
             Registration.showValidation();
         @else

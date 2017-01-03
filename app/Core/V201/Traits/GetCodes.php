@@ -30,4 +30,11 @@ trait GetCodes
 
         return $data;
     }
+
+    public function getStringFormatCode($listName, $listType)
+    {
+        $code = $this->getCodes($listName, $listType);
+
+        return implode(",", $code);
+    }
 }
