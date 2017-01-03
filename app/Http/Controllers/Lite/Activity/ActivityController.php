@@ -6,6 +6,11 @@ class ActivityController extends LiteController
 {
     public function __construct()
     {
-        // Lite Version Activity Controller
+        $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        return 'asd';
     }
 }
