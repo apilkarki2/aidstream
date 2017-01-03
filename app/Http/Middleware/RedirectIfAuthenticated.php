@@ -3,7 +3,6 @@
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Cache;
 
 class RedirectIfAuthenticated
 {
@@ -36,7 +35,11 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            $redirectUrl = (session('first_login')) ? '/welcome' : '/activity';
+            if($this->auth->user()->organization->system_version_id == 2){
+                $redirectUrl  = '/lite/activity';
+            }else{
+                $redirectUrl = (session('first_login')) ? '/welcome' : '/activity';
+            }
 
             return new RedirectResponse(url($redirectUrl));
         }
