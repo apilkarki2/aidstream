@@ -2,6 +2,7 @@
 
 use App\Core\EmailQueue;
 use App\Core\Form\BaseForm;
+use App\Http\Controllers\Auth\Traits\RedirectsUsersToCorrectVersion;
 use App\Http\Controllers\Auth\Traits\ResetsOldPassword;
 use App\Http\Controllers\Controller;
 use App\Models\Settings;
@@ -33,7 +34,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ResetsOldPassword;
+    use AuthenticatesAndRegistersUsers, ResetsOldPassword, RedirectsUsersToCorrectVersion;
 
     /**
      * @var DatabaseManager
@@ -184,6 +185,10 @@ class AuthController extends Controller
                 $this->verify($user)
                      ->storeDetailsInSession($user)
                      ->setVersions();
+
+                if ($this->userIsRegisteredForLite($user)) {
+                    return $this->redirectToLite();
+                }
 
                 $redirectPath = ($user->isSuperAdmin() || $user->isGroupAdmin())
                     ? config('app.super_admin_dashboard')
