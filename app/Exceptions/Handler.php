@@ -52,7 +52,13 @@ class Handler extends ExceptionHandler
     {
         if ($e instanceof NotFoundHttpException) {
             if (auth()->check()) {
-                return redirect()->route('activity.index')->withResponse(['type' => 'warning', 'code' => ['message', ['message' => '<b>404! Not Found</b><br>The requested url cannot be found in our system.']]]);
+                $route = 'activity.index';
+
+                if ($organization = auth()->user()->organization) {
+                    $route = $organization->system_version_id == 2 ? 'lite.activity.index' : 'activity.index';
+                }
+
+                return redirect()->route($route)->withResponse(['type' => 'warning', 'code' => ['message', ['message' => '<b>404! Not Found</b><br>The requested url cannot be found in our system.']]]);
             }
 
             $message = '<b>404! Not Found</b><br><br>The requested url cannot be found in our system. <br><br> Please contact us at <a href="support@aidstream.org" target="_blank">support@aidstream.org</a>';
