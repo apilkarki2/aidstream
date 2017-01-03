@@ -36,7 +36,7 @@
     </div>
     <div class="width-900 text-center">
         <div class="col-md-12 support-desc">
-            @lang('global.for_queries')<a href="mailto:support@aidstream.org">support@aidstream.org</a>
+            @lang('global.for_queries') <a href="mailto:support@aidstream.org">support@aidstream.org</a>
         </div>
     </div>
     <!-- Google Analytics -->

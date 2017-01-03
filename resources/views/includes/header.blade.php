@@ -25,11 +25,11 @@
                 @else
                     <a href="{{ url('/auth/login')}}" class="btn btn-primary">@lang('global.login')/@lang('global.register')</a>
                 @endif
-                <select id="languages">
+                {{--<select id="languages">
                     @foreach(Config::get('languages') as $key => $language)
                         <option value="{{$key}}" {{(Request::cookie('language') == $key) ? 'selected' : ''}}>{{$language}}</option>
                     @endforeach
-                </select>
+                </select>--}}
             </div>
         </div>
     </nav>
