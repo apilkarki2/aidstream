@@ -1,5 +1,7 @@
 <?php namespace App\Providers;
 
+use App\Lite\Contracts\ActivityRepositoryInterface;
+use App\Lite\Repositories\Activity\ActivityRepository;
 use App\Services\Settings\Segmentation\SegmentationInterface;
 use App\Services\Settings\Segmentation\SegmentationService;
 use Illuminate\Support\ServiceProvider;
@@ -35,5 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
             SegmentationInterface::class,
             SegmentationService::class
         );
+
+        $this->app->bind(ActivityRepositoryInterface::class, ActivityRepository::class);
     }
 }
