@@ -30,7 +30,8 @@ class Organization extends Model
         'published_to_registry',
         'registration_agency',
         'registration_number',
-        'secondary_contact'
+        'secondary_contact',
+        'system_version_id'
     ];
     protected $casts = ['reporting_org' => 'json', 'secondary_contact' => 'json'];
 
