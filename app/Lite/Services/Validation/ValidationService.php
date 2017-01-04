@@ -13,22 +13,27 @@ class ValidationService
      * @var
      */
     protected $data;
+
     /**
      * @var
      */
     protected $entity;
+
     /**
      * @var
      */
     protected $version;
+
     /**
      * @var Factory
      */
     protected $factory;
+
     /**
      * @var
      */
     protected $validator;
+
     /**
      * @var RulesProvider
      */
@@ -36,6 +41,7 @@ class ValidationService
 
     /**
      * ValidationService constructor.
+     *
      * @param Factory       $factory
      * @param RulesProvider $rulesProvider
      */
@@ -46,6 +52,8 @@ class ValidationService
     }
 
     /**
+     * Checks if the validation passes
+     *
      * @param array $data
      * @param       $entityType
      * @param       $version
@@ -53,27 +61,18 @@ class ValidationService
      */
     public function passes(array $data, $entityType, $version)
     {
-        $this->data = $data;
-
-        return $this->{$entityType}($version);
-    }
-
-    /**
-     * @param string $version
-     * @return bool
-     */
-    public function activity($version = 'V202')
-    {
         $this->validator = $this->factory->make(
-            $this->data(),
-            $this->rulesProvider->getRules($version, 'Activity'),
-            $this->rulesProvider->getMessages($version, 'Activity')
+            $data,
+            $this->rulesProvider->getRules($version, $entityType),
+            $this->rulesProvider->getMessages($version, $entityType)
         );
 
         return $this->validator->passes();
     }
 
     /**
+     * Returns errors if validation fails.
+     *
      * @return mixed
      */
     public function errors()
@@ -82,13 +81,4 @@ class ValidationService
             return $this->validator->errors();
         }
     }
-
-    /**
-     * @return mixed
-     */
-    protected function data()
-    {
-        return $this->data;
-    }
-
 }
