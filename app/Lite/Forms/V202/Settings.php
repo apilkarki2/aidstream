@@ -4,10 +4,6 @@ use App\Core\Form\BaseForm;
 
 class Settings extends BaseForm
 {
-    public function __construct()
-    {
-
-    }
 
     public function buildForm()
     {
@@ -16,7 +12,7 @@ class Settings extends BaseForm
             ->addSelect(
                 'language',
                 $this->getCodeList('Language', 'Organization'),
-                'Language',
+                trans('lite/settings.language'),
                 $this->addHelpText('activity_defaults-default_language', false),
                 config('app.default_language'),
                 true,
@@ -28,7 +24,7 @@ class Settings extends BaseForm
             ->addSelect(
                 'organisationType',
                 $this->getCodeList('OrganizationType', 'Organization'),
-                'Organisation Type',
+                trans('lite/settings.organisation_type'),
                 null,
                 config('app.default_language'),
                 true,
@@ -39,23 +35,21 @@ class Settings extends BaseForm
             ->add('publisherId', 'text', ['label' => trans('lite/settings.publisher_id'), 'wrapper' => ['class' => 'form-group col-sm-6']])
             ->add('apiKey', 'text', ['label' => trans('lite/settings.api_key'), 'wrapper' => ['class' => 'form-group col-sm-6']])
             ->add(
-                'autoUpdateIatiRegistryWhenPublished',
+                'publishFiles',
                 'choice',
                 [
-                    'label'   => 'Automatically Update to the IATI Registry when publishing files?',
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                    'expanded'       => true,
-                    'default_value'  => 'no',
-                    'choice_options' => [
-                        'wrapper' => ['class' => 'choice-wrapper form-group col-sm-6']
-                    ],
-                    'checked' => false
+                    'label'         => trans('lite/settings.automatically_update_iati_text'),
+                    'choices'       => ['yes' => trans('lite/settings.yes'), 'no' => trans('lite/settings.no')],
+                    'expanded'      => true,
+                    'default_value' => 'no',
+                    'wrapper'       => ['class' => 'form-group col-sm-6'],
+                    'checked'       => false
                 ]
             )
             ->addSelect(
                 'defaultCurrency',
                 $this->getCodeList('Currency', 'Organization'),
-                'Default Currency',
+                trans('lite/settings.default_currency'),
                 $this->addHelpText('activity_defaults-default_language', false),
                 config('app.default_language'),
                 true,
@@ -66,7 +60,7 @@ class Settings extends BaseForm
             ->addSelect(
                 'defaultLanguage',
                 $this->getCodeList('Language', 'Organization'),
-                'Default Language',
+                trans('lite/settings.default_language'),
                 $this->addHelpText('activity_defaults-default_language', false),
                 config('app.default_language'),
                 true,
@@ -74,8 +68,7 @@ class Settings extends BaseForm
                     'wrapper' => ['class' => 'form-group col-sm-6']
                 ]
             )
-            ->add('Save', 'submit', ['attr' => ['class' => 'btn btn-submit btn-form'], 'wrapper' => ['class' => 'form-group col-sm-6']]);
-
+            ->add(trans('lite/settings.save'), 'submit', ['attr' => ['class' => 'btn btn-submit btn-form'], 'wrapper' => ['class' => 'form-group col-sm-6']]);
     }
 
 }
