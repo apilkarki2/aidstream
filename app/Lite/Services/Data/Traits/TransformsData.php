@@ -23,6 +23,17 @@ trait TransformsData
     }
 
     /**
+     * Transform database data into a frontend compatible format.
+     *
+     * @param MapperInterface $mapper
+     * @return array
+     */
+    protected function transformReverse(MapperInterface $mapper)
+    {
+        return $mapper->reverseMap();
+    }
+
+    /**
      * Get the object mapping for the data for different entities.
      *
      * @param array $rawData
