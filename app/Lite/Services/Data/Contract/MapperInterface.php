@@ -12,4 +12,11 @@ interface MapperInterface
      * @return array
      */
     public function map();
+
+    /**
+     * Map database data into frontend compatible format.
+     *
+     * @return array
+     */
+    public function reverseMap();
 }

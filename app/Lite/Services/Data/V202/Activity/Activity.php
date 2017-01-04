@@ -39,4 +39,14 @@ class Activity implements MapperInterface
         // TODO:: Mapping for Activity Data.
         return $this->rawData;
     }
+
+    /**
+     * Map database data into frontend compatible format.
+     *
+     * @return array
+     */
+    public function reverseMap()
+    {
+        // TODO: Implement reverseMap() method.
+    }
 }
