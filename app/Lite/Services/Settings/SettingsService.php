@@ -2,6 +2,8 @@
 
 use App\Lite\Repositories\Organisation\OrganisationRepository;
 use App\Lite\Repositories\Settings\SettingsRepository;
+use Illuminate\Database\DatabaseManager;
+use Psr\Log\LoggerInterface;
 
 class SettingsService
 {
@@ -44,12 +46,20 @@ class SettingsService
     const DEFAULT_PUBLISHING_TYPE = "unsegmented";
 
     protected $orgId;
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
-    public function __construct(OrganisationRepository $organisationRepository, SettingsRepository $settingsRepository)
+    protected $database;
+
+    public function __construct(OrganisationRepository $organisationRepository, SettingsRepository $settingsRepository, DatabaseManager $database, LoggerInterface $logger)
     {
         $this->organisationRepository = $organisationRepository;
         $this->settingsRepository     = $settingsRepository;
         $this->orgId                  = auth()->user()->org_id;
+        $this->database               = $database;
+        $this->logger                 = $logger;
     }
 
     public function getSettingsModel()
@@ -66,8 +76,6 @@ class SettingsService
 
     protected function filterSettingsModel($model)
     {
-        $filteredModel = [];
-
         $filteredModel['organisationName']       = getVal($model, ['reporting_org', 0, 'narrative', 0, 'narrative'], '');
         $filteredModel['language']               = getVal($model, ['reporting_org', 0, 'narrative', 0, 'language'], '');
         $filteredModel['organisationIdentifier'] = getVal($model, ['reporting_org', 0, 'reporting_organization_identifier'], '');
@@ -83,32 +91,62 @@ class SettingsService
 
     public function store($all)
     {
-        dd($all);
+        try {
+            $settings     = $this->transform($all);
+            $organisation = $this->transformOrg($all);
 
-        $settings     = $this->transform($all);
-        $organisation = $this->transformOrg($all);
+            $this->database->beginTransaction();
+            $this->settingsRepository->store($settings, $this->orgId);
+            $this->organisationRepository->store($organisation, $this->orgId);
+            $this->database->commit();
 
-        $this->settingsRepository->store($settings);
-        $this->organisationRepository->store($organisation);
+            $this->logger->info(
+                'Settings Successfully saved.',
+                [
+                    'userId'          => auth()->user()->id,
+                    'userName'        => auth()->user()->getNameAttribute(),
+                    'forOrganisation' => $this->orgId
+                ]
+            );
 
-        return;
+            return true;
+        } catch (\Exception $exception) {
+            $this->database->rollback();
+
+            $this->logger->error(
+                sprintf('Error saving Settings due to %s', $exception->getMessage()),
+                [
+                    'userId'   => auth()->user()->id,
+                    'userName' => auth()->user()->getNameAttribute(),
+                    'trace'    => $exception->getTraceAsString()
+                ]
+            );
+
+            return null;
+        }
     }
 
     protected function transform($all)
     {
-        $settings['publishing_type']      = self::DEFAULT_PUBLISHING_TYPE;
-        $settings['registry_info']        = [
-            'publisher_id'  => getVal($all, ['publisherId'], ''),
-            'api_id'        => getVal($all, ['apiKey'], ''),
-            'publish_files' => getVal($all, ['publishFiles'], 'no')
+        $settings = [
+                'publishing_type'      => self::DEFAULT_PUBLISHING_TYPE,
+                'registry_info'        => [
+                    [
+                        'publisher_id'  => getVal($all, ['publisherId'], ''),
+                        'api_id'        => getVal($all, ['apiKey'], ''),
+                        'publish_files' => getVal($all, ['publishFiles'], 'no')
+                    ]
+                ],
+                'default_field_values' => [
+                    [
+                        'default_currency' => getVal($all, ['defaultCurrency'], ''),
+                        'default_language' => getVal($all, ['defaultLanguage'], '')
+                    ]
+                ],
+                'default_field_groups' => $this->defaultFieldGroups,
+                'version'              => self::DEFAULT_VERSION,
+                'organization_id'      => $this->orgId
         ];
-        $settings['default_field_values'] = [
-            'default_currency' => getVal($all, ['defaultCurrency'], ''),
-            'default_language' => getVal($all, ['defaultLanguage'], '')
-        ];
-        $settings['default_field_groups'] = $this->defaultFieldGroups;
-        $settings['version']              = self::DEFAULT_VERSION;
-        $settings['organization_id']      = $this->orgId;
 
         return $settings;
     }
@@ -116,12 +154,14 @@ class SettingsService
     protected function transformOrg($all)
     {
         $org['reporting_org'] = [
-            'reporting_organization_identifier' => getVal($all, ['organisationIdentifier'], ''),
-            "reporting_organization_type"       => getVal($all, ['organisationType'], ''),
-            "narrative"                         => [
-                [
-                    "narrative" => getVal($all, ['organisationName'], ''),
-                    "language"  => getVal($all, ['language'])
+            [
+                'reporting_organization_identifier' => getVal($all, ['organisationIdentifier'], ''),
+                "reporting_organization_type"       => getVal($all, ['organisationType'], ''),
+                "narrative"                         => [
+                    [
+                        "narrative" => getVal($all, ['organisationName'], ''),
+                        "language"  => getVal($all, ['language'], '')
+                    ]
                 ]
             ]
         ];

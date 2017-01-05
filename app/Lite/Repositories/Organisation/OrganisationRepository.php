@@ -19,9 +19,9 @@ class OrganisationRepository
         return $this->organisation->where('id', $id)->first();
     }
 
-    public function store($organisation)
+    public function store($organisation, $orgId)
     {
-        return $this->organisation->updateOrCreate($organisation);
+        return $this->organisation->updateorCreate(['id' => $orgId], $organisation);
     }
 }
 

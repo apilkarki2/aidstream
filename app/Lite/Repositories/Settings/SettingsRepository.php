@@ -25,9 +25,9 @@ class SettingsRepository
         return $this->settings->where('organization_id', $id)->first();
     }
 
-    public function store($settings)
+    public function store($settings, $orgId)
     {
-        return $this->settings->updateOrCreate($settings);
+        return $this->settings->updateorCreate(['organization_id' => $orgId], $settings);
     }
 }
 

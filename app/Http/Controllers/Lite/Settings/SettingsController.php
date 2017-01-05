@@ -61,7 +61,11 @@ class SettingsController extends LiteController
 
     public function store(Request $request)
     {
-        $this->settingsService->store($request->all());
+        if ($this->settingsService->store($request->all())) {
+            return redirect()->route('lite.settings.edit')->withResponse(['type' => 'success', 'messages' => ['Settings saved successfully.']]);
+        }
+
+        return redirect()->route('lite.settings.edit')->withResponse(['type' => 'danger', 'messages' => ['Error occured during saving.']]);
     }
 
 }
