@@ -29,7 +29,7 @@ class ActivityController extends LiteController
     /**
      * Entity type for Activity.
      */
-    const ENTITY_TYPE = 'activity';
+    const ENTITY_TYPE = 'Activity';
 
     /**
      * ActivityController constructor.
@@ -47,6 +47,7 @@ class ActivityController extends LiteController
 
     /**
      * Show the list of activities for the current Organization.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -57,22 +58,26 @@ class ActivityController extends LiteController
     }
 
     /**
+     * Displays form to create activity.
      *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
-        $form = $this->activityForm->form();
+        $form = $this->activityForm->form(route('lite.activity.store'));
 
         return view('lite.activity.create', compact('form'));
     }
 
     /**
+     * Save Activity to the database.
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        $rawData = $request->all();
+        $rawData = $request->except('_token');
         $version = session('version');
 
         if (!$this->validation->passes($rawData, self::ENTITY_TYPE, $version)) {
@@ -80,42 +85,101 @@ class ActivityController extends LiteController
         }
 
         if (!($activity = $this->activityService->store($rawData, $version))) {
-            return redirect()->route('lite.activity.index')->with('errors', 'Activity could not be saved.');
+            return redirect()->route('lite.activity.index')->withResponse(['type' => 'danger', 'code' => ['save_failed', ['name' => trans('lite/global.activity')]]]);
         }
 
-        return redirect()->route('lite.activity.show', [$activity->id])->with('message', 'Activity saved successfully.');
+        return redirect()->route('lite.activity.show', [$activity->id])->withResponse(['type' => 'success', 'code' => ['created', ['name' => trans('lite/global.activity')]]]);
     }
 
     /**
+     * Display the detail of an activity.
+     *
      * @param $activityId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($activityId)
     {
-        // TODO::Show an Activity
+        $activity         = $this->activityService->find($activityId);
+        $statusLabel      = ['draft', 'completed', 'verified', 'published'];
+        $activityWorkflow = $activity->activity_workflow;
+        $btn_status_label = ['Completed', 'Verified', 'Published'];
+        $btn_text         = $activityWorkflow > 2 ? "" : $btn_status_label[$activityWorkflow];
+
+        if ($activity['activity_workflow'] == 0) {
+            $nextRoute = route('activity.complete', $activityId);
+        } elseif ($activity['activity_workflow'] == 1) {
+            $nextRoute = route('activity.verify', $activityId);
+        } else {
+            $nextRoute = route('activity.publish', $activityId);
+        }
+
+        return view('lite.activity.show', compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute'));
     }
 
     /**
+     * Return form to edit an activity.
+     *
      * @param $activityId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($activityId)
     {
-        // TODO::Render edit Activity Form
+        $version  = session('version');
+        $activity = $this->activityService->edit($activityId, $version);
+        $form     = $this->activityForm->form(route('lite.activity.update', $activityId), $activity);
+
+        return view('lite.activity.create', compact('form', 'activity'));
     }
 
+
     /**
+     * Delete an activity
+     *
      * @param $activityId
+     * @return mixed
      */
     public function destroy($activityId)
     {
-        dd($activityId);
-        // TODO::Delete an Activity
+        if ($this->activityService->delete($activityId)) {
+            return redirect()->back()->withResponse(['type' => 'success', 'code' => ['deleted', ['name' => trans('lite/global.activity')]]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'code' => ['deleted_failed', ['name' => trans('lite/global.activity')]]]);
     }
 
     /**
+     * Update an activity
+     *
+     * @param         $activityId
+     * @param Request $request
+     * @return $this
+     */
+    public function update($activityId, Request $request)
+    {
+        $rawData = $request->except('_token');
+        $version = session('version');
+
+        if (!$this->validation->passes($rawData, self::ENTITY_TYPE, $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if (!($activity = $this->activityService->update($activityId, $rawData, $version))) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'danger', 'code' => ['save_failed', ['name' => trans('lite/global.activity')]]]);
+        }
+
+        return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'code' => ['created', ['name' => trans('lite/global.activity')]]]);
+    }
+
+    /**
+     * Duplicate an activity
+     *
      * @param $activityId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function duplicate($activityId)
     {
-        // TODO::Make a duplicate for an Activity
+//        $activity = $this->activityService->find($activityId);
+//        return view('lite.activity.index', compact('activity'));
     }
 }
+

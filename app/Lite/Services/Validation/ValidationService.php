@@ -52,7 +52,8 @@ class ValidationService
     }
 
     /**
-     * Checks if the validation passes
+     * Check if the provided data passes the validation rules.
+     * Validation class loaded according to version.
      *
      * @param array $data
      * @param       $entityType
@@ -69,6 +70,7 @@ class ValidationService
 
         return $this->validator->passes();
     }
+
 
     /**
      * Returns errors if validation fails.

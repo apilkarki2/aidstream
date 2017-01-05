@@ -32,4 +32,17 @@ interface ActivityRepositoryInterface
      * @return Activity
      */
     public function save(array $data);
+
+    /**
+     * @param $activityId
+     * @return mixed
+     */
+    public function delete($activityId);
+
+    /**
+     * @param       $activityId
+     * @param array $activity
+     * @return mixed
+     */
+    public function update($activityId, array $activity);
 }
