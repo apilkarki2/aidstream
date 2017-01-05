@@ -4,11 +4,12 @@ trait GetCodes
 {
     /**
      * return code array from json codeList
-     * @param $listName
-     * @param $listType
+     * @param        $listName
+     * @param        $listType
+     * @param string $type
      * @return array
      */
-    public function getCodes($listName, $listType)
+    public function getCodes($listName, $listType, $type = 'code')
     {
         $defaultVersion = config('app.default_version_name');
         $defaultLocale  = config('app.fallback_locale');
@@ -25,15 +26,15 @@ trait GetCodes
         $data             = [];
 
         foreach ($codeList as $list) {
-            $data[] = $list['code'];
+            $data[] = $list[$type];
         }
 
         return $data;
     }
 
-    public function getStringFormatCode($listName, $listType)
+    public function getStringFormatCode($listName, $listType, $type = 'code')
     {
-        $code = $this->getCodes($listName, $listType);
+        $code = $this->getCodes($listName, $listType, $type);
 
         return implode(",", $code);
     }

@@ -51,7 +51,7 @@ class ActivityService
                 $this->getContext($exception)
             );
 
-            return array();
+            return [];
         }
     }
 
@@ -68,6 +68,74 @@ class ActivityService
             $activity = $this->activityRepository->save($this->transform($this->getMapping($rawData, 'Activity', $version)));
 
             $this->logger->info('Activity successfully saved.', $this->getContext());
+
+            return $activity;
+        } catch (Exception $exception) {
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    /**
+     *  Find a Specific Activity.
+     *
+     * @param $activityId
+     * @return \App\Models\Activity\Activity
+     */
+    public function find($activityId)
+    {
+        return $this->activityRepository->find($activityId);
+    }
+
+    /**
+     * Delete a activity.
+     *
+     * @param $activityId
+     * @return mixed|null
+     */
+    public function delete($activityId)
+    {
+        try {
+            $activity = $this->activityRepository->delete($activityId);
+
+            $this->logger->info('Activity successfully deleted.', $this->getContext());
+
+            return $activity;
+        } catch (Exception $exception) {
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    /**
+     * Returns reversely mapped activity data to edit.
+     *
+     * @param $activityId
+     * @param $version
+     * @return array
+     */
+    public function edit($activityId, $version)
+    {
+        $activity = $this->find($activityId)->toArray();
+
+        return $this->transformReverse($this->getMapping($activity, 'Activity', $version));
+    }
+
+    /**
+     * Update the activity data.
+     *
+     * @param $activityId
+     * @param $rawData
+     * @param $version
+     * @return mixed|null
+     */
+    public function update($activityId, $rawData, $version)
+    {
+        try {
+            $activity = $this->activityRepository->update($activityId, $this->transform($this->getMapping($rawData, 'Activity', $version)));
+            $this->logger->info('Activity successfully updated.', $this->getContext());
 
             return $activity;
         } catch (Exception $exception) {

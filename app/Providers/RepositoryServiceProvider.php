@@ -6,6 +6,8 @@ use App\Lite\Contracts\SettingsRepositoryInterface;
 use App\Lite\Repositories\Activity\ActivityRepository;
 use App\Lite\Repositories\Organisation\OrganisationRepository;
 use App\Lite\Repositories\Settings\SettingsRepository;
+use App\Lite\Contracts\UserRepositoryInterface;
+use App\Lite\Repositories\Users\UserRepository;
 use App\Services\Settings\Segmentation\SegmentationInterface;
 use App\Services\Settings\Segmentation\SegmentationService;
 use Illuminate\Support\ServiceProvider;
@@ -45,5 +47,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ActivityRepositoryInterface::class, ActivityRepository::class);
         $this->app->bind(OrganisationRepositoryInterface::class, OrganisationRepository::class);
         $this->app->bind(SettingsRepositoryInterface::class, SettingsRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 }

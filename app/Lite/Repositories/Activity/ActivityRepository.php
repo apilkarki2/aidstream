@@ -23,8 +23,12 @@ class ActivityRepository implements ActivityRepositoryInterface
         $this->activity = $activity;
     }
 
+
     /**
-     * {@inheritdoc}
+     * Returns all the activities of an organization.
+     *
+     * @param $organizationId
+     * @return mixed
      */
     public function all($organizationId)
     {
@@ -32,7 +36,10 @@ class ActivityRepository implements ActivityRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Find a specific activity.
+     *
+     * @param $id
+     * @return mixed
      */
     public function find($id)
     {
@@ -40,11 +47,43 @@ class ActivityRepository implements ActivityRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Store the details of am activity in database.
+     *
+     * @param array $data
+     * @return Activity
      */
     public function save(array $data)
     {
-        dd($data);
-        // TODO: Implement save() method.
+        $data['organization_id'] = session('org_id');
+
+        return $this->activity->create($data);
+    }
+
+    /**
+     * Delete the activity.
+     *
+     * @param $activityId
+     * @return mixed
+     */
+    public function delete($activityId)
+    {
+        $activity = $this->find($activityId);
+
+        return $activity->delete();
+    }
+
+    /**
+     * Update the details of the activity.
+     *
+     * @param       $activityId
+     * @param array $data
+     * @return mixed
+     */
+    public function update($activityId, array  $data)
+    {
+        $activity                = $this->find($activityId);
+        $data['organization_id'] = session('org_id');
+
+        return $activity->update($data);
     }
 }

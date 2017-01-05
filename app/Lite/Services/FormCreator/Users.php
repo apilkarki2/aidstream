@@ -5,7 +5,11 @@ use App\Lite\Forms\FormPathProvider;
 use Kris\LaravelFormBuilder\Form;
 use Kris\LaravelFormBuilder\FormBuilder;
 
-class Activity
+/**
+ * Class Users
+ * @package App\Lite\Services\FormCreator
+ */
+class Users
 {
     use FormPathProvider;
 
@@ -15,7 +19,7 @@ class Activity
     protected $formBuilder;
 
     /**
-     * Activity constructor.
+     * Users constructor.
      * @param FormBuilder $formBuilder
      */
     public function __construct(FormBuilder $formBuilder)
@@ -24,23 +28,23 @@ class Activity
     }
 
     /**
-     * Builds form for the activity.
+     *  Builds form for the user.
      *
-     * @param      $route
      * @param null $model
      * @return Form
      */
-    public function form($route, $model = null)
+    public function form($model = null)
     {
-        $formPath = $this->getFormPath('Activity');
+        $formPath = $this->getFormPath('Users');
 
         return $this->formBuilder->create(
             $formPath,
             [
                 'method' => 'post',
                 'model'  => $model,
-                'url'    => $route
+                'url'    => route('lite.users.store')
             ]
         )->add('Save', 'submit', ['attr' => ['class' => 'btn btn-submit btn-form']]);
+
     }
 }

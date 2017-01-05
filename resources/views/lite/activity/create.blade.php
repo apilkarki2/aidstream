@@ -16,8 +16,11 @@
                 <div class="create-form create-project-form edit-form">
                     {!! form($form) !!}
                 </div>
-                <div class="collection-container hidden"
+                <div class="funding_organisations-container hidden"
                      data-prototype="{{ form_row($form->funding_organisations->prototype()) }}">
+                </div>
+                <div class="implementing_organisations-container hidden"
+                     data-prototype="{{ form_row($form->implementing_organisations->prototype()) }}">
                 </div>
             </div>
         </div>
@@ -25,5 +28,17 @@
 @stop
 
 @section('script')
-
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.add-to-collection').on('click', function (e) {
+                e.preventDefault();
+                var source = $(this).attr('data-collection');
+                var collection = $('.' + source + '-container');
+                var parentContainer = $('.' + source);
+                var count = $('.' + source + '> div.form-group').length;
+                var proto = collection.data('prototype').replace(/__NAME__/g, count);
+                $(parentContainer).append(proto);
+            });
+        });
+    </script>
 @stop

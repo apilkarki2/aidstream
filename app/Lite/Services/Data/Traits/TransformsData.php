@@ -33,7 +33,7 @@ trait TransformsData
         return $mapper->reverseMap();
     }
 
-    /**
+    /**-
      * Get the object mapping for the data for different entities.
      *
      * @param array $rawData

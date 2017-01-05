@@ -11,6 +11,7 @@ return [
     'start_date'                            => 'Start Date',
     'end_date'                              => 'End Date',
     'country'                               => 'Country',
+    'recipient_country'                     => 'Recipient Country',
     'funding_organisation'                  => 'Funding Organisation',
     'implementing_organisation'             => 'Implementing Organisation',
     'organisation_name'                     => 'Organisation Name',
