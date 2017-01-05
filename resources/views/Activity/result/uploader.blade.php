@@ -21,8 +21,7 @@
                         @lang('title.import_results')
                     </div>
                     <div>
-                        <a href="{{ route('activity.result.index', $activityId) }}" class="pull-right back-to-list">
-                            <span class="glyphicon glyphicon-triangle-left"></span>@lang('global.back_to_result_list')
+                        <a href="{{ route('activity.result.index', $activityId) }}" class="pull-right btn btn-primary btn-view-it">@lang('global.back_to_result_list')
                         </a>
                     </div>
                 </div>

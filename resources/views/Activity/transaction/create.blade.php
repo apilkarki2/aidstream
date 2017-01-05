@@ -12,8 +12,8 @@
                     <div>
                         <span>@lang('global.add_transaction')</span>
                         <div class="element-panel-heading-info"><span>{{$activity->IdentifierTitle}}</span></div>
-                        <div class="panel-action-btn">
-                            <a href="{{route('activity.transaction.index',$id)}}" class="btn btn-primary">@lang('global.view_transaction')
+                        <div class="panel-action-btn btn-action-wrap">
+                            <a href="{{route('activity.transaction.index',$id)}}" class="btn btn-primary btn-view-it">@lang('global.view_transaction')
                             </a>
                         </div>
                     </div>

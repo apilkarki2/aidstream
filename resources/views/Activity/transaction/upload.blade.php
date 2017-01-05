@@ -14,9 +14,9 @@
                         <div class="element-panel-heading-info">
                             <span>{{$activity->IdentifierTitle}}</span>
                         </div>
-                        <div class="panel-action-btn">
+                        <div class="panel-action-btn btn-action-wrap">
                             <a href="{{ route('activity.transaction.index', $id) }}"
-                               class="btn btn-primary back-to-transaction">@lang('global.back_to_transaction_list')</a>
+                               class="btn btn-primary back-to-transaction btn-view-it">@lang('global.back_to_transaction_list')</a>
                         </div>
                     </div>
                 </div>

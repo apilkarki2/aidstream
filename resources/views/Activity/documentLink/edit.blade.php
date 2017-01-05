@@ -12,8 +12,8 @@
                     <div>
                         <span>@lang('element.document_link')</span>
                         <div class="element-panel-heading-info"><span>{{$activityData->IdentifierTitle}}</span></div>
-                        <div class="panel-action-btn">
-                            <a href="{{route('activity.document-link.show',[$id, $documentLinkId])}}" class="btn btn-primary">@lang('global.view_document_link')</a>
+                        <div class="panel-action-btn btn-action-wrap">
+                            <a href="{{route('activity.document-link.show',[$id, $documentLinkId])}}" class="btn btn-primary btn-view-it">@lang('global.view_document_link')</a>
                         </div>
                     </div>
                 </div>
