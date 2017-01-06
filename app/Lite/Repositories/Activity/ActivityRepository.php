@@ -38,4 +38,13 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
         return $this->activity->findOrFail($id);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(array $data)
+    {
+        dd($data);
+        // TODO: Implement save() method.
+    }
 }

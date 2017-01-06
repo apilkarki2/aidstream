@@ -9,10 +9,12 @@ use App\Core\V201\Traits\GetCodes;
 class Activity
 {
     use GetCodes;
+
     /**
      * @var array
      */
     protected $activityRules = [];
+
     /**
      * @var array
      */
@@ -117,7 +119,7 @@ class Activity
      */
     protected function rulesForActivityStatus()
     {
-        $this->activityRules['activity_status'] = sprintf('required|in%s', $this->getStringFormatCode('ActivityStatus', 'Activity'));
+        $this->activityRules['activity_status'] = sprintf('required|in:%s', $this->getStringFormatCode('ActivityStatus', 'Activity'));
     }
 
     protected function messagesForActivityStatus()
