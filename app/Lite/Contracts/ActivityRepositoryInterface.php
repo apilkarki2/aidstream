@@ -24,4 +24,12 @@ interface ActivityRepositoryInterface
      * @return Activity
      */
     public function find($id);
+
+    /**
+     * Save the Activity data into the database.
+     *
+     * @param array $data
+     * @return Activity
+     */
+    public function save(array $data);
 }

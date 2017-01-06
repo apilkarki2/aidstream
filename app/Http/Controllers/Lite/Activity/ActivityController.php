@@ -1,12 +1,10 @@
 <?php namespace App\Http\Controllers\Lite\Activity;
 
-use App\Http\Controllers\Lite\LiteController;
-use App\Lite\Services\FormCreator\Activity;
 use App\Http\Requests\Request;
+use App\Lite\Services\FormCreator\Activity;
+use App\Http\Controllers\Lite\LiteController;
 use App\Lite\Services\Activity\ActivityService;
 use App\Lite\Services\Validation\ValidationService;
-use App\Lite\Traits\ProvidesValidationRules;
-use Illuminate\Contracts\Validation\Factory;
 
 /**
  * Class ActivityController
@@ -23,8 +21,14 @@ class ActivityController extends LiteController
      */
     protected $activityForm;
 
+    /**
+     * @var ValidationService
+     */
     protected $validation;
 
+    /**
+     * Entity type for Activity.
+     */
     const ENTITY_TYPE = 'activity';
 
     /**
@@ -68,11 +72,18 @@ class ActivityController extends LiteController
      */
     public function store(Request $request)
     {
-        if (!$this->validation->passes($request->all(), self::ENTITY_TYPE, session('version'))) {
-            return redirect()->back()->with('errors', $this->validation->errors());
+        $rawData = $request->all();
+        $version = session('version');
+
+        if (!$this->validation->passes($rawData, self::ENTITY_TYPE, $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
         }
 
-        $this->activityService->store();
+        if (!($activity = $this->activityService->store($rawData, $version))) {
+            return redirect()->route('lite.activity.index')->with('errors', 'Activity could not be saved.');
+        }
+
+        return redirect()->route('lite.activity.show', [$activity->id])->with('message', 'Activity saved successfully.');
     }
 
     /**
