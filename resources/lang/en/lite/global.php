@@ -24,5 +24,7 @@ return [
     'basics'                          => 'Basics',
     'location'                        => 'Location',
     'involved_organisations'          => 'Involved Organisations',
-    'results_and_reports'             => 'Results and Reports'
+    'results_and_reports'             => 'Results and Reports',
+    'save'                            => 'Save',
+    'change'                          => 'Change',
 ];

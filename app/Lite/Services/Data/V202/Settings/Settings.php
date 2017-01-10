@@ -27,13 +27,6 @@ class Settings implements MapperInterface
     protected $rawData = [];
 
     /**
-     * Data template for Settings.
-     *
-     * @var array
-     */
-    protected $template = [];
-
-    /**
      * Default Field Groups Template
      *
      * @var array
@@ -75,7 +68,7 @@ class Settings implements MapperInterface
     public function __construct(array $rawData)
     {
         $this->rawData = $rawData;
-        $this->orgId   = auth()->user()->org_id;
+        $this->orgId   = session('org_id');
     }
 
     /**
