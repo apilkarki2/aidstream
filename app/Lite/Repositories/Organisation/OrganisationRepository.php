@@ -43,17 +43,21 @@ class OrganisationRepository implements OrganisationRepositoryInterface
      */
     public function find($id)
     {
-        return $this->organisation->where('id', $id)->first();
+        return $this->organisation->findOrFail($id);
     }
 
     /**
      * Save the Organization data into the database.
      *
-     * @param       $id
      * @param array $data
-     * @return Organization
+     * @return mixed
      */
-    public function save($id, array $data)
+    public function save(array $data)
+    {
+        return $this->organisation->create($data);
+    }
+
+    public function update($id, array $data)
     {
         return $this->organisation->updateorCreate(['id' => $id], $data);
     }

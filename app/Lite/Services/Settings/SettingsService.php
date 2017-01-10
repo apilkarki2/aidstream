@@ -113,7 +113,7 @@ class SettingsService
 
             $this->database->beginTransaction();
             $this->settingsRepository->saveWithOrgId($orgId, getVal($settings, ['settings'], []));
-            $this->organisationRepository->save($orgId, getVal($settings, ['organisation'], []));
+            $this->organisationRepository->update($orgId, getVal($settings, ['organisation'], []));
             $this->database->commit();
 
             $this->logger->info('Settings successfully saved.', $this->getContext());

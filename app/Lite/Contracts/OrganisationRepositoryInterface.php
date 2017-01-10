@@ -28,9 +28,15 @@ interface OrganisationRepositoryInterface
     /**
      * Save the Organization data into the database.
      *
+     * @param array $data
+     * @return mixed
+     */
+    public function save(array $data);
+
+    /**
      * @param       $id
      * @param array $data
-     * @return Organization
+     * @return mixed
      */
-    public function save($id, array $data);
+    public function update($id, array $data);
 }

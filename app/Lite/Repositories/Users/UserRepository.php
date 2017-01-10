@@ -6,6 +6,7 @@ use App\User;
 
 /**
  * Class UserRepository
+ *
  * @package App\Lite\Repositories\Users
  */
 class UserRepository implements UserRepositoryInterface
@@ -17,6 +18,7 @@ class UserRepository implements UserRepositoryInterface
 
     /**
      * UserRepository constructor.
+     *
      * @param User $user
      */
     public function __construct(User $user)
@@ -89,4 +91,3 @@ class UserRepository implements UserRepositoryInterface
         return $user->delete();
     }
 }
-
