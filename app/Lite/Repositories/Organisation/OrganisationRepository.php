@@ -43,7 +43,7 @@ class OrganisationRepository implements OrganisationRepositoryInterface
      */
     public function find($id)
     {
-        return $this->organisation->where('id', $id)->first();
+        return $this->organisation->findOrFail($id);
     }
 
     /**

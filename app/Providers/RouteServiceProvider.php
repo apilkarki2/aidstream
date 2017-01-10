@@ -53,6 +53,7 @@ class RouteServiceProvider extends ServiceProvider
             require app_path('Http/routes/xmlImport.php');
             require app_path('Http/routes/Lite/lite.php');
             require app_path('Http/routes/Lite/settings.php');
+            require app_path('Http/routes/Lite/profile.php');
         });
     }
 }

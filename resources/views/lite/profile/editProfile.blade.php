@@ -1,6 +1,6 @@
 @extends('lite.base.sidebar')
 
-@section('title', trans('lite/title.settings'))
+@section('title', trans('lite/title.edit_profile'))
 
 @section('content')
     {{Session::get('message')}}
@@ -10,7 +10,7 @@
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
             <div class="panel-content-heading">
-                <div>@lang('lite/title.settings')</div>
+                <div>@lang('lite/title.edit_profile')</div>
             </div>
             <div class="panel-body">
                 {!! form($form) !!}
