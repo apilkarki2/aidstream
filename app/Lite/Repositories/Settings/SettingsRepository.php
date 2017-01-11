@@ -45,7 +45,7 @@ class SettingsRepository implements SettingsRepositoryInterface
      * @param $orgId
      * @return Settings
      */
-    public function saveWithOrgId($orgId, array $settings )
+    public function saveWithOrgId($orgId, array $settings)
     {
         return $this->settings->updateorCreate(['organization_id' => $orgId], $settings);
     }
@@ -69,7 +69,7 @@ class SettingsRepository implements SettingsRepositoryInterface
      */
     public function find($id)
     {
-        // TODO: Implement find() method.
+        return $this->settings->where('organization_id', $id)->get();
     }
 
     /**

@@ -2,7 +2,10 @@
 
 use App\Lite\Services\Data\V202\Activity\Activity;
 use App\Lite\Services\Data\Traits\TransformsData;
+use App\Lite\Services\ExchangeRate\ExchangeRateService;
+use App\Lite\Services\Settings\SettingsService;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
+use App\Models\ActivityPublished;
 use Exception;
 use Psr\Log\LoggerInterface;
 use App\Lite\Contracts\ActivityRepositoryInterface;
@@ -26,14 +29,38 @@ class ActivityService
     protected $logger;
 
     /**
+     * @var ExchangeRateService
+     */
+    protected $exchangeRateService;
+    /**
+     * @var ActivityPublished
+     */
+    protected $activityPublished;
+    /**
+     * @var SettingsService
+     */
+    protected $settingsService;
+
+    /**
      * ActivityService constructor.
      * @param ActivityRepositoryInterface $activityRepository
+     * @param SettingsService             $settingsService
+     * @param ExchangeRateService         $exchangeRateService
+     * @param ActivityPublished           $activityPublished
      * @param LoggerInterface             $logger
      */
-    public function __construct(ActivityRepositoryInterface $activityRepository, LoggerInterface $logger)
-    {
-        $this->activityRepository = $activityRepository;
-        $this->logger             = $logger;
+    public function __construct(
+        ActivityRepositoryInterface $activityRepository,
+        SettingsService $settingsService,
+        ExchangeRateService $exchangeRateService,
+        ActivityPublished $activityPublished,
+        LoggerInterface $logger
+    ) {
+        $this->activityRepository  = $activityRepository;
+        $this->logger              = $logger;
+        $this->exchangeRateService = $exchangeRateService;
+        $this->activityPublished   = $activityPublished;
+        $this->settingsService     = $settingsService;
     }
 
     /**
@@ -144,4 +171,104 @@ class ActivityService
             return null;
         }
     }
+
+    /**
+     * Returns the status of the activity.
+     *
+     * @return array
+     */
+    public function getActivityStats()
+    {
+        $stats        = ['draft' => 0, 'completed' => 0, 'verified' => 0, 'published' => 0];
+        $activities   = $this->all();
+        $statsMapping = [0 => 'draft', 1 => 'completed', 2 => 'verified', 3 => 'published'];
+
+        foreach ($activities as $activity) {
+            $stats[$statsMapping[$activity->activity_workflow]] = $stats[$statsMapping[$activity->activity_workflow]] + 1;
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Returns budget details of all activities.
+     *
+     * @return array
+     */
+    public function getBudgetDetails()
+    {
+        $activities    = $this->all();
+        $budgetDetails = $this->exchangeRateService->budgetDetails($activities);
+
+        return $budgetDetails;
+    }
+
+    /**
+     * Returns the number of activities published in IATI Registry.
+     *
+     * @param $orgId
+     * @return int
+     */
+    public function getNumberOfPublishedActivities($orgId)
+    {
+        $publishedInRegistry = $this->getPublishedActivities($orgId);
+        $publishedActivities = getVal($publishedInRegistry, [0, 'published_activities']);
+
+        return ($publishedActivities == "" || is_null($publishedActivities)) ? 0 : count($publishedActivities);
+    }
+
+    /**
+     * Returns the last published date of the activity.
+     *
+     * @param $orgId
+     * @return boolean|string
+     */
+    public function lastPublishedToIATI($orgId)
+    {
+        $publishedInRegistry = $this->getPublishedActivities($orgId);
+        $lastUpdated         = getVal($publishedInRegistry, [0, 'updated_at']);
+
+        return ($lastUpdated == "" || is_null($lastUpdated)) ? false : $lastUpdated;
+    }
+
+    /**
+     * Returns the activities of organisation published in iati registry.
+     *
+     * @param $orgId
+     * @return mixed
+     */
+    protected function getPublishedActivities($orgId)
+    {
+        $activityFilename    = $this->publishedFilename($orgId);
+        $publishedInRegistry = $this->activityPublished->where('organization_id', $orgId)
+                                                       ->where('filename', $activityFilename)
+                                                       ->where('published_to_register', 1)
+                                                       ->get()->toArray();
+
+        return $publishedInRegistry;
+    }
+
+
+    /**
+     * Returns the filename that will be used while publishing activities.
+     *
+     * @param $orgId
+     * @return bool|string
+     */
+    protected function publishedFilename($orgId)
+    {
+        $settings    = $this->settingsService->find($orgId)->toArray();
+        $publisherId = false;
+
+        if (($registryInfo = getVal($settings, [0, 'registry_info'], []))) {
+            $publisherId = (($id = getVal($registryInfo, [0, 'publisher_id'])) == "") ? $publisherId : $id;
+        }
+
+        if ($publisherId) {
+            $publisherId = sprintf('%s-activities.xml', $publisherId);
+        }
+
+        return $publisherId;
+    }
 }
+

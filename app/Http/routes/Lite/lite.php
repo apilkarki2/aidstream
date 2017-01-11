@@ -63,6 +63,14 @@ $router->group(
                         'uses' => 'ActivityController@update'
                     ]
                 );
+
+                $router->get(
+                    '/lite/budgetDetails',
+                    [
+                        'as'   => 'lite.activity.budgetDetails',
+                        'uses' => 'ActivityController@budgetDetails'
+                    ]
+                );
             }
         );
     }

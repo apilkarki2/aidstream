@@ -3,6 +3,12 @@
  */
 
 var Lite = {
+    callAsync: function (url, methodType) {
+        return $.ajax({
+            url: url,
+            type: methodType
+        });
+    },
     updatePermission: function () {
         $('table tbody tr td').delegate('#permission', 'change', function (e) {
             var user_id = $(this).closest('tr').find('#user_id').val();
@@ -33,6 +39,22 @@ var Lite = {
                 }
             });
         });
+    },
+    dataTable: function (searchPlaceholder) {
+        var oTable = $('#dataTable').DataTable({
+            'paging': false
+        });
+        $('label > input').attr('placeholder', searchPlaceholder);
+
+        $('#sortBy').on('change', function () {
+            oTable.column($(this).val()).order('asc').draw();
+        });
+    },
+    budgetDetails: function () {
+        this.callAsync('/lite/budgetDetails', 'get').success(function (data) {
+            $('#budgetTotal').html(data.total);
+            $('#maxBudget').html(data.maxBudget);
+        })
     }
 };
 

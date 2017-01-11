@@ -149,4 +149,15 @@ class SettingsService
 
         return Storage::put('logos/' . $fileName, $image);
     }
+
+    /**
+     * Finds the settings of the given organisation.
+     *
+     * @param $orgId
+     * @return \App\Models\Settings
+     */
+    public function find($orgId)
+    {
+        return $this->settingsRepository->find($orgId);
+    }
 }
