@@ -21,8 +21,12 @@ class Settings
     protected $methods = [
         'OrganisationName',
         'Language',
-        'OrganisationIdentifier',
+        'OrganisationNameAbbreviation',
+        'Country',
+        'OrganisationRegistrationAgency',
+        'OrganisationRegistrationNumber',
         'OrganisationType',
+        'OrganisationIatiIdentifier',
         'PublisherId',
         'ApiKey',
         'DefaultCurrency',
@@ -117,15 +121,16 @@ class Settings
     /**
      * @return $this
      */
-    protected function rulesForOrganisationIdentifier()
+    protected function rulesForOrganisationNameAbbreviation()
     {
-        $organisationIdentifiers = Organization::select('reporting_org')->where('id', '<>', session('org_id'))->get()->toArray();
+
+        $organisationIdentifiers = Organization::select('user_identifier')->where('id', '<>', session('org_id'))->get()->toArray();
         $organisationId          = [];
         foreach ($organisationIdentifiers as $organisationIdentifier) {
-            $organisationId[] = getVal($organisationIdentifier, ['reporting_org', 0, 'reporting_organization_identifier'], '');
+            $organisationId[] = getVal($organisationIdentifier, ['user_identifier'], '');
         }
 
-        $this->settingsRules['organisationIdentifier'] = sprintf('required|not_in:%s', implode(",", $organisationId));
+        $this->settingsRules['organisationNameAbbreviation'] = sprintf('required|not_in:%s', implode(",", $organisationId));
 
         return $this;
     }
@@ -133,10 +138,97 @@ class Settings
     /**
      * @return $this
      */
-    protected function messagesForOrganisationIdentifier()
+    protected function messagesForOrganisationNameAbbreviation()
     {
-        $this->settingsMessages['organisationIdentifier.required'] = trans('validation.required', ['attribute' => trans('lite/settings.organisation_identifier')]);
-        $this->settingsMessages['organisationIdentifier.not_in']   = trans('validation.not_in', ['attribute' => trans('lite/settings.organisation_identifier')]);
+        $this->settingsMessages['organisationNameAbbreviation.required'] = trans('validation.required', ['attribute' => trans('lite/settings.organisation_name_abbreviation')]);
+        $this->settingsMessages['organisationNameAbbreviation.not_in']   = trans('validation.not_in', ['attribute' => trans('lite/settings.organisation_name_abbreviation')]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function rulesForCountry()
+    {
+        $this->settingsRules['country'] = 'required';
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function messagesForCountry()
+    {
+        $this->settingsMessages['country.required'] = trans('validation.required', ['attribute' => trans('lite/settings.country')]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function rulesForOrganisationRegistrationAgency()
+    {
+        $this->settingsRules['organisationRegistrationAgency'] = 'required';
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function messagesForOrganisationRegistrationAgency()
+    {
+        $this->settingsMessages['organisationRegistrationAgency.required'] = trans('validation.required', ['attribute' => trans('lite/settings.organisation_registration_agency')]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function rulesForOrganisationRegistrationNumber()
+    {
+        $this->settingsRules['organisationRegistrationNumber'] = 'required';
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function messagesForOrganisationRegistrationNumber()
+    {
+        $this->settingsMessages['organisationRegistrationNumber.required'] = trans('validation.required', ['attribute' => trans('lite/settings.organisation_registration_number')]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function rulesForOrganisationIatiIdentifier()
+    {
+        $organisationIdentifiers = Organization::select('reporting_org')->where('id', '<>', session('org_id'))->get()->toArray();
+        $organisationId          = [];
+        foreach ($organisationIdentifiers as $organisationIdentifier) {
+            $organisationId[] = getVal($organisationIdentifier, ['reporting_org', 0, 'reporting_organization_identifier'], '');
+        }
+
+        $this->settingsRules['organisationIatiIdentifier'] = sprintf('required|not_in:%s', implode(",", $organisationId));
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function messagesForOrganisationIatiIdentifier()
+    {
+        $this->settingsMessages['organisationIatiIdentifier.required'] = trans('validation.required', ['attribute' => trans('lite/settings.organisation_identifier')]);
+        $this->settingsMessages['organisationIatiIdentifier.not_in']   = trans('validation.not_in', ['attribute' => trans('lite/settings.organisation_identifier')]);
 
         return $this;
     }
