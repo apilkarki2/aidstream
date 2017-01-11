@@ -89,7 +89,7 @@ class Settings implements MapperInterface
                 [
                     'publisher_id'  => getVal($this->rawData, ['publisherId'], ''),
                     'api_id'        => getVal($this->rawData, ['apiKey'], ''),
-                    'publish_files' => getVal($this->rawData, ['publishFiles'], 'no')
+                    'publish_files' => getVal($this->rawData, ['publishFile'], 'no')
                 ]
             ],
             'default_field_values' => [
@@ -104,18 +104,24 @@ class Settings implements MapperInterface
         ];
 
         $settings['organisation'] = [
-            'reporting_org' => [
+            'user_identifier'     => getVal($this->rawData, ['organisationNameAbbreviation'], null),
+            'reporting_org'       => [
                 [
-                    'reporting_organization_identifier' => getVal($this->rawData, ['organisationIdentifier'], ''),
-                    "reporting_organization_type"       => getVal($this->rawData, ['organisationType'], ''),
-                    "narrative"                         => [
+                    'reporting_organization_identifier' => getVal($this->rawData, ['organisationIatiIdentifier'], ''),
+                    'reporting_organization_type'       => getVal($this->rawData, ['organisationType'], ''),
+                    'narrative'                         => [
                         [
-                            "narrative" => getVal($this->rawData, ['organisationName'], ''),
-                            "language"  => getVal($this->rawData, ['language'], '')
+                            'narrative' => getVal($this->rawData, ['organisationName'], ''),
+                            'language'  => getVal($this->rawData, ['language'], '')
                         ]
                     ]
                 ]
-            ]
+            ],
+            'logo'                => getVal($this->rawData, ['fileName'], null),
+            'logo_url'            => getVal($this->rawData, ['fileUrl'], null),
+            'country'             => getVal($this->rawData, ['country'], null),
+            'registration_number' => getVal($this->rawData, ['organisationRegistrationNumber'], null),
+            'registration_agency' => getVal($this->rawData, ['organisationRegistrationAgency'], null),
         ];
 
         return $settings;
@@ -129,15 +135,20 @@ class Settings implements MapperInterface
     public function reverseMap()
     {
         $formModel = [
-            'organisationName'       => getVal($this->rawData, ['reporting_org', 0, 'narrative', 0, 'narrative'], ''),
-            'language'               => getVal($this->rawData, ['reporting_org', 0, 'narrative', 0, 'language'], ''),
-            'organisationIdentifier' => getVal($this->rawData, ['reporting_org', 0, 'reporting_organization_identifier'], ''),
-            'organisationType'       => getVal($this->rawData, ['reporting_org', 0, 'reporting_organization_type'], ''),
-            'publisherId'            => getVal($this->rawData, ['registry_info', 0, 'publisher_id'], ''),
-            'apiKey'                 => getVal($this->rawData, ['registry_info', 0, 'api_id'], ''),
-            'publishFile'            => getVal($this->rawData, ['registry_info', 0, 'publish_files'], ''),
-            'defaultCurrency'        => getVal($this->rawData, ['default_field_values', 0, 'default_currency'], ''),
-            'defaultLanguage'        => getVal($this->rawData, ['default_field_values', 0, 'default_language'], '')
+            'organisationName'               => getVal($this->rawData, ['reporting_org', 0, 'narrative', 0, 'narrative'], ''),
+            'language'                       => getVal($this->rawData, ['reporting_org', 0, 'narrative', 0, 'language'], ''),
+            'organisationIatiIdentifier'     => getVal($this->rawData, ['reporting_org', 0, 'reporting_organization_identifier'], ''),
+            'organisationType'               => getVal($this->rawData, ['reporting_org', 0, 'reporting_organization_type'], ''),
+            'registrationRegistrationAgency' => getVal($this->rawData, ['registration_agency'], ''),
+            'organisationRegistrationNumber' => getVal($this->rawData, ['registration_number'], ''),
+            'country'                        => getVal($this->rawData, ['country'], ''),
+            'logo_url'                       => getVal($this->rawData, ['logo_url'], ''),
+            'organisationNameAbbreviation'   => getVal($this->rawData, ['user_identifier'], ''),
+            'publisherId'                    => getVal($this->rawData, ['registry_info', 0, 'publisher_id'], ''),
+            'apiKey'                         => getVal($this->rawData, ['registry_info', 0, 'api_id'], ''),
+            'publishFile'                    => getVal($this->rawData, ['registry_info', 0, 'publish_files'], ''),
+            'defaultCurrency'                => getVal($this->rawData, ['default_field_values', 0, 'default_currency'], ''),
+            'defaultLanguage'                => getVal($this->rawData, ['default_field_values', 0, 'default_language'], ''),
         ];
 
         return $formModel;

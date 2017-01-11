@@ -27,7 +27,7 @@ class Settings extends BaseForm
                     'wrapper' => ['class' => 'form-group col-sm-6']
                 ]
             )
-            ->add('organisationIdentifier', 'text', ['label' => trans('lite/settings.organisation_identifier'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6']])
+            ->add('organisationNameAbbreviation', 'text', ['label' => trans('lite/settings.organisation_name_abbreviation'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6']])
             ->addSelect(
                 'organisationType',
                 $this->getCodeList('OrganizationType', 'Organization'),
@@ -37,6 +37,47 @@ class Settings extends BaseForm
                 true,
                 [
                     'wrapper' => ['class' => 'form-group col-sm-6']
+                ]
+            )
+            ->addSelect(
+                'country',
+                $this->getCodeList('Country', 'Organization'),
+                trans('lite/settings.country'),
+                null,
+                config('app.default_language'),
+                true,
+                [
+                    'wrapper' => ['class' => 'form-group col-sm-6 country'],
+                ]
+            )
+            ->add(
+                'organisationRegistrationAgency',
+                'select',
+                [
+                    'label' => trans('lite/settings.organisation_registration_agency'),
+                    'required' => true,
+                    'empty_value' => 'Select an agency',
+                    'wrapper' => ['class' => 'form-group col-sm-6 organization_registration_agency']
+                ]
+            )
+            ->add(
+                'organisationRegistrationNumber',
+                'text',
+                [
+                    'label'    => trans('lite/settings.organisation_registration_number'),
+                    'required' => true,
+                    'wrapper'  => ['class' => 'form-group col-sm-6 registration_number']
+                ]
+            )
+            ->add(
+                'organisationIatiIdentifier',
+                'text',
+                [
+                    'label'      => trans('lite/settings.organisation_iati_identifier'),
+                    'required'   => true,
+                    'help_block' => $this->addHelpText('registration_org_identifier', true),
+                    'attr'       => ['readonly'],
+                    'wrapper'    => ['class' => 'form-group col-sm-6 organization_identifier']
                 ]
             )
             ->add('publisherId', 'text', ['label' => trans('lite/settings.publisher_id'), 'wrapper' => ['class' => 'form-group col-sm-6']])
@@ -56,7 +97,7 @@ class Settings extends BaseForm
                 'defaultCurrency',
                 $this->getCodeList('Currency', 'Organization'),
                 trans('lite/settings.default_currency'),
-                $this->addHelpText('activity_defaults-default_language', false),
+                $this->addHelpText('activity_defaults-default_currency', false),
                 config('app.default_language'),
                 true,
                 [
@@ -72,6 +113,13 @@ class Settings extends BaseForm
                 true,
                 [
                     'wrapper' => ['class' => 'form-group col-sm-6']
+                ]
+            )
+            ->add(
+                'picture',
+                'file',
+                [
+                    'wrapper' => ['class' => 'form-group col-sm-6 upload-logo'],
                 ]
             )
             ->add(trans('lite/settings.save'), 'submit', ['attr' => ['class' => 'btn btn-submit btn-form'], 'wrapper' => ['class' => 'form-group col-sm-6']]);

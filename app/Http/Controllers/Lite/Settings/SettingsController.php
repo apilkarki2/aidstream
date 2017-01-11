@@ -68,11 +68,11 @@ class SettingsController extends LiteController
      */
     public function edit()
     {
-        $orgId   = auth()->user()->org_id;
+        $orgId   = session('org_id');
         $version = session('version');
 
-        $model   = $this->settingsService->getSettingsModel($orgId, $version);
-        $form    = $this->formBuilder->create(
+        $model = $this->settingsService->getSettingsModel($orgId, $version);
+        $form  = $this->formBuilder->create(
             'App\Lite\Forms\V202\Settings',
             [
                 'method' => 'PUT',
@@ -81,7 +81,11 @@ class SettingsController extends LiteController
             ]
         );
 
-        return view('lite.settings.index', compact('form'));
+        $registrationAgency = getVal($model, ['registrationRegistrationAgency'], '');
+        $country            = getVal($model, ['country'], '');
+        $agencies           = json_encode($form->getCodeList('OrganisationRegistrationAgency', 'Organization', false));
+
+        return view('lite.settings.index', compact('form', 'agencies', 'registrationAgency', 'country'));
     }
 
     /**
@@ -93,7 +97,7 @@ class SettingsController extends LiteController
     public function store(Request $request)
     {
         $rawData = $request->all();
-        $orgId = auth()->user()->org_id;
+        $orgId   = session('org_id');
         $version = session('version');
 
         if (!$this->validationService->passes($rawData, 'Settings', $version)) {

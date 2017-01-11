@@ -1,6 +1,6 @@
 @extends('lite.base.sidebar')
 
-@section('title', 'Activities')
+@section('title', trans('lite/title.settings'))
 
 @section('content')
     {{Session::get('message')}}
@@ -10,7 +10,7 @@
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
             <div class="panel-content-heading">
-                <div>Settings</div>
+                <div>@lang('lite/title.settings')</div>
             </div>
             <div class="panel-body">
                 {!! form($form) !!}
@@ -18,7 +18,12 @@
         </div>
     </div>
 @stop
-
 @section('script')
-
+    <script>
+        var agencies = {!! $agencies !!};
+        var selectedRegistrationAgency = "{!! $registrationAgency !!}";
+        var country = "{!! $country !!}";
+    </script>
+    <script src="{{ asset('lite/js/settings.js') }}"></script>
 @stop
+
