@@ -53,9 +53,9 @@ class Activity extends LiteBaseForm
                  true,
                  ['wrapper' => ['class' => 'form-group col-sm-6']]
              )
-             ->addToCollection('funding_organisations', trans('lite/elementForm.funding_organisation'), $participatingOrganisationFormPath, 'collection_form funding_organisations')
+             ->addToCollection('funding_organisations', ' ', $participatingOrganisationFormPath, 'collection_form funding_organisations')
              ->addButton('add_more_funding', trans('lite/elementForm.add_another_funding_organisation'), 'funding_organisations', 'add_more')
-             ->addToCollection('implementing_organisations', trans('lite/elementForm.implementing_organisation'), $participatingOrganisationFormPath, 'collection_form implementing_organisations')
+             ->addToCollection('implementing_organisations', ' ', $participatingOrganisationFormPath, 'collection_form implementing_organisations')
              ->addButton('add_more_implementing', trans('lite/elementForm.add_another_implementing_organisation'), 'implementing_organisations', 'add_more');
     }
 }

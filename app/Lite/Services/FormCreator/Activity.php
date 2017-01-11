@@ -41,6 +41,6 @@ class Activity
                 'model'  => $model,
                 'url'    => $route
             ]
-        )->add('Save', 'submit', ['attr' => ['class' => 'btn btn-submit btn-form']]);
+        )->add('Save', 'submit', ['label' => trans('lite/elementForm.add_this_activity'), 'attr' => ['class' => 'btn btn-submit btn-form']]);
     }
 }

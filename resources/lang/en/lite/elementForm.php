@@ -14,10 +14,12 @@ return [
     'recipient_country'                     => 'Recipient Country',
     'funding_organisation'                  => 'Funding Organisation',
     'implementing_organisation'             => 'Implementing Organisation',
-    'organisation_name'                     => 'Organisation Name',
-    'organisation_type'                     => 'Organisation Type',
+    'funding_organisation_name'             => 'Funding Organisation Name',
+    'funding_organisation_type'             => 'Funding Organisation Type',
+    'implementing_organisation_name'        => 'Implementing Organisation Name',
+    'implementing_organisation_type'        => 'Implementing Organisation Type',
     'add_another_funding_organisation'      => 'Add another Funding Organisation',
     'add_another_implementing_organisation' => 'Add another Implementing Organisation',
     'select_text'                           => 'Select one of the following options',
-
+    'add_this_activity'                     => 'Add this activity'
 ];

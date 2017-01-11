@@ -43,7 +43,6 @@
             </div>
 
             <div class="panel panel-default panel-element-detail element-show">
-
                 <div class="activity-element-wrapper">
                     <div class="activity-element-list">
                         <div class="activity-element-label">
@@ -120,12 +119,12 @@
                             @lang('lite/elementForm.sector')
                         </div>
                         <div class="activity-element-info">
-                            {{ $getCode->getCodeNameOnly('Sector', getVal($activity->sector, [0, 'sector_code']),-7)}}
+                            {{ $getCode->getCodeNameOnly('Sector', getVal((array)$activity->sector, [0, 'sector_code']),-7)}}
                         </div>
                     </div>
                 </div>
 
-                @foreach ($activity->activity_date as $date)
+                @foreach ((array)$activity->activity_date as $date)
                     @if(getVal($date, ['type']) == 2)
                         <div class="activity-element-wrapper">
                             <div class="activity-element-list">
@@ -159,7 +158,7 @@
                             @lang('lite/elementForm.recipient_country')
                         </div>
                         <div class="activity-element-info">
-                            @foreach($activity->recipient_country as $index=> $country)
+                            @foreach((array)$activity->recipient_country as $index=> $country)
                                 {{$getCode->getCodeNameOnly('Country', $country['country_code'],-4,'Organization')}}
                             @endforeach
                         </div>
