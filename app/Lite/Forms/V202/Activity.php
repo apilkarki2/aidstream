@@ -21,9 +21,6 @@ class Activity extends LiteBaseForm
 
         $this->addText('activity_identifier', trans('lite/elementForm.activity_identifier'))
              ->addText('activity_title', trans('lite/elementForm.activity_title'))
-             ->addText('general_description', trans('lite/elementForm.general_description'))
-             ->addText('objectives', trans('lite/elementForm.objectives'), false)
-             ->addText('target_groups', trans('lite/elementForm.target_groups'), false)
              ->addSelect(
                  'activity_status',
                  $this->getCodeList('ActivityStatus', 'Activity'),
@@ -44,6 +41,9 @@ class Activity extends LiteBaseForm
              )
              ->add('start_date', 'date', ['label' => trans('lite/elementForm.start_date'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6']])
              ->add('end_date', 'date', ['label' => trans('lite/elementForm.end_date'), 'wrapper' => ['class' => 'form-group col-sm-6']])
+             ->addText('general_description', trans('lite/elementForm.general_description'))
+             ->addText('objectives', trans('lite/elementForm.objectives'), false)
+             ->addText('target_groups', trans('lite/elementForm.target_groups'), false)
              ->addSelect(
                  'country',
                  $this->getCodeList('Country', 'Organization'),

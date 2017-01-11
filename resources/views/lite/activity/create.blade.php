@@ -10,11 +10,31 @@
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
             <div class="panel-content-heading">
-                <div>Activities</div>
+                <div>@lang('lite/global.add_an_activity')</div>
             </div>
+            <p>@lang('lite/global.add_an_activity_in_simple_steps')</p>
             <div class="panel-body">
                 <div class="create-form create-project-form edit-form">
-                    {!! form($form) !!}
+                    {!! form_start($form) !!}
+                    <div>
+                        <h2>@lang('lite/global.basics')</h2>
+                        <div>
+                            {!! form_until($form,'target_groups') !!}
+                        </div>
+                    </div>
+                    <div>
+                        <h2>@lang('lite/global.location')</h2>
+                        <div>
+                            {!! form_row($form->country) !!}
+                        </div>
+                    </div>
+                    <div>
+                        <h2>@lang('lite/global.involved_organisations')</h2>
+                        <div>
+                            {!! form_rest($form) !!}
+                        </div>
+                    </div>
+                    {!! form_end($form) !!}
                 </div>
                 <div class="funding_organisations-container hidden"
                      data-prototype="{{ form_row($form->funding_organisations->prototype()) }}">
