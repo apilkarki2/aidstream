@@ -9,30 +9,34 @@
         @include('includes.response')
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
-            <div class="panel-content-heading">
-                <div>@lang('lite/global.add_an_activity')</div>
+            <div class="panel__heading">
+                <h1>@lang('lite/global.add_an_activity')</h1>
+                <p>@lang('lite/global.add_an_activity_in_simple_steps')</p>
             </div>
-            <p>@lang('lite/global.add_an_activity_in_simple_steps')</p>
             <div class="panel-body">
                 <div class="create-form create-project-form edit-form">
                     {!! form_start($form) !!}
-                    <div>
+                    <div class="form__block">
                         <h2>@lang('lite/global.basics')</h2>
-                        <div>
+                        <div class="row">
                             {!! form_until($form,'target_groups') !!}
                         </div>
                     </div>
-                    <div>
+                    <div class="form__block">
                         <h2>@lang('lite/global.location')</h2>
-                        <div>
+                        <div class="row">
                             {!! form_row($form->country) !!}
                         </div>
                     </div>
-                    <div>
+                    <div class="form__block">
                         <h2>@lang('lite/global.involved_organisations')</h2>
-                        <div>
-                            {!! form_rest($form) !!}
+                        <div class="row">
+                            {!! form_until($form,"add_more_implementing") !!}
                         </div>
+                    </div>
+                    <div class="form__block">
+                        {!! form_rest($form) !!}
+                        <a href="#" class="pull-right btn-go-back">Cancel and go back</a>
                     </div>
                     {!! form_end($form) !!}
                 </div>

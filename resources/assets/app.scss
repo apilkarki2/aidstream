@@ -95,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 textarea {
-  height: 45px;
+  height: 40px;
   padding: 0.5em !important;
   font-size: 16px !important;
 }
@@ -128,7 +128,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill, inpu
 
 #{$all-text-inputs},
 select, button {
-  font: normal 16px $font_0;
+  font: normal 14px $font_0;
   color: $color_gravel_approx;
   &:focus {
     outline: none;
@@ -154,19 +154,19 @@ select, .form-control[readonly] {
 
 textarea, textarea.form-control {
   border: 1px solid $color_blue !important;
-  height: 45px;
+  height: 40px;
 }
 
 #{$all-text-inputs}, select,
 select.form-control, form .select2-container {
-  height: 45px;
+  height: 40px;
   border: 1px solid $color_blue;
   margin-bottom: 0.75em;
 }
 
 form .select2-container {
   width: 100% !important;
-  margin-bottom: 0;
+  margin-bottom: 3px;
 }
 
 .admin-container .select2-container {
@@ -237,7 +237,7 @@ label[class*="text-"] {
   background: transparent !important;
   border: none !important;
   outline: none !important;
-  font: 16px $font_0;
+  font: 14px $font_0;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -8079,4 +8079,105 @@ body > .skiptranslate iframe {
   .settings-form {
     width: 80%;
   }
+}
+
+//lite
+
+.lite .navbar-brand {
+  padding: 0 0 0 15px;
+  > a {
+    background: none;
+    padding: 0;
+    text-indent: 1px;
+    width: auto;
+  }
+}
+
+.panel__heading {
+  padding: 10px 36px;
+  h1 {
+    font-size: 20px;
+    margin: 5px 0;
+  }
+  p {
+    color: rgba($color_gravel_approx, 0.5);
+    font-size: 11px;
+    margin-bottom: 0;
+  }
+}
+
+.lite .create-form {
+  padding: 0;
+  > form {
+    background: none;
+    border: none;
+  }
+}
+
+.form__block {
+  border-top: 1px solid #d5eaf5;
+  display: inline-block;
+  padding: 25px 36px 5px;
+  width: 100%;
+  h2 {
+    font: 14px $font_1;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+  label {
+    font-size: 12px;
+    text-transform: uppercase;
+    &:after {
+      color: lighten($color_gravel_approx, 40%);
+      content: "(Optional)";
+      font-size: 10px;
+      margin-left: 2px;
+      text-transform: none;
+    }
+    &.required:after {
+      display: none;
+    }
+  }
+}
+
+.funding_organisations, .implementing_organisations {
+  > label:after {
+    display: none;
+  }
+}
+
+.lite .add-to-collection {
+  background: none;
+  color: $color_gravel_approx;
+  font-size: 12px;
+  float: left;
+  margin: -10px 0 18px;
+  padding: 0 0 0 40px;
+  position: relative;
+  &:before {
+    border: 1px solid $color_gravel_approx;
+    border-radius: 50%;
+    content: " + ";
+    height: 18px;
+    font-size: 20px;
+    line-height: 16px;
+    position: absolute;
+    left: 16px;
+    width: 18px;
+  }
+}
+
+.lite .btn-form {
+  height: 53px;
+  margin: 0;
+  position: static;
+  width: 218px;
+}
+
+.btn-go-back {
+  margin: 16px 0;
 }

@@ -23,7 +23,7 @@
 
     @yield('head')
 </head>
-<body>
+<body class="lite">
 {{--<div id="google_translate_element"></div><script type="text/javascript">--}}
 {{--function googleTranslateElementInit() {--}}
 {{--new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,es,fr', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false, multilanguagePage: true}, 'google_translate_element');--}}
@@ -33,7 +33,14 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <div class="navbar-brand">
-                <a href="{{url('/')}}" alt="Aidstream">Aidstream</a>
+                <div class="logo">
+                    <a href="{{url('/')}}" title="Aidstream Lite">
+                        <img src="{{url('images/header_logo.svg')}}" alt="Aidstream">
+                    </a>
+                </div>
+                <a href="{{url('/')}}" title="Aidstream Lite">
+                    <span class="logo-name">Aidstream<span>Lite</span></span>
+                </a>
             </div>
         </div>
         <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -190,67 +197,67 @@
     var roleId = "{!! $loggedInUser->role_id!!}";
 </script>
 {{--@if($loggedInUser && $loggedInUser->userOnBoarding && (session('role_id')!= 3 && session('role_id')!= 4))--}}
-    {{--<script src="/js/userOnBoarding.js"></script>--}}
-    {{--<script type="text/javascript">--}}
-        {{--var hintStatus = "{!! ($loggedInUser->userOnBoarding->display_hints) ? 1 : 0 !!}";--}}
-        {{--var completedTour = "{!! ($loggedInUser->userOnBoarding->completed_tour) ? 1 : 0 !!}";--}}
+{{--<script src="/js/userOnBoarding.js"></script>--}}
+{{--<script type="text/javascript">--}}
+{{--var hintStatus = "{!! ($loggedInUser->userOnBoarding->display_hints) ? 1 : 0 !!}";--}}
+{{--var completedTour = "{!! ($loggedInUser->userOnBoarding->completed_tour) ? 1 : 0 !!}";--}}
 
-        {{--var className = (hintStatus == 1) ? 'pull-right display Yes' : 'pull-right display No';--}}
+{{--var className = (hintStatus == 1) ? 'pull-right display Yes' : 'pull-right display No';--}}
 
-        {{--$('#logout').before(--}}
-            {{--"<li class='dashboard-tour'>" +--}}
-            {{--"<span>Dashboard tour</span><a href='#' class='" + className + "' id='hints'></a></li>");--}}
+{{--$('#logout').before(--}}
+{{--"<li class='dashboard-tour'>" +--}}
+{{--"<span>Dashboard tour</span><a href='#' class='" + className + "' id='hints'></a></li>");--}}
 
-        {{--var endTour = function () {--}}
-            {{--introJs().exit();--}}
-            {{--$('.introjs-tooltip').hide();--}}
-            {{--$("[data-step='1']").removeClass('open');--}}
-            {{--$(document).on('click');--}}
-            {{--completedTour = 1;--}}
-        {{--};--}}
+{{--var endTour = function () {--}}
+{{--introJs().exit();--}}
+{{--$('.introjs-tooltip').hide();--}}
+{{--$("[data-step='1']").removeClass('open');--}}
+{{--$(document).on('click');--}}
+{{--completedTour = 1;--}}
+{{--};--}}
 
-        {{--var goNext = function (step) {--}}
-            {{--$("a[data-step=" + step + "]").trigger('click');--}}
-        {{--};--}}
+{{--var goNext = function (step) {--}}
+{{--$("a[data-step=" + step + "]").trigger('click');--}}
+{{--};--}}
 
-        {{--var skip = function (step) {--}}
-            {{--$(".introjs-tooltip").hide();--}}
-            {{--$('#hints').trigger('click');--}}
-            {{--if (completedTour == 0) {--}}
-                {{--$("[data-step='1']").addClass('open');--}}
-                {{--UserOnBoarding.finalHints();--}}
-                {{--$(document).off('click');--}}
-                {{--$('.introjs-tooltip').css({'right': '270px', 'top': '87px'});--}}
-                {{--$('.introjs-arrow').css({'right': '-18px', 'top': '50px'});--}}
+{{--var skip = function (step) {--}}
+{{--$(".introjs-tooltip").hide();--}}
+{{--$('#hints').trigger('click');--}}
+{{--if (completedTour == 0) {--}}
+{{--$("[data-step='1']").addClass('open');--}}
+{{--UserOnBoarding.finalHints();--}}
+{{--$(document).off('click');--}}
+{{--$('.introjs-tooltip').css({'right': '270px', 'top': '87px'});--}}
+{{--$('.introjs-arrow').css({'right': '-18px', 'top': '50px'});--}}
 
-            {{--}--}}
-        {{--};--}}
+{{--}--}}
+{{--};--}}
 
-        {{--$('#hints').on('click', function () {--}}
-            {{--if ($(this).hasClass("Yes")) {--}}
-                {{--$(this).removeClass('Yes');--}}
-                {{--$(this).addClass('No');--}}
-                {{--$('.introjs-hints').css('visibility', 'hidden');--}}
-                {{--UserOnBoarding.storeHintStatus(0);--}}
-            {{--} else if ($(this).hasClass("No")) {--}}
-                {{--$(this).removeClass('No');--}}
-                {{--$(this).addClass('Yes');--}}
-                {{--$('.introjs-hints').css('visibility', 'visible');--}}
-                {{--UserOnBoarding.storeHintStatus(1);--}}
-            {{--}--}}
-        {{--});--}}
+{{--$('#hints').on('click', function () {--}}
+{{--if ($(this).hasClass("Yes")) {--}}
+{{--$(this).removeClass('Yes');--}}
+{{--$(this).addClass('No');--}}
+{{--$('.introjs-hints').css('visibility', 'hidden');--}}
+{{--UserOnBoarding.storeHintStatus(0);--}}
+{{--} else if ($(this).hasClass("No")) {--}}
+{{--$(this).removeClass('No');--}}
+{{--$(this).addClass('Yes');--}}
+{{--$('.introjs-hints').css('visibility', 'visible');--}}
+{{--UserOnBoarding.storeHintStatus(1);--}}
+{{--}--}}
+{{--});--}}
 
-        {{--UserOnBoarding.addHintLabel();--}}
-        {{--UserOnBoarding.dashboardTour();--}}
+{{--UserOnBoarding.addHintLabel();--}}
+{{--UserOnBoarding.dashboardTour();--}}
 
-        {{--if (hintStatus == 0) {--}}
-            {{--$('.introjs-hints').css('visibility', 'hidden');--}}
-        {{--}--}}
+{{--if (hintStatus == 0) {--}}
+{{--$('.introjs-hints').css('visibility', 'hidden');--}}
+{{--}--}}
 
-        {{--if (completedTour == 0 && hintStatus == 1 && window.location.pathname == '/activity') {--}}
-            {{--$("[data-step='0']").trigger('click');--}}
-        {{--}--}}
-    {{--</script>--}}
+{{--if (completedTour == 0 && hintStatus == 1 && window.location.pathname == '/activity') {--}}
+{{--$("[data-step='0']").trigger('click');--}}
+{{--}--}}
+{{--</script>--}}
 {{--@endif--}}
 <!-- End of script -->
 @yield('script')
