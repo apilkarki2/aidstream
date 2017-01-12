@@ -1,6 +1,6 @@
 var filteredAgencies;
 
-function agency(status = false) {
+function agency(status) {
     var selectedCountry = $('#country').val();
     if (selectedRegistrationAgency && !status && selectedCountry == country) {
         filteredAgencies = '<option value="' + selectedRegistrationAgency + '" selected="selected">' + agencies[selectedRegistrationAgency] + '</option>';
@@ -17,7 +17,7 @@ function agency(status = false) {
 }
 
 $('#organisationRegistrationAgency')
-    .html(agency());
+    .html(agency(false));
 
 $('#country').on('change', function () {
     var agencySelectField = $('#organisationRegistrationAgency');

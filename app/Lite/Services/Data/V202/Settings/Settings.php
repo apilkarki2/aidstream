@@ -89,7 +89,7 @@ class Settings implements MapperInterface
                 [
                     'publisher_id'  => getVal($this->rawData, ['publisherId'], ''),
                     'api_id'        => getVal($this->rawData, ['apiKey'], ''),
-                    'publish_files' => getVal($this->rawData, ['publishFiles'], 'no')
+                    'publish_files' => getVal($this->rawData, ['publishFile'], 'no')
                 ]
             ],
             'default_field_values' => [

@@ -24,6 +24,6 @@
         var selectedRegistrationAgency = "{!! $registrationAgency !!}";
         var country = "{!! $country !!}";
     </script>
-    <script src="{{ asset('js/settings.js') }}"></script>
+    <script src="{{ asset('lite/js/settings.js') }}"></script>
 @stop
 
