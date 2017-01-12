@@ -44,7 +44,7 @@ class Activity
     protected $activityMessages = [];
 
     /**
-     * Calls and sets $this->activityRules from $this->methods.
+     * Calls all the methods mentioned in methods array and sets the rules in activityRules.
      *
      * @return array
      */
@@ -62,7 +62,7 @@ class Activity
     }
 
     /**
-     * Calls and sets $this->activityMessages from $this->methods.
+     * Calls all the methods mentioned in methods array and sets the messages in activityMessages.
      *
      * @return array
      */

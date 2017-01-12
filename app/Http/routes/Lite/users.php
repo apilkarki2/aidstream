@@ -42,7 +42,7 @@ $router->group(
                     '/lite/users/update-permission/{id}',
                     [
                         'as'   => 'lite.users.update-permission',
-                        'uses' => 'UserController@UpdatePermission'
+                        'uses' => 'UserController@updateRole'
                     ]
                 );
             }

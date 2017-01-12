@@ -122,7 +122,7 @@ class Activity implements MapperInterface
     /**
      * Map database data into frontend compatible format.
      *
-     * @return mixed
+     * @return array
      */
     public function reverseMap()
     {

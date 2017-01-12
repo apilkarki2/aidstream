@@ -59,3 +59,4 @@ class Activity extends LiteBaseForm
              ->addButton('add_more_implementing', trans('lite/elementForm.add_another_implementing_organisation'), 'implementing_organisations', 'add_more');
     }
 }
+

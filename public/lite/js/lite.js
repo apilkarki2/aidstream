@@ -7,13 +7,13 @@ var Lite = {
         $('table tbody tr td').delegate('#permission', 'change', function (e) {
             var user_id = $(this).closest('tr').find('#user_id').val();
             var username = $(this).closest('tr').find('#name').html();
-            var permission = $(this).val();
-            var permission_text = $(':selected', this).text();
+            var role = $(this).val();
+            var role_text = $(':selected', this).text();
             $('#response').addClass('hidden');
             $.ajax({
                 headers: {'X-CSRF-TOKEN': $('[name="_token"]').val()},
                 url: '/lite/users/update-permission/' + user_id,
-                data: {permission: permission},
+                data: {role: role},
                 type: 'POST',
                 beforeSend: function () {
                     $('body').append('<div class="loader">.....</div>');
@@ -24,7 +24,7 @@ var Lite = {
                 success: function (data) {
                     if (data == 'success') {
                         $('.alert-success').addClass('hidden');
-                        $('#success').removeClass('hidden').html(permission_text + ' level permission has been given to ' + username);
+                        $('#success').removeClass('hidden').html(role_text + ' level permission has been given to ' + username);
                     } else {
                         $('.alert-danger').addClass('hidden');
                         $('#error').removeClass('hidden').html('Failed to update permission for ' + username);

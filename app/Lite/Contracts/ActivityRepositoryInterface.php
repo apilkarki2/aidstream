@@ -34,12 +34,16 @@ interface ActivityRepositoryInterface
     public function save(array $data);
 
     /**
+     * Delete the activity record from database.
+     *
      * @param $activityId
      * @return mixed
      */
     public function delete($activityId);
 
     /**
+     * Update the details of the activity.
+     *
      * @param       $activityId
      * @param array $activity
      * @return mixed

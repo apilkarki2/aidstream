@@ -98,11 +98,7 @@ class UserService
         } catch (Exception $exception) {
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
-                [
-                    'user'     => auth()->user()->id,
-                    'userName' => auth()->user()->getNameAttribute,
-                    'trace'    => $exception->getTraceAsString()
-                ]
+                $this->getContext($exception)
             );
 
             return false;
@@ -113,30 +109,45 @@ class UserService
      * Update the permission of the user.
      *
      * @param $userId
-     * @param $permission
+     * @param $roleId
      * @return bool
      */
-    public function updatePermission($userId, $permission)
+    public function updateRole($userId, $roleId)
     {
         try {
-            $this->userRepository->update($userId, ['role_id' => $permission]);
+            $this->userRepository->update($userId, ['role_id' => $roleId]);
 
-            $this->logger->info('User Permission has been updated successfully.', $this->getContext());
+            $this->logger->info('User Role has been updated successfully.', $this->getContext());
 
             return true;
 
         } catch (Exception $exception) {
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
-                [
-                    'user'     => auth()->user()->id,
-                    'userName' => auth()->user()->getNameAttribute,
-                    'trace'    => $exception->getTraceAsString()
-                ]
+                $this->getContext($exception)
             );
 
             return false;
         }
+    }
+
+    /**
+     * Returns id of roles that can be assigned to a user.
+     * @return array
+     */
+    public function assignableRoleIds()
+    {
+        return $this->userRepository->assignableRoleIds();
+    }
+
+    /**
+     * Returns list of roles with id that can be assigned to a user.
+     *
+     * @return array
+     */
+    public function assignableRoles()
+    {
+        return $this->userRepository->assignableRoles();
     }
 }
 

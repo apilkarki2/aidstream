@@ -55,13 +55,8 @@ class UserController extends LiteController
      */
     public function index()
     {
-        $users   = $this->userService->all(session('org_id'));
-        $dbRoles = DB::table('role')->whereNotNull('permissions')->orderBy('role', 'desc')->get();
-        $roles   = [];
-
-        foreach ($dbRoles as $role) {
-            $roles[$role->id] = $role->role;
-        }
+        $users = $this->userService->all(session('org_id'));
+        $roles = $this->userService->assignableRoles();
 
         return view('lite.users.index', compact('users', 'roles'));
     }
@@ -113,23 +108,24 @@ class UserController extends LiteController
     }
 
     /**
-     * Updates the permission of the user from AJAX Request.
+     * Updates the role of the user from AJAX Request.
      *
-     * @param $id
-     * @return bool|string
+     * @param         $id
+     * @param Request $request
+     * @return string
      */
-    public function updatePermission($id)
+    public function updateRole($id, Request $request)
     {
-        $permission           = Input::get('permission');
-        $availablePermissions = Role::lists('id')->toArray();
+        $roleId         = $request->get('role');
+        $availableRoles = $this->userService->assignableRoleIds();
 
-        if (in_array($permission, $availablePermissions)) {
-            $this->userService->updatePermission($id, $permission);
+        if (in_array($roleId, $availableRoles)) {
+            $this->userService->updateRole($id, $roleId);
 
             return 'success';
         }
 
-        return false;
+        return 'failed';
     }
 }
 

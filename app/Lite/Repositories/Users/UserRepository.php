@@ -2,6 +2,7 @@
 
 
 use App\Lite\Contracts\UserRepositoryInterface;
+use App\Models\Role;
 use App\User;
 
 /**
@@ -14,14 +15,20 @@ class UserRepository implements UserRepositoryInterface
      * @var User
      */
     protected $user;
+    /**
+     * @var Role
+     */
+    protected $role;
 
     /**
      * UserRepository constructor.
      * @param User $user
+     * @param Role $role
      */
-    public function __construct(User $user)
+    public function __construct(User $user, Role $role)
     {
         $this->user = $user;
+        $this->role = $role;
     }
 
     /**
@@ -87,6 +94,49 @@ class UserRepository implements UserRepositoryInterface
         $user = $this->find($userId);
 
         return $user->delete();
+    }
+
+    /**
+     *  Returns id of roles that can be assigned to a user.
+     *
+     * @return array
+     */
+    public function assignableRoleIds()
+    {
+        $assignableRoles = $this->getAssignableRoles();
+        $roles           = [];
+
+        foreach ($assignableRoles as $role) {
+            $roles[] = $role['id'];
+        }
+
+        return $roles;
+    }
+
+    /**
+     * Returns roles that can be assigned to a user.
+     *
+     * @return array
+     */
+    public function assignableRoles()
+    {
+        $assignableRoles = $this->getAssignableRoles();
+        $roles           = [];
+
+        foreach ($assignableRoles as $role) {
+            $roles[$role['id']] = $role['role'];
+        }
+
+        return $roles;
+    }
+
+    /** Returns roles.
+     *
+     * @return mixed
+     */
+    protected function getAssignableRoles()
+    {
+        return $this->role->whereNotNull('permissions')->get()->toArray();
     }
 }
 

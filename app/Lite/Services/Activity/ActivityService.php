@@ -89,7 +89,7 @@ class ActivityService
     }
 
     /**
-     * Delete a activity.
+     * Delete an activity record.
      *
      * @param $activityId
      * @return mixed|null
