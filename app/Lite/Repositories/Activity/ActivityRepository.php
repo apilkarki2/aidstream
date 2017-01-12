@@ -36,10 +36,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     }
 
     /**
-     * Find a specific activity.
-     *
-     * @param $id
-     * @return mixed
+     * {@inheritdoc}
      */
     public function find($id)
     {
@@ -47,10 +44,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     }
 
     /**
-     * Store the details of am activity in database.
-     *
-     * @param array $data
-     * @return Activity
+     * {@inheritdoc}
      */
     public function save(array $data)
     {
@@ -60,10 +54,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     }
 
     /**
-     * Delete the activity.
-     *
-     * @param $activityId
-     * @return mixed
+     * {@inheritdoc}
      */
     public function delete($activityId)
     {
@@ -73,17 +64,27 @@ class ActivityRepository implements ActivityRepositoryInterface
     }
 
     /**
-     * Update the details of the activity.
-     *
-     * @param       $activityId
-     * @param array $data
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function update($activityId, array  $data)
+    public function update($activityId, array $data)
     {
         $activity                = $this->find($activityId);
+        $activity                = $this->resetWorkflow($activity);
         $data['organization_id'] = session('org_id');
 
         return $activity->update($data);
+    }
+
+    /**
+     * Reset the Activity Workflow.
+     *
+     * @param Activity $activity
+     * @return Activity
+     */
+    protected function resetWorkflow(Activity $activity)
+    {
+        $activity->activity_workflow = 0;
+
+        return $activity;
     }
 }

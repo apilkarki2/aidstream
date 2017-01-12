@@ -5,6 +5,7 @@ use App\Lite\Services\FormCreator\Activity;
 use App\Http\Controllers\Lite\LiteController;
 use App\Lite\Services\Activity\ActivityService;
 use App\Lite\Services\Validation\ValidationService;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * Class ActivityController
@@ -106,11 +107,11 @@ class ActivityController extends LiteController
         $btn_text         = $activityWorkflow > 2 ? "" : $btn_status_label[$activityWorkflow];
 
         if ($activity['activity_workflow'] == 0) {
-            $nextRoute = route('activity.complete', $activityId);
+            $nextRoute = route('lite.activity.complete', $activityId);
         } elseif ($activity['activity_workflow'] == 1) {
-            $nextRoute = route('activity.verify', $activityId);
+            $nextRoute = route('lite.activity.verify', $activityId);
         } else {
-            $nextRoute = route('activity.publish', $activityId);
+            $nextRoute = route('lite.activity.publish', $activityId);
         }
 
         return view('lite.activity.show', compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute'));
@@ -136,7 +137,7 @@ class ActivityController extends LiteController
      * Delete an activity
      *
      * @param $activityId
-     * @return mixed
+     * @return RedirectResponse
      */
     public function destroy($activityId)
     {
@@ -152,7 +153,7 @@ class ActivityController extends LiteController
      *
      * @param         $activityId
      * @param Request $request
-     * @return $this
+     * @return RedirectResponse
      */
     public function update($activityId, Request $request)
     {
@@ -163,7 +164,7 @@ class ActivityController extends LiteController
             return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
         }
 
-        if (!($activity = $this->activityService->update($activityId, $rawData, $version))) {
+        if (!$this->activityService->update($activityId, $rawData, $version)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'danger', 'code' => ['save_failed', ['name' => trans('lite/global.activity')]]]);
         }
 

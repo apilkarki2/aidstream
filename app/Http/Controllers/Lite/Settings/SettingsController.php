@@ -47,7 +47,7 @@ class SettingsController extends LiteController
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function index()
     {
         $form = $this->formBuilder->create(
             'App\Lite\Forms\V202\Settings',

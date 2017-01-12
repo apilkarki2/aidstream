@@ -134,10 +134,10 @@ class ActivityService
     public function update($activityId, $rawData, $version)
     {
         try {
-            $activity = $this->activityRepository->update($activityId, $this->transform($this->getMapping($rawData, 'Activity', $version)));
+            $this->activityRepository->update($activityId, $this->transform($this->getMapping($rawData, 'Activity', $version)));
             $this->logger->info('Activity successfully updated.', $this->getContext());
 
-            return $activity;
+            return true;
         } catch (Exception $exception) {
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 

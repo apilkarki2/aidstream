@@ -94,8 +94,16 @@ class Settings implements MapperInterface
             ],
             'default_field_values' => [
                 [
-                    'default_currency' => getVal($this->rawData, ['defaultCurrency'], ''),
-                    'default_language' => getVal($this->rawData, ['defaultLanguage'], '')
+                    'default_currency'           => getVal($this->rawData, ['defaultCurrency'], ''),
+                    'default_language'           => getVal($this->rawData, ['defaultLanguage'], ''),
+                    "default_hierarchy"          => "",
+                    "linked_data_uri"            => "",
+                    "default_collaboration_type" => "",
+                    "default_flow_type"          => "",
+                    "default_finance_type"       => "",
+                    "default_aid_type"           => "",
+                    "default_tied_status"        => "",
+                    "humanitarian"               => ""
                 ]
             ],
             'default_field_groups' => $this->defaultFieldGroups,

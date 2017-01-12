@@ -11,7 +11,7 @@
                     <li class="users"><a href="{{route('lite.users.index')}}">Users</a></li>
                     {{--<li class="documents" data-step="5"><a href="{{ route('documents') }}">Documents</a></li>--}}
                     {{--<li class="downloads" data-step="6"><a href="{{route('download.index')}}">Downloads</a></li>--}}
-                    <li class="settings" data-step="7"><a href="{{ $loggedInUser->organization->settings ? route('lite.settings.edit') : route('lite.settings.create') }}">Settings</a></li>
+                    <li class="settings" data-step="7"><a href="{{ $loggedInUser->organization->settings ? route('lite.settings.edit') : route('lite.settings.index') }}">Settings</a></li>
                     {{--@if(Auth::user()->role_id == 1)--}}
                     {{--<li class="logs" data-step="8"><a href="{{ route('user-logs') }}">Activity Log</a></li>--}}
                     {{--@endif--}}

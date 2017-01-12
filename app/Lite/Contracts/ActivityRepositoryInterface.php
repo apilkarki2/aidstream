@@ -35,14 +35,14 @@ interface ActivityRepositoryInterface
 
     /**
      * @param $activityId
-     * @return mixed
+     * @return bool|null
      */
     public function delete($activityId);
 
     /**
      * @param       $activityId
      * @param array $activity
-     * @return mixed
+     * @return bool
      */
     public function update($activityId, array $activity);
 }
