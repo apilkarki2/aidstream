@@ -29,7 +29,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Find Specific user.
      * @param $userId
-     * @return mixed
+     * @return User
      */
     public function find($userId)
     {

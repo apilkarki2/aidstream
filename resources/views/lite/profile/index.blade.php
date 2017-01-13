@@ -14,7 +14,7 @@
                 <div>@lang('lite/title.profile')</div>
             </div>
             <div class="panel-body">
-                <img src="{{ $loggedInUser->profile_url ? url($loggedInUser->profile_url) : url('images/avatar-full.png')}}" width="200" height="200" alt="{{$loggedInUser->name}}">
+                <img src="{{ $loggedInUser->profile_url ? $loggedInUser->profile_url : url('images/avatar-full.png')}}" width="200" height="200" alt="{{$loggedInUser->name}}">
                 <div class="profile-info">
                     <span class="profile-username">{{$loggedInUser->username}}</span>
                     <span class="profile-user-email"><a href="mailto:{{$loggedInUser->email}}">{{$loggedInUser->email}}</a></span>

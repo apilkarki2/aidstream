@@ -6,10 +6,9 @@ use App\Lite\Services\Data\Traits\TransformsData;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
 use App\User;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Support\Facades\File;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ProfileService
 {
-
     use ProvidesLoggerContext, TransformsData;
 
     /**
@@ -43,17 +41,37 @@ class ProfileService
     protected $logger;
 
     /**
+     * @var ImageManager
+     */
+    protected $imageManager;
+
+    /**
+     * @var Filesystem
+     */
+    protected $fileSystem;
+
+    /**
      * ProfileService constructor.
+     * @param Filesystem                      $fileSystem
+     * @param ImageManager                    $imageManager
      * @param UserRepositoryInterface         $userRepository
      * @param OrganisationRepositoryInterface $organisationRepository
      * @param DatabaseManager                 $database
      * @param LoggerInterface                 $logger
      */
-    function __construct(UserRepositoryInterface $userRepository, OrganisationRepositoryInterface $organisationRepository, DatabaseManager $database, LoggerInterface $logger)
-    {
+    function __construct(
+        Filesystem $fileSystem,
+        ImageManager $imageManager,
+        UserRepositoryInterface $userRepository,
+        OrganisationRepositoryInterface $organisationRepository,
+        DatabaseManager $database,
+        LoggerInterface $logger
+    ) {
         $this->userRepository         = $userRepository;
         $this->organisationRepository = $organisationRepository;
         $this->database               = $database;
+        $this->imageManager           = $imageManager;
+        $this->fileSystem             = $fileSystem;
         $this->logger                 = $logger;
     }
 
@@ -80,6 +98,7 @@ class ProfileService
     }
 
     /**
+     * Store the current users Profile data.
      * @param       $orgId
      * @param       $userId
      * @param array $rawData
@@ -132,12 +151,9 @@ class ProfileService
      * @param UploadedFile $file
      * @return mixed
      */
-    protected
-    function uploadFile(
-        $fileName,
-        UploadedFile $file
-    ) {
-        $image = Image::make(File::get($file))->fit(
+    protected function uploadFile($fileName, UploadedFile $file)
+    {
+        $image = $this->imageManager->make($file)->fit(
             166,
             166,
             function ($constraint) {
@@ -145,7 +161,9 @@ class ProfileService
             }
         )->encode();
 
-        return Storage::put('users/' . $fileName, $image);
+        $filePath = sprintf(public_path('files/users/%s'), $fileName);
+
+        return $this->fileSystem->put($filePath, $image);
     }
 
     /**
@@ -169,31 +187,31 @@ class ProfileService
     }
 
     /**
-     * @param $userId
-     * @param $rawData
+     * @param User $user
+     * @param      $rawData
      * @return bool|null
      */
-    public function storePassword($userId, $rawData)
+    public function storePassword(User $user, $rawData)
     {
-        $currentPassword = User::where('id', $userId)->first();
+        try {
+            $currentPassword = $user->getAuthPassword();
 
-        if (Hash::check($rawData['oldPassword'], $currentPassword->password)) {
-            try {
+            if (Hash::check($rawData['oldPassword'], $currentPassword)) {
                 $password['password'] = Hash::make(getVal($rawData, ['newPassword'], null));
 
                 $this->database->beginTransaction();
-                $this->userRepository->update($userId, $password);
+                $this->userRepository->update($user->id, $password);
                 $this->database->commit();
 
                 $this->logger->info('Password successfully changed.', $this->getContext());
 
                 return true;
-            } catch (\Exception $exception) {
-                $this->database->rollback();
-                $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
-
-                return null;
             }
+        } catch (\Exception $exception) {
+            $this->database->rollback();
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
         }
 
         return null;

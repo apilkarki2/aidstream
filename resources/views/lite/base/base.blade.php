@@ -63,14 +63,14 @@
                     <li class="dropdown" data-step="1" id="admin-dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-expanded="false"><span class="avatar-img">
-                                @if(Auth::user()->profile_url)
-                                    <img src="{{Auth::user()->profile_url}}"
+                                @if($loggedInUser->profile_url)
+                                    <img src="{{$loggedInUser->profile_url}}"
                                          width="36" height="36"
-                                         alt="{{Auth::user()->name}}">
+                                         alt="{{$loggedInUser->name}}">
                                 @else
                                     <img src="{{url('images/avatar.svg')}}"
                                          width="36" height="36"
-                                         alt="{{Auth::user()->name}}">
+                                         alt="{{$loggedInUser->name}}">
                                 @endif
                             </span>
                             <span class="caret"></span></a>
@@ -117,7 +117,7 @@
             </ul>
         </div>
         <div class="navbar-right version-wrap">
-            @if(auth()->user() && !isSuperAdminRoute())
+            @if($loggedInUser && !isSuperAdminRoute())
                 <div class="version pull-right {{ (session('version') == 'V201') ? 'old' : 'new' }}">
                     @if (session('next_version'))
                         <a class="version-text" href="{{route('upgrade-version.index')}}">Update available</a>

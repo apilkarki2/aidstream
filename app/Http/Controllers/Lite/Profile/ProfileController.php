@@ -4,6 +4,7 @@ use App\Http\Controllers\Lite\LiteController;
 use App\Http\Requests\Request;
 use App\Lite\Services\Profile\ProfileService;
 use App\Lite\Services\Validation\ValidationService;
+use Illuminate\Http\RedirectResponse;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 /**
@@ -46,8 +47,7 @@ class ProfileController extends LiteController
      */
     public function index()
     {
-        $orgId = session('org_id');
-
+        $orgId        = session('org_id');
         $organisation = $this->profileService->getOrg($orgId);
 
         return view('lite.profile.index', compact('organisation'));
@@ -65,8 +65,7 @@ class ProfileController extends LiteController
         $version = session('version');
 
         $model = $this->profileService->getFormModel($userId, $orgId, $version);
-
-        $form = $this->formBuilder->create(
+        $form  = $this->formBuilder->create(
             'App\Lite\Forms\V202\Profile',
             [
                 'method' => 'PUT',
@@ -96,11 +95,10 @@ class ProfileController extends LiteController
         }
 
         if ($this->profileService->store($orgId, $userId, $rawData, $version)) {
-            return redirect()->route('lite.user.profile.edit')->withResponse(['type' => 'success', 'messages' => ['Profile saved successfully.']]);
+            return redirect()->route('lite.user.profile.index')->withResponse(['type' => 'success', 'messages' => [trans('lite/profile.profile_saved_successfully')]]);
         }
 
-        return redirect()->route('lite.user.profile.edit')->withResponse(['type' => 'danger', 'messages' => ['Error occurred during saving.']]);
-
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('lite/profile.failed_to_save_profile')]]);
     }
 
     /**
@@ -123,11 +121,11 @@ class ProfileController extends LiteController
      * Stores changed password
      *
      * @param Request $request
-     * @return $this
+     * @return RedirectResponse
      */
     public function storePassword(Request $request)
     {
-        $userId  = auth()->user()->id;
+        $user    = auth()->user();
         $rawData = $request->all();
         $version = session('version');
 
@@ -135,10 +133,10 @@ class ProfileController extends LiteController
             return redirect()->back()->with('errors', $this->validationService->errors())->withInput($rawData);
         }
 
-        if ($this->profileService->storePassword($userId, $rawData)) {
-            return redirect()->route('lite.user.profile.edit')->withResponse(['type' => 'success', 'messages' => ['Profile saved successfully.']]);
+        if ($this->profileService->storePassword($user, $rawData)) {
+            return redirect()->route('lite.user.profile.index')->withResponse(['type' => 'success', 'messages' => [trans('lite/profile.profile_saved_successfully')]]);
         }
 
-        return redirect()->route('lite.user.password.edit')->withResponse(['type' => 'danger', 'messages' => ['New Password mismatched.']]);
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('lite/profile.new_password_mismatched')]]);
     }
 }

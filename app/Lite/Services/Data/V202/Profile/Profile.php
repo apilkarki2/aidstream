@@ -55,7 +55,7 @@ class Profile implements MapperInterface
             'time_zone_id'    => $time_zone_id,
             'time_zone'       => $time_zone,
             'profile_picture' => getVal($this->rawData, ['fileName'], null),
-            'profile_url'     => getVal($this->rawData, ['fileUrl'], null),
+            'profile_url'     => !($fileUrl = getVal($this->rawData, ['fileUrl'], null)) ?: url($fileUrl),
         ];
 
         $profile['organisation'] = [
