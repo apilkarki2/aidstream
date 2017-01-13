@@ -14,11 +14,10 @@
                 <div>@lang('lite/title.profile')</div>
             </div>
             <div class="panel-body">
-                <img src="{{url(Auth::user()->profile_url) ? url(Auth::user()->profile_url) : url('images/avatar-full.png')}}" width="200" height="200"
-                     alt="{{Auth::user()->name}}">
+                <img src="{{ $loggedInUser->profile_url ? url($loggedInUser->profile_url) : url('images/avatar-full.png')}}" width="200" height="200" alt="{{$loggedInUser->name}}">
                 <div class="profile-info">
-                    <span class="profile-username">{{Auth::user()->username}}</span>
-                    <span class="profile-user-email"><a href="mailto:{{Auth::user()->email}}">{{Auth::user()->email}}</a></span>
+                    <span class="profile-username">{{$loggedInUser->username}}</span>
+                    <span class="profile-user-email"><a href="mailto:{{$loggedInUser->email}}">{{$loggedInUser->email}}</a></span>
                     <div><a href="{{route('lite.user.profile.edit')}}">
                             @lang('lite/profile.edit_profile')
                         </a> |
@@ -70,7 +69,7 @@
                             </li>
                         @endif
                     </ul>
-                    {{--<div class="disqus-wrapper"><span>Disqus Comments : </span>{{($organisation->disqus_comments == 1) ? 'Enabled' : 'Disabled'}}</div>--}}
+                    <div class="disqus-wrapper"><span>Disqus Comments : </span>{{($organisation->disqus_comments == 1) ? 'Enabled' : 'Disabled'}}</div>
                 </div>
             </div>
         </div>
