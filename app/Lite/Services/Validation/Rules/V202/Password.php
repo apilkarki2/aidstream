@@ -7,6 +7,8 @@
 class Password
 {
     /**
+     * Rules for password
+     *
      * @return array
      */
     public function rules()
@@ -19,6 +21,8 @@ class Password
     }
 
     /**
+     * Rules for messages
+     *
      * @return array
      */
     public function messages()

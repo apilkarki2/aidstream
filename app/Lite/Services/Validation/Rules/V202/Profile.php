@@ -9,12 +9,15 @@ use App\Core\V201\Traits\GetCodes;
 class Profile
 {
     use GetCodes;
+
     /**
      * @var array
      */
     protected $profileRules = [];
 
     /**
+     * Methods Template
+     *
      * @var array
      */
     protected $methods = [
@@ -32,6 +35,8 @@ class Profile
     protected $profileMessages = [];
 
     /**
+     * Rules maker
+     *
      * @return array
      */
     public function rules()
@@ -48,6 +53,8 @@ class Profile
     }
 
     /**
+     * Messages maker
+     *
      * @return array
      */
     public function messages()
@@ -64,6 +71,8 @@ class Profile
     }
 
     /**
+     * Returns all the methods
+     *
      * @return array
      */
     protected function methods()
@@ -72,6 +81,8 @@ class Profile
     }
 
     /**
+     * Rules for Username
+     *
      * @return $this
      */
     protected function rulesForUsername()
@@ -82,6 +93,7 @@ class Profile
     }
 
     /**
+     * Messages for Username
      * @return $this
      */
     protected function messagesForUsername()
@@ -92,6 +104,8 @@ class Profile
     }
 
     /**
+     * Rules for Email
+     *
      * @return $this
      */
     protected function rulesForEmail()
@@ -102,6 +116,8 @@ class Profile
     }
 
     /**
+     * Messages for Email
+     *
      * @return $this
      */
     protected function messagesForEmail()
@@ -112,6 +128,8 @@ class Profile
     }
 
     /**
+     * Rules for FirstName
+     *
      * @return $this
      */
     protected function rulesForFirstName()
@@ -122,6 +140,8 @@ class Profile
     }
 
     /**
+     * Messages for FirstName
+     *
      * @return $this
      */
     protected function messagesForFirstName()
@@ -132,6 +152,8 @@ class Profile
     }
 
     /**
+     * Rules for LastName
+     *
      * @return $this
      */
     protected function rulesForLastName()
@@ -142,6 +164,8 @@ class Profile
     }
 
     /**
+     * Messages for LastName
+     *
      * @return $this
      */
     protected function messagesForLastName()
@@ -152,6 +176,8 @@ class Profile
     }
 
     /**
+     * Rules for Permission
+     *
      * @return $this
      */
     protected function rulesForPermission()
@@ -162,6 +188,8 @@ class Profile
     }
 
     /**
+     * Messages for Permission
+     *
      * @return $this
      */
     protected function messagesForPermission()
@@ -172,6 +200,8 @@ class Profile
     }
 
     /**
+     * Rules for Secondary Email Address
+     *
      * @return $this
      */
     protected function rulesForSecondaryEmailAddress()
@@ -182,6 +212,8 @@ class Profile
     }
 
     /**
+     * Rules for Secondary Email Address
+     *
      * @return $this
      */
     protected function messagesForSecondaryEmailAddress()
