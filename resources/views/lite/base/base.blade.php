@@ -33,13 +33,13 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <div class="navbar-brand">
-                <div class="logo">
-                    <a href="{{url('/')}}" title="Aidstream Lite">
-                        <img src="{{url('images/header_logo.svg')}}" alt="Aidstream">
+                <div class="pull-left logo">
+                    <a href="{{url('/')}}" title="AidStream Lite">
+                        <img src="{{url('images/header_logo.svg')}}" alt="AidStream">
                     </a>
                 </div>
-                <a href="{{url('/')}}" title="Aidstream Lite">
-                    <span class="logo-name">Aidstream<span>Lite</span></span>
+                <a href="{{url('/')}}" title="AidStream Lite">
+                    <span class="logo-name">AidStream <span>Lite</span></span>
                 </a>
             </div>
         </div>

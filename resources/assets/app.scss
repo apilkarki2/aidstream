@@ -80,6 +80,7 @@ $url_22: url(../../images/ic-camera.svg);
 $url_23: url(../../images/ic-org-sprite.svg);
 $url_24: url(../../images/ic-warning.svg);
 $url_25: url(../../images/ic-verified.svg);
+$url_26: url(../../images/ic-date.svg);
 
 html, body {
   height: 100%;
@@ -937,9 +938,9 @@ label {
 
 .navbar-default {
   background: $color_white;
+  border: 0;
   border-bottom: 1px solid $color_gallery_approx;
   margin-bottom: 0;
-  border-top: 0;
   position: fixed;
   width: 100%;
   border-radius: 0;
@@ -2302,7 +2303,7 @@ $element-sidebar-wrapper-width: 283px;
     width: 100%;
   }
   .form-group {
-    > input, select {
+    > input, select, textarea {
       margin-bottom: 3px;
     }
   }
@@ -7646,6 +7647,17 @@ body > .skiptranslate iframe {
     width: 80%;
   }
 
+  .create-form > form .form-group {
+    display: inline-block;
+    float: none;
+    margin-left: -2px;
+    vertical-align: top;
+  }
+
+  .form__block .col-md-9 {
+    padding-right: 15px!important;
+  }
+
 }
 
 @media all and (min-width: 880px) {
@@ -7695,7 +7707,7 @@ body > .skiptranslate iframe {
 
   .btn-action-wrap {
     float: right;
-    margin-top: -14px!important;
+    margin-top: -14px !important;
   }
 
   .panel-action-btn {
@@ -8085,11 +8097,31 @@ body > .skiptranslate iframe {
 
 .lite .navbar-brand {
   padding: 0 0 0 15px;
+  height: auto;
   > a {
     background: none;
+    height: auto;
     padding: 0;
+    margin: 23px 0;
     text-indent: 1px;
     width: auto;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .logo {
+    border-right: 1px solid rgba(232, 232, 232, 0.4);
+    padding: 17px 16px 16px 0;
+    margin-right: 16px;
+  }
+}
+
+.logo-name {
+  color: $color_gravel_approx;
+  display: block;
+  font: 12px $font_1;
+  span {
+    text-transform: uppercase;
   }
 }
 
@@ -8106,11 +8138,21 @@ body > .skiptranslate iframe {
   }
 }
 
+.panel__body {
+  background: #fdffff;
+}
+
 .lite .create-form {
   padding: 0;
   > form {
     background: none;
     border: none;
+    .datepicker {
+      background: $url_26 no-repeat 97%;
+    }
+    .has-error {
+      font-size: 12px;
+    }
   }
 }
 
@@ -8119,6 +8161,9 @@ body > .skiptranslate iframe {
   display: inline-block;
   padding: 25px 36px 5px;
   width: 100%;
+  .col-md-9 {
+    padding: 0;
+  }
   h2 {
     font: 14px $font_1;
     margin-bottom: 16px;
@@ -8148,6 +8193,28 @@ body > .skiptranslate iframe {
   > label:after {
     display: none;
   }
+  > .form-group {
+    background: $color_white!important;
+    border: 1px solid transparent!important;
+    display: inline-block;
+    margin-bottom: 0;
+    padding-bottom: 0!important;
+    position: relative;
+    width: 100%;
+    &.fill-border {
+      border: 1px dashed $color_dodger_blue_approx !important;
+    }
+    .form-group {
+      margin-bottom: 0;
+    }
+    & + .form-group {
+      margin-top: 16px;
+    }
+  }
+  .remove_from_collection, .remove_from_collection:focus {
+    top: -10px;
+    @include size(22px);
+  }
 }
 
 .lite .add-to-collection {
@@ -8155,7 +8222,7 @@ body > .skiptranslate iframe {
   color: $color_gravel_approx;
   font-size: 12px;
   float: left;
-  margin: -10px 0 18px;
+  margin: 2px 0 20px;
   padding: 0 0 0 40px;
   position: relative;
   &:before {
@@ -8169,6 +8236,12 @@ body > .skiptranslate iframe {
     left: 16px;
     width: 18px;
   }
+  &:hover {
+    color: $color_dodger_blue_approx;
+    &:before {
+      border: 1px solid $color_dodger_blue_approx;
+    }
+  }
 }
 
 .lite .btn-form {
@@ -8180,4 +8253,59 @@ body > .skiptranslate iframe {
 
 .btn-go-back {
   margin: 16px 0;
+}
+
+.panel__nav nav {
+  background: $color_white;
+  border-radius: 4px;
+  box-shadow: 0 2px 40px 10px #e0ecf2;
+  padding: 12px 10px;
+  @include position(absolute, 66px 30px auto auto);
+  transition: all 0.5s ease-in-out;
+  width: 226px;
+  li {
+    line-height: 17px;
+    padding: 0 0 32px 20px;
+    position: relative;
+    &:before {
+      border-left: 2px dotted rgba($color_gravel_approx, 0.4);
+      content: "";
+      height: 32px;
+      @include position(absolute, 17px auto auto 20px);
+    }
+    &:last-child {
+      padding-bottom: 0;
+      &:before {
+        display: none;
+      }
+    }
+    a {
+      color: rgba($color_gravel_approx, 0.5);
+      padding-left: 14px;
+      position: relative;
+      &:before {
+        background: rgba($color_gravel_approx, 0.5);
+        border-radius: 50%;
+        content: "";
+        @include size(8px);
+        @include position(absolute, 6px auto auto -3px);
+      }
+    }
+  }
+  .active {
+    color: $color_gravel_approx;
+    &:before {
+      background: $color_dodger_blue_approx;
+    }
+  }
+}
+
+.panel__nav nav.stick {
+  position: fixed;
+  top: 90px;
+  z-index: 10000;
+}
+
+.nav--completed {
+  background: $url_3 no-repeat -637px -268px;
 }

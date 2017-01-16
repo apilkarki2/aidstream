@@ -944,9 +944,9 @@ label {
 
 .navbar-default {
   background: #fff;
+  border: 0;
   border-bottom: 1px solid #ededed;
   margin-bottom: 0;
-  border-top: 0;
   position: fixed;
   width: 100%;
   -webkit-border-radius: 0;
@@ -2039,7 +2039,7 @@ label {
     clear: both;
     display: inline-block;
     width: 100%; }
-  .create-form .form-group > input, .create-form .form-group select {
+  .create-form .form-group > input, .create-form .form-group select, .create-form .form-group textarea {
     margin-bottom: 3px; }
 
 .create-form > form > .collection_form > .form-group {
@@ -6330,7 +6330,14 @@ body > .skiptranslate iframe {
     vertical-align: top;
     width: 49%; }
   .welcome-screen .modal-body {
-    width: 80%; } }
+    width: 80%; }
+  .create-form > form .form-group {
+    display: inline-block;
+    float: none;
+    margin-left: -2px;
+    vertical-align: top; }
+  .form__block .col-md-9 {
+    padding-right: 15px !important; } }
 
 @media all and (min-width: 880px) {
   #activity-elements-checklist .collection_form > .form-group > .form-group {
@@ -6672,12 +6679,28 @@ body > .skiptranslate iframe {
     width: 80%; } }
 
 .lite .navbar-brand {
-  padding: 0 0 0 15px; }
+  padding: 0 0 0 15px;
+  height: auto; }
   .lite .navbar-brand > a {
     background: none;
+    height: auto;
     padding: 0;
+    margin: 23px 0;
     text-indent: 1px;
     width: auto; }
+    .lite .navbar-brand > a:hover {
+      text-decoration: none; }
+  .lite .navbar-brand .logo {
+    border-right: 1px solid rgba(232, 232, 232, 0.4);
+    padding: 17px 16px 16px 0;
+    margin-right: 16px; }
+
+.logo-name {
+  color: #484848;
+  display: block;
+  font: 12px Open-Sans-Bold; }
+  .logo-name span {
+    text-transform: uppercase; }
 
 .panel__heading {
   padding: 10px 36px; }
@@ -6689,17 +6712,26 @@ body > .skiptranslate iframe {
     font-size: 11px;
     margin-bottom: 0; }
 
+.panel__body {
+  background: #fdffff; }
+
 .lite .create-form {
   padding: 0; }
   .lite .create-form > form {
     background: none;
     border: none; }
+    .lite .create-form > form .datepicker {
+      background: url(../../images/ic-date.svg) no-repeat 97%; }
+    .lite .create-form > form .has-error {
+      font-size: 12px; }
 
 .form__block {
   border-top: 1px solid #d5eaf5;
   display: inline-block;
   padding: 25px 36px 5px;
   width: 100%; }
+  .form__block .col-md-9 {
+    padding: 0; }
   .form__block h2 {
     font: 14px Open-Sans-Bold;
     margin-bottom: 16px;
@@ -6722,12 +6754,32 @@ body > .skiptranslate iframe {
 .funding_organisations > label:after, .implementing_organisations > label:after {
   display: none; }
 
+.funding_organisations > .form-group, .implementing_organisations > .form-group {
+  background: #fff !important;
+  border: 1px solid transparent !important;
+  display: inline-block;
+  margin-bottom: 0;
+  padding-bottom: 0 !important;
+  position: relative;
+  width: 100%; }
+  .funding_organisations > .form-group.fill-border, .implementing_organisations > .form-group.fill-border {
+    border: 1px dashed #00A8FF !important; }
+  .funding_organisations > .form-group .form-group, .implementing_organisations > .form-group .form-group {
+    margin-bottom: 0; }
+  .funding_organisations > .form-group + .form-group, .implementing_organisations > .form-group + .form-group {
+    margin-top: 16px; }
+
+.funding_organisations .remove_from_collection, .funding_organisations .remove_from_collection:focus, .implementing_organisations .remove_from_collection, .implementing_organisations .remove_from_collection:focus {
+  top: -10px;
+  height: 22px;
+  width: 22px; }
+
 .lite .add-to-collection {
   background: none;
   color: #484848;
   font-size: 12px;
   float: left;
-  margin: -10px 0 18px;
+  margin: 2px 0 20px;
   padding: 0 0 0 40px;
   position: relative; }
   .lite .add-to-collection:before {
@@ -6741,6 +6793,10 @@ body > .skiptranslate iframe {
     position: absolute;
     left: 16px;
     width: 18px; }
+  .lite .add-to-collection:hover {
+    color: #00A8FF; }
+    .lite .add-to-collection:hover:before {
+      border: 1px solid #00A8FF; }
 
 .lite .btn-form {
   height: 53px;
@@ -6750,5 +6806,68 @@ body > .skiptranslate iframe {
 
 .btn-go-back {
   margin: 16px 0; }
+
+.panel__nav nav {
+  background: #fff;
+  -webkit-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 2px 40px 10px #e0ecf2;
+          box-shadow: 0 2px 40px 10px #e0ecf2;
+  padding: 12px 10px;
+  position: absolute;
+  top: 66px;
+  right: 30px;
+  bottom: auto;
+  left: auto;
+  -webkit-transition: all 0.5s ease-in-out;
+     -moz-transition: all 0.5s ease-in-out;
+       -o-transition: all 0.5s ease-in-out;
+          transition: all 0.5s ease-in-out;
+  width: 226px; }
+  .panel__nav nav li {
+    line-height: 17px;
+    padding: 0 0 32px 20px;
+    position: relative; }
+    .panel__nav nav li:before {
+      border-left: 2px dotted rgba(72, 72, 72, 0.4);
+      content: "";
+      height: 32px;
+      position: absolute;
+      top: 17px;
+      right: auto;
+      bottom: auto;
+      left: 20px; }
+    .panel__nav nav li:last-child {
+      padding-bottom: 0; }
+      .panel__nav nav li:last-child:before {
+        display: none; }
+    .panel__nav nav li a {
+      color: rgba(72, 72, 72, 0.5);
+      padding-left: 14px;
+      position: relative; }
+      .panel__nav nav li a:before {
+        background: rgba(72, 72, 72, 0.5);
+        -webkit-border-radius: 50%;
+                border-radius: 50%;
+        content: "";
+        height: 8px;
+        width: 8px;
+        position: absolute;
+        top: 6px;
+        right: auto;
+        bottom: auto;
+        left: -3px; }
+  .panel__nav nav .active {
+    color: #484848; }
+    .panel__nav nav .active:before {
+      background: #00A8FF; }
+
+.panel__nav nav.stick {
+  position: fixed;
+  top: 90px;
+  z-index: 10000; }
+
+.nav--completed {
+  background: url(../../images/ic-sprite.svg) no-repeat -637px -268px; }
 
 /*# sourceMappingURL=maps/app.css.map */

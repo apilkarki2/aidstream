@@ -18,7 +18,7 @@ return [
     'last_updated'                    => 'Last Updated',
     'status'                          => 'Status',
     'actions'                         => 'Actions',
-    'add_an_activity'                 => 'Add an Activity',
+    'add_an_activity'                 => 'Add an activity',
     'not_added'                       => 'You haven’t added any :type yet.',
     'add_an_activity_in_simple_steps' => 'Add an activity in these simple 4 steps',
     'basics'                          => 'Basics',

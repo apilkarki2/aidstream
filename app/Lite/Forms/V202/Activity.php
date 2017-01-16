@@ -41,9 +41,9 @@ class Activity extends LiteBaseForm
              )
              ->add('start_date', 'date', ['label' => trans('lite/elementForm.start_date'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6']])
              ->add('end_date', 'date', ['label' => trans('lite/elementForm.end_date'), 'wrapper' => ['class' => 'form-group col-sm-6']])
-             ->addText('general_description', trans('lite/elementForm.general_description'))
-             ->addText('objectives', trans('lite/elementForm.objectives'), false)
-             ->addText('target_groups', trans('lite/elementForm.target_groups'), false)
+             ->add('general_description', 'textarea', ['label' =>trans('lite/elementForm.general_description'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6']])
+             ->add('objectives', 'textarea', ['label' =>trans('lite/elementForm.objectives'), 'wrapper' => ['class' => 'form-group col-sm-6']])
+             ->add('target_groups', 'textarea', ['label' =>trans('lite/elementForm.target_groups'), 'wrapper' => ['class' => 'form-group col-sm-6']])
              ->addSelect(
                  'country',
                  $this->getCodeList('Country', 'Organization'),
