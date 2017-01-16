@@ -5,7 +5,9 @@ use App\Lite\Contracts\OrganisationRepositoryInterface;
 use App\Lite\Repositories\Settings\SettingsRepository;
 use App\Lite\Services\Data\Traits\TransformsData;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
+use Exception;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -119,7 +121,7 @@ class SettingsService
             $this->logger->info('Settings successfully saved.', $this->getContext());
 
             return $settings;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->database->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
@@ -134,11 +136,8 @@ class SettingsService
      * @param UploadedFile $file
      * @return mixed
      */
-    protected
-    function uploadFile(
-        $fileName,
-        UploadedFile $file
-    ) {
+    protected function uploadFile($fileName, UploadedFile $file)
+    {
         $image = Image::make(File::get($file))->fit(
             166,
             166,
@@ -159,5 +158,50 @@ class SettingsService
     public function find($orgId)
     {
         return $this->settingsRepository->find($orgId);
+    }
+
+    /**
+     * Upgrade AidStream to Core.
+     *
+     * @param $organizationId
+     * @return bool|null
+     */
+    public function upgradeSystemVersion($organizationId)
+    {
+        try {
+            $organization = $this->organisationRepository->find($organizationId);
+            $users        = $organization->users;
+
+            $this->database->beginTransaction();
+            $this->organisationRepository->upgradeSystem($organization);
+            $this->enableOnBoardingFor($users);
+            $this->database->commit();
+
+            $this->logger->info('System successfully upgraded.');
+
+            return true;
+        } catch (Exception $exception) {
+            $this->database->rollback();
+            $this->logger->error(sprintf('System could not be upgraded due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    /**
+     * Enable user on boarding for the users of the Organization on upgrade.
+     *
+     * @param Collection $users
+     * @return Collection
+     */
+    protected function enableOnBoardingFor(Collection $users)
+    {
+        return $users->each(function ($user) {
+            if ($user->userOnBoarding) {
+                $user->userOnBoarding()->update(['has_logged_in_once' => false, 'completed_tour' => false, 'settings_completed_steps' => null, 'display_hints' => true]);
+            } else {
+                $user->userOnBoarding()->create(['has_logged_in_once' => false]);
+            }
+        });
     }
 }

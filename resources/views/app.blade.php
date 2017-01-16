@@ -67,7 +67,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-expanded="false"><span class="avatar-img">
                                 @if(Auth::user()->profile_url)
-                                    <img src="{{Auth::user()->profile_url}}"
+                                    <img src="{{ url(Auth::user()->profile_url) }}"
                                          width="36" height="36"
                                          alt="{{Auth::user()->name}}">
                                 @else

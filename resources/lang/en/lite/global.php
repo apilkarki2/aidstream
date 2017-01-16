@@ -27,4 +27,5 @@ return [
     'results_and_reports'             => 'Results and Reports',
     'save'                            => 'Save',
     'change'                          => 'Change',
+    'cancel'                          => 'Cancel'
 ];

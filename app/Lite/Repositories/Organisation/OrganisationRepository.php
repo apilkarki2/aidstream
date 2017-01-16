@@ -2,6 +2,7 @@
 
 use App\Lite\Contracts\OrganisationRepositoryInterface;
 use App\Models\Organization\Organization;
+use App\Models\SystemVersion;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -15,13 +16,17 @@ class OrganisationRepository implements OrganisationRepositoryInterface
      */
     protected $organisation;
 
+    protected $systemVersion;
+
     /**
      * OrganisationRepository constructor.
-     * @param Organization $organisation
+     * @param Organization  $organisation
+     * @param SystemVersion $systemVersion
      */
-    public function __construct(Organization $organisation)
+    public function __construct(Organization $organisation, SystemVersion $systemVersion)
     {
-        $this->organisation = $organisation;
+        $this->organisation  = $organisation;
+        $this->systemVersion = $systemVersion;
     }
 
     /**
@@ -61,5 +66,22 @@ class OrganisationRepository implements OrganisationRepositoryInterface
     {
         return $this->organisation->updateorCreate(['id' => $id], $data);
     }
-}
 
+    /**
+     * {@inheritdoc}
+     */
+    public function upgradeSystem(Organization $organization)
+    {
+        return $organization->update(['system_version_id' => $this->getCoreSystemId()]);
+    }
+
+    /**
+     * Get the Core System's version id.
+     *
+     * @return int
+     */
+    protected function getCoreSystemId()
+    {
+        return $this->systemVersion->where('system_version', '=', 'Core')->first()->id;
+    }
+}

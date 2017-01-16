@@ -39,4 +39,12 @@ interface OrganisationRepositoryInterface
      * @return mixed
      */
     public function update($id, array $data);
+
+    /**
+     * Upgrade AidStream to Core.
+     *
+     * @param Organization $organization
+     * @return bool|int
+     */
+    public function upgradeSystem(Organization $organization);
 }

@@ -37,6 +37,7 @@ class SettingsController extends LiteController
     public function __construct(FormBuilder $formBuilder, SettingsService $settingsService, ValidationService $validationService)
     {
         $this->middleware('auth');
+        $this->middleware('auth.admin', ['only' => ['upgradeVersion']]);
         $this->formBuilder       = $formBuilder;
         $this->settingsService   = $settingsService;
         $this->validationService = $validationService;
@@ -109,6 +110,23 @@ class SettingsController extends LiteController
         }
 
         return redirect()->route('lite.settings.edit')->withResponse(['type' => 'danger', 'messages' => ['Error occurred during saving.']]);
+    }
+
+    /**
+     * Upgrade AidStream to Core.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function upgradeVersion(Request $request)
+    {
+        $organizationId = session()->get('org_id');
+
+        if (!$this->settingsService->upgradeSystemVersion($organizationId)) {
+            return redirect()->back()->withResponse(['type' => 'danger', 'messages' => ['Upgrade could not be completed.']]);
+        }
+
+        return redirect()->route('activity.index')->withResponse(['type' => 'success', 'messages' => ['Congratulations! You have upgraded AidStream!']]);
     }
 
 }
