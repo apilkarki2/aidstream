@@ -49,13 +49,11 @@ class Profile implements MapperInterface
         $time_zone    = getVal($timeZone, ['1'], null);
 
         $profile['profile'] = [
-            'first_name'      => getVal($this->rawData, ['firstName'], null),
-            'last_name'       => getVal($this->rawData, ['lastName'], null),
-            'email'           => getVal($this->rawData, ['email'], null),
-            'time_zone_id'    => $time_zone_id,
-            'time_zone'       => $time_zone,
-            'profile_picture' => getVal($this->rawData, ['fileName'], null),
-            'profile_url'     => !($fileUrl = getVal($this->rawData, ['fileUrl'], null)) ?: url($fileUrl),
+            'first_name'   => getVal($this->rawData, ['firstName'], null),
+            'last_name'    => getVal($this->rawData, ['lastName'], null),
+            'email'        => getVal($this->rawData, ['email'], null),
+            'time_zone_id' => $time_zone_id,
+            'time_zone'    => $time_zone
         ];
 
         $profile['organisation'] = [
@@ -67,6 +65,11 @@ class Profile implements MapperInterface
                 ]
             ]
         ];
+
+        if ($filename = getVal($this->rawData, ['fileName'], null)) {
+            $profile['profile']['profile_picture'] = $filename;
+            $profile['profile']['profile_url']     = !($fileUrl = getVal($this->rawData, ['fileUrl'], null)) ?: $fileUrl;
+        }
 
         return $profile;
     }

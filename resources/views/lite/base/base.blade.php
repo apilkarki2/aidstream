@@ -64,7 +64,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-expanded="false"><span class="avatar-img">
                                 @if($loggedInUser->profile_url)
-                                    <img src="{{$loggedInUser->profile_url}}"
+                                    <img src="{{url($loggedInUser->profile_url)}}"
                                          width="36" height="36"
                                          alt="{{$loggedInUser->name}}">
                                 @else
