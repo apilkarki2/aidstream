@@ -7,7 +7,7 @@
                 <ul class="nav">
                     <li class="activities"><a href="{{ route('lite.activity.index') }}">Activities</a></li>
                     {{--<li class="organization" data-step="3"><a href="{{ route('organization.show', session('org_id')) }}">Organisation</a></li>--}}
-                    <li class="published-files"><a href="#">Published Files</a></li>
+                    <li class="published-files"><a href="{{ route('lite.published-files.index') }}">Published Files</a></li>
                     <li class="users"><a href="{{route('lite.users.index')}}">Users</a></li>
                     {{--<li class="documents" data-step="5"><a href="{{ route('documents') }}">Documents</a></li>--}}
                     {{--<li class="downloads" data-step="6"><a href="{{route('download.index')}}">Downloads</a></li>--}}

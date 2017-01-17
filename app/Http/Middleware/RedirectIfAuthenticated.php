@@ -14,6 +14,11 @@ class RedirectIfAuthenticated
      */
     protected $auth;
 
+    protected $redirectPaths = [
+        1 => '/activity',
+        2 => '/lite/activity'
+    ];
+
     /**
      * Create a new filter instance.
      *
@@ -35,10 +40,8 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next)
     {
         if ($this->auth->check()) {
-            if($this->auth->user()->organization->system_version_id == 2){
-                $redirectUrl  = '/lite/activity';
-            }else{
-                $redirectUrl = (session('first_login')) ? '/welcome' : '/activity';
+            if (($redirectUrl = $this->redirectPaths[$this->auth->user()->organization->system_version_id]) == '/activity') {
+                $redirectUrl = (session('first_login')) ? '/welcome' : $redirectUrl;
             }
 
             return new RedirectResponse(url($redirectUrl));

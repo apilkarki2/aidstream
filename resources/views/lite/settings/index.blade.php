@@ -48,8 +48,8 @@
             </div>
         </div>
     </div>
-
 @stop
+
 @section('script')
     <script>
         var agencies = {!! $agencies !!};
@@ -57,6 +57,7 @@
         var country = "{!! $country !!}";
     </script>
     <script src="{{ asset('lite/js/settings.js') }}"></script>
+
     <script>
         $(document).ready(function () {
             $('#agree-upgrade').change(function () {

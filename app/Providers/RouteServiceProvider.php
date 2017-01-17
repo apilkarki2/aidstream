@@ -58,6 +58,7 @@ class RouteServiceProvider extends ServiceProvider
                 require app_path('Http/routes/Lite/users.php');
                 require app_path('Http/routes/Lite/workflow.php');
                 require app_path('Http/routes/Lite/profile.php');
+                require app_path('Http/routes/Lite/publishedFiles.php');
             }
         );
     }

@@ -156,7 +156,7 @@ class ExchangeRateService
         if (!in_array(date('Y-m-d'), array_flatten($allDates))) {
             $exchangeRate = $this->clean(json_decode($this->curl(date('Y-m-d')), true), date('Y-m-d'));
 
-            $this->storeExchangeRates($exchangeRate);;
+            $this->storeExchangeRates(array($exchangeRate));
         }
 
         return false;

@@ -34,5 +34,5 @@ return [
     'annual_report_title'                   => 'Annual Report Title',
     'annual_report_url'                     => 'Annual Report URL',
     'results_outcomes_documents'            => 'Results/Outcomes Documents',
-    'annual_reports'                        => 'Annual Reports'
+    'annual_reports'                        => 'Annual Reports',
 ];

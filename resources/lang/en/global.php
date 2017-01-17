@@ -265,5 +265,7 @@ return [
     'false'                                        => 'False',
     'cancel_csv_import'                            => 'Are you sure you want to cancel :type Import?',
     'result'                                       => 'Result',
+    'yes'                                          => 'Yes',
+    'no'                                           => 'No'
 ];
 

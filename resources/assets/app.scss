@@ -1619,7 +1619,7 @@ $full-sidebar-wrapper-width: 210px;
   }
 }
 
-.delete {
+.delete, .delete-lite-published-files {
   @extend %extend_3;
   height: 23px;
   background-position: -229px -332px;

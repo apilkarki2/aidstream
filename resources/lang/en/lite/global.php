@@ -27,5 +27,16 @@ return [
     'results_and_reports'             => 'Results and Reports',
     'save'                            => 'Save',
     'change'                          => 'Change',
-    'cancel'                          => 'Cancel'
+    'cancel'                          => 'Cancel',
+    'filename'                        => 'Filename',
+    'published_date'                  => 'Published Date',
+    'registered_in_iati_registry'     => 'Registered in IATI Registry',
+    'preview_as'                      => 'Preview As',
+    'action'                          => 'Action',
+    'csv'                             => 'CSV',
+    'confirm_delete'                  => 'Are you sure you want to delete?',
+    'deleted_successfully'            => ':type successfully deleted.',
+    'delete_unsuccessful'             => ':type could not be deleted.',
+    'bulk_publish_successful'         => 'File(s) successfully published to the IATI Registry.',
+    'bulk_publish_unsuccessful'       => 'File(s) could not be published to the IATI Registry.',
 ];
