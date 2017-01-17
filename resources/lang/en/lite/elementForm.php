@@ -21,5 +21,12 @@ return [
     'add_another_funding_organisation'      => 'Add another Funding Organisation',
     'add_another_implementing_organisation' => 'Add another Implementing Organisation',
     'select_text'                           => 'Select one of the following options',
-    'add_this_activity'                     => 'Add this activity'
+    'add_this_activity'                     => 'Add this activity',
+    'period_start'                          => 'Period Start',
+    'period_end'                            => 'Period End',
+    'amount'                                => 'Amount',
+    'currency'                              => 'Currency',
+    'add_this_budget'                       => 'Add this budget',
+    'add_another_budget'                    => 'Add another budget',
+
 ];

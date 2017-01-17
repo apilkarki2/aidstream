@@ -45,6 +45,16 @@ class Activity implements MapperInterface
     const GENERAL_DESCRIPTION = 1;
 
     /**
+     * Code for budget type
+     */
+    const BUDGET_TYPE = 1;
+
+    /**
+     * Code for budget status
+     */
+    const BUDGET_STATUS = 2;
+
+    /**
      * Raw data holder for Activity entity.
      *
      * @var array
@@ -89,7 +99,7 @@ class Activity implements MapperInterface
         'end_date'                   => 'activity_date',
         'country'                    => 'recipient_country',
         'funding_organisations'      => 'participating_organization',
-        'implementing_organisations' => 'participating_organization'
+        'implementing_organisations' => 'participating_organization',
     ];
 
     /**
@@ -141,6 +151,7 @@ class Activity implements MapperInterface
 
     /**
      * Reset the index value to 0.
+     *
      * @param $key
      */
     protected function resetIndex($key)
@@ -275,6 +286,27 @@ class Activity implements MapperInterface
     }
 
     /**
+     * Maps activity budget to the database format
+     * @param $key
+     * @param $value
+     * @param $template
+     */
+    protected function budget($key, $value, $template)
+    {
+        foreach ($value as $index => $field) {
+            $this->mappedData['budget'][$this->index]                            = $template;
+            $this->mappedData['budget'][$this->index]['budget_type']             = self::BUDGET_TYPE;
+            $this->mappedData['budget'][$this->index]['status']                  = self::BUDGET_STATUS;
+            $this->mappedData['budget'][$this->index]['period_start'][0]['date'] = $value[$this->index]['startDate'];
+            $this->mappedData['budget'][$this->index]['period_end'][0]['date']   = $value[$this->index]['endDate'];
+            $this->mappedData['budget'][$this->index]['value'][0]['amount']      = $value[$this->index]['amount'];
+            $this->mappedData['budget'][$this->index]['value'][0]['currency']    = $value[$this->index]['currency'];
+            $this->mappedData['budget'][$this->index]['value'][0]['value_date']  = Date('Y-m-d');
+            $this->index ++;
+        }
+    }
+
+    /**
      * Reverse map description for form.
      *
      * @return $this
@@ -322,7 +354,7 @@ class Activity implements MapperInterface
 
     /**
      * Reverse map participating organisations for form.
-     * 
+     *
      * @return $this
      */
     protected function reverseMapParticipatingOrganisation()
@@ -342,7 +374,33 @@ class Activity implements MapperInterface
     }
 
     /**
+     * Maps activity budget to the database format
+     *
+     * @param $key
+     * @param $value
+     * @param $template
+     * @return $this
+     */
+    protected function reverseMapBudget($key, $value, $template)
+    {
+        foreach ($value as $index => $field) {
+            $this->mappedData['budget'][$this->index]                            = $template;
+            $this->mappedData['budget'][$this->index]['budget_type']             = self::BUDGET_TYPE;
+            $this->mappedData['budget'][$this->index]['status']                  = self::BUDGET_STATUS;
+            $this->mappedData['budget'][$this->index]['period_start'][0]['date'] = $value[$this->index]['startDate'];
+            $this->mappedData['budget'][$this->index]['period_end'][0]['date']   = $value[$this->index]['endDate'];
+            $this->mappedData['budget'][$this->index]['value'][0]['amount']      = $value[$this->index]['amount'];
+            $this->mappedData['budget'][$this->index]['value'][0]['currency']    = $value[$this->index]['currency'];
+            $this->mappedData['budget'][$this->index]['value'][0]['value_date']  = Date('Y-m-d');
+            $this->index ++;
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns the organisation role code.
+     *
      * If reversed is true, then key is returned.
      *
      * @param      $key
