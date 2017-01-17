@@ -51,5 +51,6 @@ return [
     'could_not_publish_to_registry'                          => 'Could not publish to registry.',
     'publisher_not_found'                                    => 'Could not publish to registry. (Publisher not found. <a href="/settings">Please check you publisher Id.</a>)',
     'failed_to_submit_query'                                 => 'Failed to submit your query. Please try again.',
-    'not_authorized'                                         => 'Not Authorized'
+    'not_authorized'                                         => 'Not Authorized',
+    'error_budget_create'                                    => 'Error occurred during creation of budget'
 ];
