@@ -4,6 +4,7 @@ use App\Http\Requests\Request;
 use App\Lite\Services\FormCreator\Activity;
 use App\Http\Controllers\Lite\LiteController;
 use App\Lite\Services\Activity\ActivityService;
+use App\Lite\Services\FormCreator\Budget;
 use App\Lite\Services\Validation\ValidationService;
 use Illuminate\Http\RedirectResponse;
 
@@ -17,6 +18,7 @@ class ActivityController extends LiteController
      * @var ActivityService
      */
     protected $activityService;
+
     /**
      * @var Activity
      */
@@ -31,19 +33,25 @@ class ActivityController extends LiteController
      * Entity type for Activity.
      */
     const ENTITY_TYPE = 'Activity';
+    /**
+     * @var Budget
+     */
+    protected $budgetForm;
 
     /**
      * ActivityController constructor.
      * @param ActivityService   $activityService
+     * @param Budget            $budgetForm
      * @param Activity          $activityForm
      * @param ValidationService $validationService
      */
-    public function __construct(ActivityService $activityService, Activity $activityForm, ValidationService $validationService)
+    public function __construct(ActivityService $activityService, Budget $budgetForm, Activity $activityForm, ValidationService $validationService)
     {
         $this->middleware('auth');
         $this->activityService = $activityService;
         $this->activityForm    = $activityForm;
         $this->validation      = $validationService;
+        $this->budgetForm      = $budgetForm;
     }
 
     /**
@@ -182,5 +190,73 @@ class ActivityController extends LiteController
 //        $activity = $this->activityService->find($activityId);
 //        return view('lite.activity.index', compact('activity'));
     }
-}
 
+    /**
+     * Creates budget of an activity.
+     *
+     * @param $activityId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function createBudget($activityId)
+    {
+        $form = $this->budgetForm->form(route('lite.activity.budget.store', $activityId));
+
+        return view('lite.activity.budget.edit', compact('form'));
+    }
+
+    /**
+     * Edits budget of an activity.
+     *
+     * @param $activityId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function editBudget($activityId)
+    {
+        $version = session('version');
+
+        $model = $this->activityService->getBudgetModel($activityId, $version);
+
+        $form = $this->budgetForm->form(route('lite.activity.budget.store', $activityId), $model);
+
+        return view('lite.activity.budget.edit', compact('form'));
+    }
+
+    /**
+     * Stores Budget of an activity.
+     *
+     * @param         $activityId
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function storeBudget($activityId, Request $request)
+    {
+        $rawData = $request->except('_token');
+        $version = session('version');
+
+        if (!$this->validation->passes($rawData, 'Budget', $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if ($this->activityService->addBudget($activityId, $rawData, $version)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.budget_success_created')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_budget_create')]]);
+    }
+
+    /**
+     * Deletes a single Budget.
+     * @param         $activityId
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteBudget($activityId, Request $request)
+    {
+        if ($this->activityService->deleteBudget($activityId, $request)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.budget_success_deleted')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_budget_create')]]);
+
+    }
+}

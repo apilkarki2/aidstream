@@ -144,4 +144,79 @@ class ActivityService
             return null;
         }
     }
+
+    /**
+     * Returns Budget Model in view format
+     * @param $activityId
+     * @param $version
+     * @return array
+     * @internal param $budget
+     */
+    public function getBudgetModel($activityId, $version)
+    {
+        $model = json_decode($this->activityRepository->find($activityId), true);
+
+        $filteredModel = $this->transformReverse($this->getMapping($model, 'Budget', $version));
+
+        return $filteredModel;
+    }
+
+    /**
+     * Adds new budgets to the current activity.
+     *
+     * @param $activityId
+     * @param $rawData
+     * @param $version
+     * @return bool|null
+     */
+    public function addBudget($activityId, $rawData, $version)
+    {
+        try {
+            $mappedBudget = $this->transform($this->getMapping($rawData, 'Budget', $version));
+            $activity     = $this->activityRepository->find($activityId)->toArray();
+
+            foreach (getVal($mappedBudget, ['budget'], []) as $index => $value) {
+                $activity['budget'][] = $value;
+            }
+
+            $this->activityRepository->update($activityId, $activity);
+
+            $this->logger->info('Budget successfully added.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    /**
+     * Deletes a budget from current activity.
+     *
+     * @param $activityId
+     * @param $request
+     * @return bool|null
+     */
+    public function deleteBudget($activityId, $request)
+    {
+        try {
+            $activity = $this->find($activityId);
+            $budget   = $activity->budget;
+
+            unset($budget[$request->get('index')]);
+
+            $activity->budget = array_values($budget);
+
+            $activity->save();
+
+            $this->logger->info('Budget transaction successfully deleted.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
 }

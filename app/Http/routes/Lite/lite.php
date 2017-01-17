@@ -63,6 +63,38 @@ $router->group(
                         'uses' => 'ActivityController@update'
                     ]
                 );
+
+                $router->get(
+                    '/lite/activity/{activity}/budget/create',
+                    [
+                        'as'   => 'lite.activity.budget.create',
+                        'uses' => 'ActivityController@createBudget'
+                    ]
+                );
+
+                $router->get(
+                    '/lite/activity/{activity}/budget/edit',
+                    [
+                        'as'   => 'lite.activity.budget.edit',
+                        'uses' => 'ActivityController@editBudget'
+                    ]
+                );
+
+                $router->post(
+                    '/lite/activity/{activity}/budget/store',
+                    [
+                        'as'   => 'lite.activity.budget.store',
+                        'uses' => 'ActivityController@storeBudget'
+                    ]
+                );
+
+                $router->post(
+                    '/lite/activity/{activity}/budget/delete',
+                    [
+                        'as'   => 'lite.activity.budget.delete',
+                        'uses' => 'ActivityController@deleteBudget'
+                    ]
+                );
             }
         );
     }
