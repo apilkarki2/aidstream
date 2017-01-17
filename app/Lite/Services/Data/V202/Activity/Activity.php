@@ -120,9 +120,13 @@ class Activity implements MapperInterface
     public function map()
     {
         foreach ($this->rawData as $key => $value) {
-            if (!empty($value)) {
-                $this->resetIndex($this->mappedFields[$key]);
-                $this->{$this->mappedFields[$key]}($key, $value, $this->getTemplateOf($key));
+            if (!empty($value) && array_key_exists($key, $this->mappedFields)) {
+                $methodName = $this->mappedFields[$key];
+
+                if (method_exists($this, $methodName)) {
+                    $this->resetIndex($this->mappedFields[$key]);
+                    $this->{$this->mappedFields[$key]}($key, $value, $this->getTemplateOf($key));
+                }
             }
         }
 
@@ -201,10 +205,14 @@ class Activity implements MapperInterface
      */
     protected function description($key, $value, $template)
     {
-        $this->mappedData['description'][$this->index]              = $template['type'];
-        $this->mappedData['description'][$this->index]['type']      = $this->getDescriptionType($key);
-        $this->mappedData['description'][$this->index]['narrative'] = [['narrative' => $value, 'language' => '']];
-        $this->index ++;
+        $descriptionType = $this->getDescriptionType($key);
+
+        if ($descriptionType) {
+            $this->mappedData['description'][$this->index]              = $template['type'];
+            $this->mappedData['description'][$this->index]['type']      = $descriptionType;
+            $this->mappedData['description'][$this->index]['narrative'] = [['narrative' => $value, 'language' => '']];
+            $this->index ++;
+        }
     }
 
     /**
@@ -242,10 +250,14 @@ class Activity implements MapperInterface
      */
     protected function activity_date($key, $value, $template)
     {
-        $this->mappedData['activity_date'][$this->index]         = $template;
-        $this->mappedData['activity_date'][$this->index]['date'] = $value;
-        $this->mappedData['activity_date'][$this->index]['type'] = $this->getActivityDateType($key);
-        $this->index ++;
+        $activityDateType = $this->getActivityDateType($key);
+
+        if ($activityDateType) {
+            $this->mappedData['activity_date'][$this->index]         = $template;
+            $this->mappedData['activity_date'][$this->index]['type'] = $activityDateType;
+            $this->mappedData['activity_date'][$this->index]['date'] = $value;
+            $this->index ++;
+        }
     }
 
     /**
@@ -272,15 +284,18 @@ class Activity implements MapperInterface
     {
         $organizationRole = $this->getOrganizationRole($key);
         foreach ($value as $index => $field) {
-            $organizationType = getVal($field, ['organisation_type'], '');
-            $organizationName = getVal($field, ['organisation_name'], '');
 
-            if ($organizationName != "" && $organizationType != "") {
-                $this->mappedData['participating_organization'][$this->index]                              = $template;
-                $this->mappedData['participating_organization'][$this->index]['organization_role']         = $organizationRole;
-                $this->mappedData['participating_organization'][$this->index]['organization_type']         = $organizationType;
-                $this->mappedData['participating_organization'][$this->index]['narrative'][0]['narrative'] = $organizationName;
-                $this->index ++;
+            if ($organizationRole) {
+                $organizationType = getVal($field, ['organisation_type'], '');
+                $organizationName = getVal($field, ['organisation_name'], '');
+
+                if ($organizationName != "" || $organizationType != "") {
+                    $this->mappedData['participating_organization'][$this->index]                              = $template;
+                    $this->mappedData['participating_organization'][$this->index]['organization_role']         = $organizationRole;
+                    $this->mappedData['participating_organization'][$this->index]['organization_type']         = $organizationType;
+                    $this->mappedData['participating_organization'][$this->index]['narrative'][0]['narrative'] = $organizationName;
+                    $this->index ++;
+                }
             }
         }
     }
@@ -314,9 +329,13 @@ class Activity implements MapperInterface
     protected function reverseMapDescription()
     {
         foreach (getVal($this->rawData, ['description'], []) as $descriptions) {
-            $descriptionType                    = $this->getDescriptionType(getVal($descriptions, ['type']), true);
-            $description                        = getVal($descriptions, ['narrative', 0, 'narrative']);
-            $this->mappedData[$descriptionType] = $description;
+            $descriptionType = $this->getDescriptionType(getVal($descriptions, ['type']), true);
+
+            if ($descriptionType) {
+                $description                        = getVal($descriptions, ['narrative', 0, 'narrative']);
+                $this->mappedData[$descriptionType] = $description;
+            }
+
         }
 
         return $this;
@@ -330,9 +349,13 @@ class Activity implements MapperInterface
     protected function reverseMapActivityDate()
     {
         foreach (getVal($this->rawData, ['activity_date'], []) as $activityDate) {
-            $activityDateType                    = $this->getActivityDateType(getVal($activityDate, ['type']), true);
-            $date                                = getVal($activityDate, ['date']);
-            $this->mappedData[$activityDateType] = $date;
+            $activityDateType = $this->getActivityDateType(getVal($activityDate, ['type']), true);
+
+            if ($activityDateType) {
+                $date                                = getVal($activityDate, ['date']);
+                $this->mappedData[$activityDateType] = $date;
+            }
+
         }
 
         return $this;
@@ -359,15 +382,19 @@ class Activity implements MapperInterface
      */
     protected function reverseMapParticipatingOrganisation()
     {
-        foreach (getVal($this->rawData, ['participating_organization']) as $index => $organization) {
+        foreach (getVal($this->rawData, ['participating_organization'], []) as $index => $organization) {
             $organizationRole = $this->getOrganizationRole(getVal($organization, ['organization_role']), true);
-            if (!array_key_exists($organizationRole, $this->mappedData)) {
-                $index = 0;
+
+            if ($organizationRole) {
+                if (!array_key_exists($organizationRole, $this->mappedData)) {
+                    $index = 0;
+                }
+
+                $organizationType                                                 = getVal($organization, ['organization_type']);
+                $organizationName                                                 = getVal($organization, ['narrative', 0, 'narrative']);
+                $this->mappedData[$organizationRole][$index]['organisation_name'] = $organizationName;
+                $this->mappedData[$organizationRole][$index]['organisation_type'] = $organizationType;
             }
-            $organizationType                                                 = getVal($organization, ['organization_type']);
-            $organizationName                                                 = getVal($organization, ['narrative', 0, 'narrative']);
-            $this->mappedData[$organizationRole][$index]['organisation_name'] = $organizationName;
-            $this->mappedData[$organizationRole][$index]['organisation_type'] = $organizationType;
         }
 
         return $this;
@@ -413,11 +440,12 @@ class Activity implements MapperInterface
             'funding_organisations'      => self::FUNDING_ORGANIZATION_ROLE,
             'implementing_organisations' => self::IMPLEMENTING_ORGANIZATION_ROLE
         ];
+
         if ($reversed) {
-            return getVal(array_flip($organizationRole), [$key]);
+            return (array_key_exists($key, array_flip($organizationRole))) ? getVal(array_flip($organizationRole), [$key]) : false;
         }
 
-        return $organizationRole[$key];
+        return (array_key_exists($key, $organizationRole)) ? $organizationRole[$key] : false;
     }
 
     /**
@@ -436,10 +464,10 @@ class Activity implements MapperInterface
         ];
 
         if ($reversed) {
-            return getVal(array_flip($activityDates), [$key]);
+            return array_key_exists($key, array_flip($activityDates)) ? getVal(array_flip($activityDates), [$key]) : false;
         }
 
-        return $activityDates[$key];
+        return array_key_exists($key, $activityDates) ? $activityDates[$key] : false;
     }
 
     /**
@@ -459,10 +487,10 @@ class Activity implements MapperInterface
         ];
 
         if ($reversed) {
-            return getVal(array_flip($description), [$key]);
+            return array_key_exists($key, array_flip($description)) ? getVal(array_flip($description), [$key]) : false;
         }
 
-        return $description[$key];
+        return array_key_exists($key, $description) ? $description[$key] : false;
     }
 
     /**

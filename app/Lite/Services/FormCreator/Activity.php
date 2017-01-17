@@ -27,10 +27,11 @@ class Activity
      * Builds form for the activity.
      *
      * @param      $route
+     * @param null $buttonLabel
      * @param null $model
      * @return Form
      */
-    public function form($route, $model = null)
+    public function form($route, $buttonLabel = null, $model = null)
     {
         $formPath = $this->getFormPath('Activity');
 
@@ -41,6 +42,6 @@ class Activity
                 'model'  => $model,
                 'url'    => $route
             ]
-        )->add('Save', 'submit', ['label' => trans('lite/elementForm.add_this_activity'), 'attr' => ['class' => 'btn btn-submit btn-form']]);
+        )->add('Save', 'submit', ['label' => $buttonLabel, 'attr' => ['class' => 'btn btn-submit btn-form']]);
     }
 }

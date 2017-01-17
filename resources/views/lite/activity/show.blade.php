@@ -216,7 +216,48 @@
                     @endforeach
                 </div>
             @endif
-{{--TODO REMOVE THIS--}}
+            @if(array_key_exists('outcomes_document',$documentLinks))
+                <div class="activity-element-wrapper">
+                    <div class="activity-element-list">
+                        <div class="activity-element-label">
+                            @lang('lite/elementForm.results_outcomes_documents')
+                        </div>
+                        <div class="activity-element-info">
+                            @foreach((array)getVal($documentLinks,['outcomes_document'],[]) as $index => $value)
+                                <li>
+                                    @if(($url = getVal($value,['document_url'])) != "")
+                                        <a href="{{$url}}">{{getVal($value,['document_title'])}}</a>
+                                    @else
+                                        {{getVal($value,['document_title'])}}
+                                    @endif
+                                </li>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if(array_key_exists('annual_report',$documentLinks))
+                <div class="activity-element-wrapper">
+                    <div class="activity-element-list">
+                        <div class="activity-element-label">
+                            @lang('lite/elementForm.annual_reports')
+                        </div>
+                        <div class="activity-element-info">
+                            @foreach((array)getVal($documentLinks,['annual_report'],[]) as $index => $value)
+                                <li>
+                                    @if(($url = getVal($value,['document_url'])) != "")
+                                        <a href="{{$url}}">{{getVal($value,['document_title'])}}</a>
+                                    @else
+                                        {{getVal($value,['document_title'])}}
+                                    @endif
+                                </li>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+            {{--TODO REMOVE THIS--}}
             {{--@if ($activity->resultDocuments())--}}
             {{--<div class="activity-element-wrapper">--}}
             {{--<div class="title">--}}
@@ -525,20 +566,18 @@
         </div>
     </div>
 @endsection
-
 @section('script')
-    {{-- TODO REMOVE THIS--}}
-    {{--<script>
-        var currentTransactionCount;
+    {{--<script>--}}
+    {{--var currentTransactionCount;--}}
 
-        @if(old('transaction'))
-            currentTransactionCount = "{{ count(old('transaction')) - 1 }}";
-        @elseif (isset($transactions))
-            currentTransactionCount = "{{ count($transactions) - 1 }}";
-        @else
-            currentTransactionCount = 0;
-        @endif
-    </script>
-    <script src="{{ asset('/js/tz/transaction.js') }}"></script>
-    <script src="{{ asset('/js/tz/transactionDelete.js') }}"></script>--}}
+    {{--@if(old('transaction'))--}}
+    {{--currentTransactionCount = "{{ count(old('transaction')) - 1 }}";--}}
+    {{--@elseif (isset($transactions))--}}
+    {{--currentTransactionCount = "{{ count($transactions) - 1 }}";--}}
+    {{--@else--}}
+    {{--currentTransactionCount = 0;--}}
+    {{--@endif--}}
+    {{--</script>--}}
+    {{--<script src="{{ asset('/js/tz/transaction.js') }}"></script>--}}
+    {{--<script src="{{ asset('/js/tz/transactionDelete.js') }}"></script>--}}
 @endsection

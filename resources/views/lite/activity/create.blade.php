@@ -30,6 +30,7 @@
                                         <li class="nav--completed"><a href="#basics">@lang('lite/global.basics')</a></li>
                                         <li><a href="#location">@lang('lite/global.location')</a></li>
                                         <li><a href="#involved-organisations">@lang('lite/global.involved_organisations')</a></li>
+                                        <li><a href="#results-and-reports">@lang('lite/global.results_and_reports')</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -47,6 +48,14 @@
                                 <h2>@lang('lite/global.involved_organisations')</h2>
                                 <div class="row">
                                     {!! form_until($form,"add_more_implementing") !!}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form__block" id="results-and-reports">
+                            <div class="col-md-9">
+                                <h2>@lang('lite/global.results_and_reports')</h2>
+                                <div class="row">
+                                    {!! form_until($form,"annual_report") !!}
                                 </div>
                             </div>
                         </div>

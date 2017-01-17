@@ -1,5 +1,6 @@
 <?php namespace App\Lite\Services\Activity;
 
+use App\Lite\Contracts\DocumentLinkRepositoryInterface;
 use App\Lite\Services\Data\V202\Activity\Activity;
 use App\Lite\Services\Data\Traits\TransformsData;
 use App\Lite\Services\ExchangeRate\ExchangeRateService;
@@ -32,35 +33,45 @@ class ActivityService
      * @var ExchangeRateService
      */
     protected $exchangeRateService;
+
     /**
      * @var ActivityPublished
      */
     protected $activityPublished;
+
     /**
      * @var SettingsService
      */
     protected $settingsService;
 
     /**
+     * @var DocumentLinkRepositoryInterface
+     */
+    protected $documentLinkRepository;
+
+    /**
      * ActivityService constructor.
-     * @param ActivityRepositoryInterface $activityRepository
-     * @param SettingsService             $settingsService
-     * @param ExchangeRateService         $exchangeRateService
-     * @param ActivityPublished           $activityPublished
-     * @param LoggerInterface             $logger
+     * @param ActivityRepositoryInterface     $activityRepository
+     * @param SettingsService                 $settingsService
+     * @param ExchangeRateService             $exchangeRateService
+     * @param ActivityPublished               $activityPublished
+     * @param DocumentLinkRepositoryInterface $documentLinkRepository
+     * @param LoggerInterface                 $logger
      */
     public function __construct(
         ActivityRepositoryInterface $activityRepository,
         SettingsService $settingsService,
         ExchangeRateService $exchangeRateService,
         ActivityPublished $activityPublished,
+        DocumentLinkRepositoryInterface $documentLinkRepository,
         LoggerInterface $logger
     ) {
-        $this->activityRepository  = $activityRepository;
-        $this->logger              = $logger;
-        $this->exchangeRateService = $exchangeRateService;
-        $this->activityPublished   = $activityPublished;
-        $this->settingsService     = $settingsService;
+        $this->activityRepository     = $activityRepository;
+        $this->logger                 = $logger;
+        $this->exchangeRateService    = $exchangeRateService;
+        $this->activityPublished      = $activityPublished;
+        $this->settingsService        = $settingsService;
+        $this->documentLinkRepository = $documentLinkRepository;
     }
 
     /**
@@ -92,7 +103,14 @@ class ActivityService
     public function store(array $rawData, $version)
     {
         try {
-            $activity = $this->activityRepository->save($this->transform($this->getMapping($rawData, 'Activity', $version)));
+            $activityMappedData = $this->transform($this->getMapping($rawData, 'Activity', $version));
+            $documentLinkData   = $this->transform($this->getMapping($rawData, 'DocumentLink', $version));
+
+            $activity = $this->activityRepository->save($activityMappedData);
+
+            if ($documentLinkData) {
+                $this->documentLinkRepository->save($documentLinkData, $activity->id);
+            }
 
             $this->logger->info('Activity successfully saved.', $this->getContext());
 
@@ -145,9 +163,16 @@ class ActivityService
      */
     public function edit($activityId, $version)
     {
-        $activity = $this->find($activityId)->toArray();
+        $activity           = $this->find($activityId)->toArray();
+        $documentLink       = $this->documentLinkRepository->all($activity['id'])->toArray();
+        $activityMappedData = $this->transformReverse($this->getMapping($activity, 'Activity', $version));
 
-        return $this->transformReverse($this->getMapping($activity, 'Activity', $version));
+        if ($documentLink) {
+            $documentLinkData   = $this->transformReverse($this->getMapping($documentLink, 'DocumentLink', $version));
+            $activityMappedData = array_merge($activityMappedData, $documentLinkData);
+        }
+
+        return $activityMappedData;
     }
 
     /**
@@ -161,7 +186,14 @@ class ActivityService
     public function update($activityId, $rawData, $version)
     {
         try {
-            $this->activityRepository->update($activityId, $this->transform($this->getMapping($rawData, 'Activity', $version)));
+            $activityMappedData = $this->transform($this->getMapping($rawData, 'Activity', $version));
+            $documentLinkData   = $this->transform($this->getMapping($rawData, 'DocumentLink', $version));
+            $this->activityRepository->update($activityId, $activityMappedData);
+
+            if ($documentLinkData) {
+                $this->documentLinkRepository->update($documentLinkData, $activityId);
+            }
+
             $this->logger->info('Activity successfully updated.', $this->getContext());
 
             return true;
@@ -344,6 +376,20 @@ class ActivityService
 
             return null;
         }
+    }
+
+    /**
+     * Returns reversely mapped document links data.
+     *g
+     * @param $activityId
+     * @param $version
+     * @return array
+     */
+    public function documentLinks($activityId, $version)
+    {
+        $documentLinks = $this->documentLinkRepository->all($activityId)->toArray();
+
+        return $this->transformReverse($this->getMapping($documentLinks, 'DocumentLink', $version));
     }
 }
 

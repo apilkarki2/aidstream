@@ -33,7 +33,8 @@ class Activity
         'EndDate',
         'Country',
         'OrganisationName',
-        'OrganisationType'
+        'OrganisationType',
+        'DocumentUrl'
     ];
 
     /**
@@ -236,7 +237,7 @@ class Activity
      */
     protected function messagesForOrganisationName()
     {
-        $this->activityMessages['implementing_organisations.*.organisation_name.required'] = trans('validation.required', ['attribute' => trans('lite/elementForm.organisation_name')]);
+        $this->activityMessages['implementing_organisations.*.organisation_name.required'] = trans('validation.required', ['attribute' => trans('lite/elementForm.implementing_organisation_name')]);
     }
 
     /**
@@ -253,9 +254,21 @@ class Activity
      */
     protected function messagesForOrganisationType()
     {
-        $this->activityMessages['funding_organisations.*.organisation_type.in']            = trans('validation.code_list', ['attribute' => trans('lite/elementForm.funding_organisation')]);
-        $this->activityMessages['implementing_organisations.*.organisation_type.required'] = trans('validation.required', ['attribute' => trans('lite/elementForm.implementing_organisation')]);
-        $this->activityMessages['implementing_organisations.*.organisation_type.in']       = trans('validation.code_list', ['attribute' => trans('lite/elementForm.implementing_organisation')]);
+        $this->activityMessages['funding_organisations.*.organisation_type.in']            = trans('validation.code_list', ['attribute' => trans('lite/elementForm.funding_organisation_type')]);
+        $this->activityMessages['implementing_organisations.*.organisation_type.required'] = trans('validation.required', ['attribute' => trans('lite/elementForm.implementing_organisation_type')]);
+        $this->activityMessages['implementing_organisations.*.organisation_type.in']       = trans('validation.code_list', ['attribute' => trans('lite/elementForm.implementing_organisation_type')]);
+    }
+
+    protected function rulesForDocumentUrl()
+    {
+        $this->activityRules['outcomes_document_url'] = 'url';
+        $this->activityRules['annual_report_url']     = 'url';
+    }
+
+    protected function messagesForDocumentUrl()
+    {
+        $this->activityRules['outcomes_document_url.url'] = trans('validation.url', ['attribute' => trans('lite/elementForm.outcomes_document_url')]);
+        $this->activityRules['annual_report_url.url']     = trans('validation.url', ['attribute' => trans('lite/elementForm.annual_report_url')]);
     }
 
     /**
@@ -273,6 +286,7 @@ class Activity
         }
 
         $activityIdentifiers = [];
+
         foreach ($activities as $activity) {
             $activityIdentifiers[] = getVal($activity->identifier, ['activity_identifier']);
         }

@@ -28,5 +28,11 @@ return [
     'currency'                              => 'Currency',
     'add_this_budget'                       => 'Add this budget',
     'add_another_budget'                    => 'Add another budget',
-
+    'update_this_activity'                  => 'Update this activity',
+    'outcomes_document_title'               => 'Results/Outcomes Document Title',
+    'outcomes_document_url'                 => 'Results/Outcomes Document URL',
+    'annual_report_title'                   => 'Annual Report Title',
+    'annual_report_url'                     => 'Annual Report URL',
+    'results_outcomes_documents'            => 'Results/Outcomes Documents',
+    'annual_reports'                        => 'Annual Reports'
 ];
