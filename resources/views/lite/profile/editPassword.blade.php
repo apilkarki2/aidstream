@@ -9,11 +9,22 @@
         @include('includes.response')
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
-            <div class="panel-content-heading">
-                <div>@lang('lite/title.change_password')</div>
+            <div class="panel__heading">
+                <h1>@lang('lite/title.change_password')</h1>
             </div>
-            <div class="panel-body">
-                {!! form($form) !!}
+            <div class="panel__body">
+                <div class="create-form user-form">
+                    <div class="row">
+                        {!! form_start($form) !!}
+                        <div class="col-md-9">
+                            {!! form_until($form,"newPasswordAgain") !!}
+                        </div>
+                        <div class="border-btn-line">
+                            {!! form_rest($form) !!}
+                        </div>
+                        {!! form_end($form) !!}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

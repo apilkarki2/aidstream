@@ -15,12 +15,12 @@ class Settings extends BaseForm
     public function buildForm()
     {
         return $this
-            ->add('organisationName', 'text', ['label' => trans('lite/settings.organisation_name'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6']])
+            ->add('organisationName', 'text', ['label' => trans('lite/settings.organisation_name'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6'], ])
             ->addSelect(
                 'language',
                 $this->getCodeList('Language', 'Organization'),
                 trans('lite/settings.language'),
-                $this->addHelpText('activity_defaults-default_language', false),
+                $this->addHelpText('activity_defaults-default_language', true),
                 config('app.default_language'),
                 true,
                 [
@@ -97,7 +97,7 @@ class Settings extends BaseForm
                 'defaultCurrency',
                 $this->getCodeList('Currency', 'Organization'),
                 trans('lite/settings.default_currency'),
-                $this->addHelpText('activity_defaults-default_currency', false),
+                $this->addHelpText('activity_defaults-default_currency', true),
                 config('app.default_language'),
                 true,
                 [
@@ -108,20 +108,13 @@ class Settings extends BaseForm
                 'defaultLanguage',
                 $this->getCodeList('Language', 'Organization'),
                 trans('lite/settings.default_language'),
-                $this->addHelpText('activity_defaults-default_language', false),
+                $this->addHelpText('activity_defaults-default_language', true),
                 config('app.default_language'),
                 true,
                 [
                     'wrapper' => ['class' => 'form-group col-sm-6']
                 ]
             )
-            ->add(
-                'picture',
-                'file',
-                [
-                    'wrapper' => ['class' => 'form-group col-sm-6 upload-logo'],
-                ]
-            )
-            ->add(trans('lite/settings.save'), 'submit', ['attr' => ['class' => 'btn btn-submit btn-form'], 'wrapper' => ['class' => 'form-group col-sm-6']]);
+            ->add(trans('lite/settings.save'), 'submit', ['attr' => ['class' => 'btn btn-submit btn-form']]);
     }
 }

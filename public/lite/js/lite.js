@@ -52,9 +52,10 @@ var Lite = {
     },
     budgetDetails: function () {
         this.callAsync('/lite/budgetDetails', 'get').success(function (data) {
-            $('#budgetTotal').html(data.total);
+            $('#totalBudget').html(data.totalBudget);
+            $('#placeValue').html(data.totalBudgetPlaceValue);
             $('#maxBudget').html(data.maxBudget);
-        })
+        });
     }
 };
 

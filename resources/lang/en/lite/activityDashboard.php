@@ -13,7 +13,7 @@ return [
     'verified'                           => 'Verified',
     'published'                          => 'Published',
     'highest_budget_in_activity'         => 'Highest budget in an activity',
-    'type_an_activity_title_to_search'   => 'Type an activity title to search',
+    'type_an_activity_title_to_search'   => 'Type an activity title to search ...',
     'sort_by'                            => 'Sort by',
     'duplicate_activity'                 => 'Duplicate activity',
     'delete_this_activity'               => 'Delete this activity',

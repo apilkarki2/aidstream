@@ -39,4 +39,7 @@ return [
     'delete_unsuccessful'             => ':type could not be deleted.',
     'bulk_publish_successful'         => 'File(s) successfully published to the IATI Registry.',
     'bulk_publish_unsuccessful'       => 'File(s) could not be published to the IATI Registry.',
+    'personal_information'            => 'Personal Information',
+    'organisation_information'        => 'Organisation Information'
 ];
+

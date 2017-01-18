@@ -9,12 +9,14 @@
         <div class="alert alert-danger hidden" id="error"></div>
         @include('includes.response')
         <div class="panel panel-default">
-            <div class="element-panel-heading">
-                <div>
+            <div class="panel__heading">
+                <h1>
                     @lang('lite/title.user_list')
-                </div>
+                </h1>
                 @if (auth()->user()->isAdmin())
-                    <a href="{{ route('lite.users.create') }}">Add a user</a>
+                    <div class="add-user-link">
+                        <a href="{{ route('lite.users.create') }}">Add a user</a>
+                    </div>
                 @endif
             </div>
             <div class="panel-body panel-users-settings">

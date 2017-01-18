@@ -4,16 +4,16 @@ var Dashboard = {
     barColors: ["#e15353", "#fcb651", "#4f7286", "#52cc88"],
     overlayBarColors: ["#edd0d0", "#f3dbb9", "#d5e8f3", "#b4eccd"],
     width: 300,
-    height: 200,
+    height: 100,
     totalActivities: 0,
     rectangleSelection: '',
     canvas: '',
     widthOffset: 110,
-    rectangleHeight: 10,
-    spaceBetweenBars: 20,
-    rectangleCurve: 5,
+    rectangleHeight: 6,
+    spaceBetweenBars: 25,
+    rectangleCurve: 3,
     xCoordinateOfBars: 80,
-    yCoordinateOfLabelsAndValues:12,
+    yCoordinateOfLabelsAndValues:7,
     spaceBetweenBarAndValue : 85,
     widthScale: function (value) {
          var widthScale = d3.scaleLinear()
@@ -60,35 +60,32 @@ var Dashboard = {
             this.generateAnimation();
         }
 
-        this.rectangleSelection.attr("width", function (d) {
-                                    return (widthValue != null) ? Dashboard.widthScale(widthValue) : Dashboard.widthScale(d);
-                                })
-                                .attr("height", this.rectangleHeight)
-                                .attr("y", function (d, i) {
-                                        return i * Dashboard.spaceBetweenBars;
-                                })
-                                .attr("x", this.xCoordinateOfBars)
-                                .attr("fill", function (d, i) {
-                                        return colors[i];
-                                })
-                                // .attr("rx", function () {
-                                //         return (widthValue != null ) ? 0 : Dashboard.rectangleCurve
-                                // })
-                                // .attr("ry", function () {
-                                //         return (widthValue != null ) ? 0 : Dashboard.rectangleCurve
-                                // });
-                                .attr("rx", Dashboard.rectangleCurve)
-                                .attr("ry", Dashboard.rectangleCurve);
-
+        this.buildRectangle(widthValue, colors);
+    },
+    buildRectangle: function(widthValue, colors){
+        return this.rectangleSelection.attr("width", function (d) {
+                                            return (widthValue != null) ? Dashboard.widthScale(widthValue) : Dashboard.widthScale(d);
+                                        })
+                                        .attr("height", this.rectangleHeight)
+                                        .attr("y", function (d, i) {
+                                            return i * Dashboard.spaceBetweenBars;
+                                        })
+                                        .attr("x", this.xCoordinateOfBars)
+                                        .attr("fill", function (d, i) {
+                                            return colors[i];
+                                        })
+                                        .attr("rx", Dashboard.rectangleCurve)
+                                        .attr("ry", Dashboard.rectangleCurve)
+                                        .attr('id', (widthValue != null) ? 'rect-overlay' : 'rect');
     },
     generateAnimation: function () {
         return this.rectangleSelection.transition()
-                                    .duration(1000)
+                                    .duration(10)
                                     .attr("width", function () {
-                                        return Dashboard.widthScale(Math.floor(Math.random() * Dashboard.totalActivities) + 1);
+                                        return Dashboard.widthScale(0);
                                     })
                                     .transition()
-                                    .duration(2000)
+                                    .duration(3000)
                                     .attr("width", function (d) {
                                         return Dashboard.widthScale(d);
                                     });
@@ -98,7 +95,7 @@ var Dashboard = {
             .data(this.labels)
             .enter()
             .append("text")
-            .attr("fill", "black")
+            .attr("fill", "#484848")
             .attr("y", function (d, i) {
                 return i * Dashboard.spaceBetweenBars + Dashboard.yCoordinateOfLabelsAndValues;
             })
@@ -113,7 +110,7 @@ var Dashboard = {
             .data(this.data)
             .enter()
             .append("text")
-            .attr("fill", "black")
+            .attr("fill", "#484848")
             .attr("y", function (d, i) {
                 return i * Dashboard.spaceBetweenBars + Dashboard.yCoordinateOfLabelsAndValues;
             })
