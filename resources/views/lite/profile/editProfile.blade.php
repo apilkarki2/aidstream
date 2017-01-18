@@ -13,7 +13,16 @@
                 <div>@lang('lite/title.edit_profile')</div>
             </div>
             <div class="panel-body">
-                {!! form($form) !!}
+                {!! form_start($form) !!}
+                <div>
+                    Personal Information
+                </div>
+                {!! form_until($form, 'picture') !!}
+                <div>
+                    Organisation Information
+                </div>
+                {!! form_rest($form) !!}
+                {!! form_end($form) !!}
             </div>
         </div>
     </div>
