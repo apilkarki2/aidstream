@@ -31,6 +31,7 @@
                                         <li><a href="#location">@lang('lite/global.location')</a></li>
                                         <li><a href="#involved-organisations">@lang('lite/global.involved_organisations')</a></li>
                                         <li><a href="#results-and-reports">@lang('lite/global.results_and_reports')</a></li>
+
                                     </ul>
                                 </nav>
                             </div>
@@ -64,7 +65,6 @@
                                 {!! form_rest($form) !!}
                                 <a href="#" class="pull-right btn-go-back">Cancel and go back</a>
                             </div>
-                        </div>
                         {!! form_end($form) !!}
                     </div>
                     <div class="funding_organisations-container hidden"

@@ -28,15 +28,12 @@ class Profile extends BaseForm
                 null,
                 true,
                 [
-                    'wrapper' => ['class' => 'form-group col-sm-6'],
+                    'wrapper' => ['class' => 'form-group col-sm-6 timezone'],
                 ]
             )
             ->add(
                 'picture',
-                'file',
-                [
-                    'wrapper' => ['class' => 'form-group col-sm-6 upload-logo'],
-                ]
+                'file'
             )
             ->add('secondaryFirstName', 'text', ['label' => trans('lite/profile.secondary') . ' ' . trans('lite/profile.first_name'), 'wrapper' => ['class' => 'form-group col-sm-6']])
             ->add('secondaryLastName', 'text', ['label' => trans('lite/profile.secondary') . ' ' . trans('lite/profile.last_name'), 'wrapper' => ['class' => 'form-group col-sm-6']])

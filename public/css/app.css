@@ -311,7 +311,8 @@ form .select2-container {
   background: none !important; }
 
 .select2-container .select2-selection--single .select2-selection__rendered {
-  padding-left: 0 !important; }
+  padding-left: 0 !important;
+  line-height: 22px !important; }
 
 .has-error {
   font-style: normal; }
@@ -4308,12 +4309,12 @@ body > .skiptranslate iframe {
       background: url(../../images/ic-sprite.svg) -393px -197px no-repeat; }
 
 .add-user-link {
-  float: right;
-  margin-top: -50px; }
+  float: right; }
   .add-user-link a {
     background-color: transparent;
     color: #00A8FF;
     border: 0;
+    font-size: 14px;
     position: relative; }
     .add-user-link a:before, .add-user-link a:after {
       content: "";
@@ -4329,8 +4330,12 @@ body > .skiptranslate iframe {
       top: 2px;
       left: -14px; }
 
+.panel-users-settings .add-user-link {
+  margin-top: -50px; }
+
 .single-form-wrap > .form-group {
-  padding-left: 0 !important; }
+  padding-left: 0 !important;
+  float: left !important; }
 
 .single-form-wrap .description {
   clear: both;
@@ -6279,7 +6284,9 @@ body > .skiptranslate iframe {
     margin-left: -2px;
     vertical-align: top; }
   .form__block .col-md-9 {
-    padding-right: 15px !important; } }
+    padding-right: 15px !important; }
+  .settings-form > form .collection_form > .form-group {
+    width: 100%; } }
 
 @media all and (min-width: 880px) {
   #activity-elements-checklist .collection_form > .form-group > .form-group {
@@ -6639,53 +6646,71 @@ body > .skiptranslate iframe {
     text-transform: uppercase; }
 
 .panel__heading {
-  padding: 10px 36px; }
+  border-bottom: 1px solid #d5eaf5;
+  padding: 15px 36px 10px;
+  margin-bottom: 20px;
+  overflow: hidden; }
   .panel__heading h1 {
     font-size: 20px;
-    margin: 5px 0; }
+    float: left;
+    margin: 0 0 5px; }
   .panel__heading p {
     color: rgba(72, 72, 72, 0.5);
+    clear: both;
     font-size: 11px;
     margin-bottom: 0; }
+  .panel__heading .add-user-link {
+    margin-top: 4px; }
 
 .panel__body {
   background: #fdffff; }
 
 .lite .create-form {
   padding: 0; }
-  .lite .create-form > form {
+  .lite .create-form .row {
+    margin-left: -15px;
+    margin-right: -15px; }
+  .lite .create-form form {
     background: none;
     border: none; }
-    .lite .create-form > form .datepicker {
+    .lite .create-form form .datepicker {
       background: url(../../images/ic-date.svg) no-repeat 97%; }
-    .lite .create-form > form .has-error {
+    .lite .create-form form .has-error {
       font-size: 12px; }
+    .lite .create-form form > .form-group {
+      margin-bottom: 15px;
+      padding: 0 15px; }
+      .lite .create-form form > .form-group label {
+        font-size: 12px;
+        text-transform: uppercase; }
+        .lite .create-form form > .form-group label:after {
+          color: #aeaeae;
+          content: "(Optional)";
+          font-size: 10px;
+          margin-left: 2px;
+          text-transform: none; }
+        .lite .create-form form > .form-group label.required:after {
+          display: none; }
+
+.lite .help-text {
+  right: -8px;
+  top: 32px; }
 
 .form__block {
-  border-top: 1px solid #d5eaf5;
+  border-bottom: 1px solid #d5eaf5;
   display: inline-block;
-  padding: 25px 36px 5px;
+  padding: 20px 36px 15px;
+  vertical-align: top;
   width: 100%; }
   .form__block .col-md-9 {
     padding: 0; }
   .form__block h2 {
     font: 14px Open-Sans-Bold;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     text-transform: uppercase; }
-  .form__block .row {
-    margin-left: -15px;
-    margin-right: -15px; }
-  .form__block label {
-    font-size: 12px;
-    text-transform: uppercase; }
-    .form__block label:after {
-      color: #aeaeae;
-      content: "(Optional)";
-      font-size: 10px;
-      margin-left: 2px;
-      text-transform: none; }
-    .form__block label.required:after {
-      display: none; }
+
+#basics {
+  padding-top: 0; }
 
 .funding_organisations > label:after, .implementing_organisations > label:after {
   display: none; }
@@ -6736,12 +6761,16 @@ body > .skiptranslate iframe {
 
 .lite .btn-form {
   height: 53px;
-  margin: 0;
+  margin: 25px 15px 0;
   position: static;
-  width: 218px; }
+  width: 218px;
+  -webkit-transition: all 0.5s ease-in-out;
+     -moz-transition: all 0.5s ease-in-out;
+       -o-transition: all 0.5s ease-in-out;
+          transition: all 0.5s ease-in-out; }
 
 .btn-go-back {
-  margin: 16px 0; }
+  margin: 40px 0 0; }
 
 .panel__nav nav {
   background: #fff;
@@ -6804,5 +6833,20 @@ body > .skiptranslate iframe {
 
 .nav--completed {
   background: url(../../images/ic-sprite.svg) no-repeat -637px -268px; }
+
+.lite .user-form {
+  padding: 0 36px 15px; }
+  .lite .user-form .form-group:last-of-type {
+    float: none; }
+
+.border-btn-line {
+  border-top: 1px solid #d5eaf5;
+  clear: both;
+  margin: 30px -20px 0; }
+  .border-btn-line .btn {
+    margin-left: 35px; }
+
+.timezone {
+  clear: both; }
 
 /*# sourceMappingURL=maps/app.css.map */
