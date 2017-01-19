@@ -10,4 +10,6 @@ return [
     'edit_profile'    => 'Edit Profile',
     'change_password' => 'Change Password',
     'budget'          => 'Budget',
+    'transaction'     => 'Transaction',
+
 ];

@@ -5,6 +5,8 @@ use App\Lite\Services\FormCreator\Activity;
 use App\Http\Controllers\Lite\LiteController;
 use App\Lite\Services\Activity\ActivityService;
 use App\Lite\Services\FormCreator\Budget;
+use App\Lite\Services\FormCreator\Transaction;
+use App\Lite\Services\Activity\Transaction\TransactionService;
 use App\Lite\Services\Validation\ValidationService;
 use Illuminate\Http\RedirectResponse;
 
@@ -33,25 +35,46 @@ class ActivityController extends LiteController
      * Entity type for Activity.
      */
     const ENTITY_TYPE = 'Activity';
+
     /**
      * @var Budget
      */
     protected $budgetForm;
 
     /**
-     * ActivityController constructor.
-     * @param ActivityService   $activityService
-     * @param Budget            $budgetForm
-     * @param Activity          $activityForm
-     * @param ValidationService $validationService
+     * @var Transaction
      */
-    public function __construct(ActivityService $activityService, Budget $budgetForm, Activity $activityForm, ValidationService $validationService)
-    {
+    protected $transactionForm;
+    /**
+     * @var TransactionService
+     */
+    private $transactionService;
+
+    /**
+     * ActivityController constructor.
+     * @param ActivityService    $activityService
+     * @param TransactionService $transactionService
+     * @param Transaction        $transactionForm
+     * @param Budget             $budgetForm
+     * @param Activity           $activityForm
+     * @param ValidationService  $validationService
+     * @internal param Transaction $transaction
+     */
+    public function __construct(
+        ActivityService $activityService,
+        TransactionService $transactionService,
+        Transaction $transactionForm,
+        Budget $budgetForm,
+        Activity $activityForm,
+        ValidationService $validationService
+    ) {
         $this->middleware('auth');
-        $this->activityService = $activityService;
-        $this->activityForm    = $activityForm;
-        $this->validation      = $validationService;
-        $this->budgetForm      = $budgetForm;
+        $this->activityService    = $activityService;
+        $this->activityForm       = $activityForm;
+        $this->validation         = $validationService;
+        $this->budgetForm         = $budgetForm;
+        $this->transactionForm    = $transactionForm;
+        $this->transactionService = $transactionService;
     }
 
     /**
@@ -114,6 +137,8 @@ class ActivityController extends LiteController
     public function show($activityId)
     {
         $activity         = $this->activityService->find($activityId);
+        $transaction      = $activity->transactions->toArray();
+        dd($transaction);
         $statusLabel      = ['draft', 'completed', 'verified', 'published'];
         $activityWorkflow = $activity->activity_workflow;
         $btn_status_label = ['Completed', 'Verified', 'Published'];
@@ -127,7 +152,7 @@ class ActivityController extends LiteController
             $nextRoute = route('lite.activity.publish', $activityId);
         }
 
-        return view('lite.activity.show', compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute'));
+        return view('lite.activity.show', compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute', 'transaction'));
     }
 
     /**
@@ -261,6 +286,7 @@ class ActivityController extends LiteController
 
     /**
      * Deletes a single Budget.
+     *
      * @param         $activityId
      * @param Request $request
      * @return mixed
@@ -272,6 +298,79 @@ class ActivityController extends LiteController
         }
 
         return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_budget_create')]]);
+
+    }
+
+    /**
+     * Creates budget of an activity.
+     *
+     * @param $activityId
+     * @param $type
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function createTransaction($activityId, $type)
+    {
+        $form = $this->transactionForm->form(route('lite.activity.transaction.store', [$activityId, $type]), $type);
+
+        return view('lite.activity.transaction.edit', compact('form'));
+    }
+
+    /**
+     * Edits transaction of an activity.
+     *
+     * @param $activityId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function editTransaction($activityId)
+    {
+        $version = session('version');
+
+        $model = $this->transactionService->getModel($activityId, $version);
+
+        $form = $this->transactionForm->form(route('lite.activity.transaction.store', $activityId), $model);
+
+        return view('lite.activity.transaction.edit', compact('form'));
+    }
+
+    /**
+     * Stores Transaction of an activity.
+     *
+     * @param         $activityId
+     * @param         $type
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function storeTransaction($activityId, $type, Request $request)
+    {
+
+        $rawData = $request->except('_token');
+        $version = session('version');
+        $method  = sprintf('add%s', ucfirst($type));
+
+        if (!$this->validation->passes($rawData, 'Transaction', $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if ($this->transactionService->$method($activityId, $rawData, $version)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_created')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_create')]]);
+    }
+
+    /**
+     * Deletes a single Transaction.
+     * @param         $activityId
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteTransaction($activityId, Request $request)
+    {
+        if ($this->transactionService->deleteTransaction($activityId, $request)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_create')]]);
 
     }
 }

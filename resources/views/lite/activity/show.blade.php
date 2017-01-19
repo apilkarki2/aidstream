@@ -247,6 +247,7 @@
             {{--@endif--}}
 
             @include('lite.activity.partials.budget')
+            @include('lite.activity.partials.transaction')
             {{--TODO REMOVE THIS--}}
             {{-- -------------  start of transactions --------------- --}}
             {{--<div class="transactions-wrap">--}}

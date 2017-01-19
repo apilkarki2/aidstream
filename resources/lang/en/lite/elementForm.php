@@ -28,5 +28,11 @@ return [
     'currency'                              => 'Currency',
     'add_this_budget'                       => 'Add this budget',
     'add_another_budget'                    => 'Add another budget',
-
+    'reference'                             => 'Reference',
+    'date'                                  => 'Date',
+    'description'                           => 'Description',
+    'receiver_organisation'                 => 'Receiver Organisation',
+    'provider_organisation'                 => 'Provider Organisation',
+    'add_another_transaction'               => 'Add another transaction',
+    'add_this_transaction'                  => 'Add this transaction'
 ];

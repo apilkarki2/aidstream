@@ -103,6 +103,38 @@ $router->group(
                         'uses' => 'ActivityController@deleteBudget'
                     ]
                 );
+
+                $router->get(
+                    '/lite/activity/{activity}/transaction/{type}/create',
+                    [
+                        'as'   => 'lite.activity.transaction.create',
+                        'uses' => 'ActivityController@createTransaction'
+                    ]
+                );
+
+                $router->get(
+                    '/lite/activity/{activity}/transaction/edit',
+                    [
+                        'as'   => 'lite.activity.transaction.edit',
+                        'uses' => 'ActivityController@editTransaction'
+                    ]
+                );
+
+                $router->post(
+                    '/lite/activity/{activity}/transaction/{type}/store',
+                    [
+                        'as'   => 'lite.activity.transaction.store',
+                        'uses' => 'ActivityController@storeTransaction'
+                    ]
+                );
+
+                $router->post(
+                    '/lite/activity/{activity}/transaction/delete',
+                    [
+                        'as'   => 'lite.activity.transaction.delete',
+                        'uses' => 'ActivityController@deleteTransaction'
+                    ]
+                );
             }
         );
     }
