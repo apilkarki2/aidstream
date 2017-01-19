@@ -138,7 +138,11 @@ class ActivityController extends LiteController
     {
         $activity         = $this->activityService->find($activityId);
         $transaction      = $activity->transactions->toArray();
-        dd($transaction);
+        $transactions     = $this->transactionService->getFilteredTransactions($transaction);
+        $disbursement     = getVal($transactions, ['disbursement'], '');
+        $expenditure      = getVal($transactions, ['expenditure'], '');
+        $incoming         = getVal($transactions, ['incoming'], '');
+        $defaultCurrency  = $this->transactionService->getDefaultCurrency($activity);
         $statusLabel      = ['draft', 'completed', 'verified', 'published'];
         $activityWorkflow = $activity->activity_workflow;
         $btn_status_label = ['Completed', 'Verified', 'Published'];
@@ -152,7 +156,7 @@ class ActivityController extends LiteController
             $nextRoute = route('lite.activity.publish', $activityId);
         }
 
-        return view('lite.activity.show', compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute', 'transaction'));
+        return view('lite.activity.show', compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute', 'disbursement', 'expenditure', 'incoming', 'defaultCurrency'));
     }
 
     /**
@@ -366,6 +370,7 @@ class ActivityController extends LiteController
      */
     public function deleteTransaction($activityId, Request $request)
     {
+        dd($activityId);
         if ($this->transactionService->deleteTransaction($activityId, $request)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
         }

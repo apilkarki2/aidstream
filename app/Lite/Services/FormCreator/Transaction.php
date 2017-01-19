@@ -31,6 +31,7 @@ class Transaction
      * Builds form for the activity.
      *
      * @param      $route
+     * @param      $type
      * @param null $model
      * @return Form
      */

@@ -1,5 +1,5 @@
 <div class="activity-element-wrapper">
-    @if ($activity->transaction)
+    @if ($incoming)
         <a href="{{ route('lite.activity.transaction.edit', [$activity->id, 'IncomingFunds']) }}"
            class="edit-element">
             <span>Edit Incoming Funds</span>
@@ -11,13 +11,19 @@
                 Incoming Funds
             </div>
             <div class="activity-element-info">
-                @foreach ($activity->transaction as $index => $transaction)
+                @foreach ($incoming as $index => $transaction)
                     <li>
-                        {{ getVal($transaction, ['value', 0, 'amount']) }} {{ getVal($transaction, ['value', 0, 'currency']) }} [{{ getVal($transaction, ['period_start', 0, 'date']) }}
-                        - {{ getVal($transaction, ['period_end', 0, 'date']) }}]
-
-                        <a data-href="{{ route('lite.activity.transaction.delete', [$activity->id, 'IncomingFunds'])}}" data-index="{{ $index }}"
-                           class="delete-lite-transaction" data-toggle="modal" data-target="#delete-transaction-modal"> @lang('lite/global.delete') </a>
+                               {{ getVal($transaction, ['transaction', 'value', 0, 'amount']) }}
+                               @if(getVal($transaction, ['transaction', 'value', 0, 'currency']))
+                               {{ getVal($transaction, ['transaction', 'value', 0, 'currency']) }}
+                               @else
+                               {{ $defaultCurrency }}
+                               @endif
+                               @if(getVal($transaction, ['transaction', 'value', 0, 'date']))
+                               [{{ getVal($transaction, ['transaction', 'value', 0, 'date']) }}]
+                        @endif
+                        <a data-href="{{ route('lite.activity.transaction.delete', $activity->id) }}" data-index="{{ getVal($transaction, ['transaction', 'id']) }}"
+                           class="delete-lite-transaction" data-toggle="modal" data-target="#delete-modal"> @lang('lite/global.delete') </a>
                     </li>
                 @endforeach
             </div>

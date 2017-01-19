@@ -153,7 +153,7 @@ class TransactionService
     }
 
     /**
-     * Adds new budgets to the current activity.
+     * Adds new disbursement transaction to the current activity.
      *
      * @param $activityId
      * @param $rawData
@@ -162,7 +162,7 @@ class TransactionService
      */
     public function addDisbursement($activityId, $rawData, $version)
     {
-        $rawData['type'] = 3;
+        $rawData['type']        = 3;
         $rawData['activity_id'] = $activityId;
 
         try {
@@ -181,25 +181,24 @@ class TransactionService
     }
 
     /**
-     * Deletes a budget from current activity.
+     * Adds new expenditure transaction to the current activity.
      *
      * @param $activityId
-     * @param $request
+     * @param $rawData
+     * @param $version
      * @return bool|null
      */
-    public function deleteBudget($activityId, $request)
+    public function addExpenditure($activityId, $rawData, $version)
     {
+        $rawData['type']        = 4;
+        $rawData['activity_id'] = $activityId;
+
         try {
-            $activity = $this->find($activityId);
-            $budget   = $activity->budget;
+            $mappedBudget = $this->transform($this->getMapping($rawData, 'Transaction', $version));
 
-            unset($budget[$request->get('index')]);
+            $this->transactionRepository->save($mappedBudget);
 
-            $activity->budget = array_values($budget);
-
-            $activity->save();
-
-            $this->logger->info('Budget transaction successfully deleted.', $this->getContext());
+            $this->logger->info('Transaction successfully added.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
@@ -207,5 +206,102 @@ class TransactionService
 
             return null;
         }
+    }
+
+    /**
+     * Adds new disbursement transaction to the current activity.
+     *
+     * @param $activityId
+     * @param $rawData
+     * @param $version
+     * @return bool|null
+     */
+    public function addIncomingFunds($activityId, $rawData, $version)
+    {
+        $rawData['type']        = 1;
+        $rawData['activity_id'] = $activityId;
+
+        try {
+            $mappedBudget = $this->transform($this->getMapping($rawData, 'Transaction', $version));
+
+            $this->transactionRepository->save($mappedBudget);
+
+            $this->logger->info('Transaction successfully added.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    /**
+     * Deletes a transaction of current activity.
+     *
+     * @param $activityId
+     * @param $request
+     * @return bool|null
+     */
+    public function deleteTransaction($activityId, $request)
+    {
+
+        dd($request->get('index'));
+        try {
+            $activity = $this->find($activityId);
+            $transactions   = $activity->transactions;
+
+            unset($transactions[$request->get('index')]);
+
+            $transactions = array_values($transactions);
+
+            $transactions->save();
+
+            $this->logger->info('Transaction successfully deleted.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    public function getFilteredTransactions($transactions)
+    {
+        $filteredTransactions = [];
+        foreach ($transactions as $index => $transaction) {
+            $type = getVal($transaction, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '');
+            if ($type == 3) {
+                $filteredTransactions['disbursement'][] = $transaction;
+            }
+            if ($type == 4) {
+                $filteredTransactions['expenditure'][] = $transaction;
+            }
+            if ($type == 1) {
+                $filteredTransactions['incoming'][] = $transaction;
+            }
+        }
+
+        return $filteredTransactions;
+    }
+
+    public function getDefaultCurrency($activity)
+    {
+        $settings     = $activity->organization->settings;
+        $activityData = json_decode($activity, true);
+        $settingsData = json_decode($settings, true);
+
+        $activityCurrency = getVal($activityData, ['default_field_values', 0, 'default_currency'], '');
+        if ($activityCurrency) {
+            return $activityCurrency;
+        }
+
+        $settingsCurrency = getVal($settingsData, ['default_field_values', 0, 'default_currency'], '');
+        if ($settingsCurrency) {
+            return $settingsCurrency;
+        }
+
+        return null;
     }
 }

@@ -27,7 +27,7 @@ class Budget extends LiteBaseForm
                  trans('lite/elementForm.currency'),
                  null,
                  null,
-                 $required,
+                 false,
                  [
                      'wrapper' => ['class' => 'form-group col-sm-6']
                  ]

@@ -21,6 +21,6 @@ class Disbursement extends LiteBaseForm
 
         return $this
             ->addToCollection('disbursement', ' ', $formPath, 'collection_form transaction')
-            ->addAddMoreButton('add_more_transaction', 'transaction', trans('lite/elementForm.add_another_transaction'));
+            ->addAddMoreButton('add_more_transaction', 'transaction', trans('lite/elementForm.add_another_disbursement'));
     }
 }

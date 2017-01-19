@@ -33,6 +33,8 @@ return [
     'description'                           => 'Description',
     'receiver_organisation'                 => 'Receiver Organisation',
     'provider_organisation'                 => 'Provider Organisation',
-    'add_another_transaction'               => 'Add another transaction',
+    'add_another_disbursement'              => 'Add another Disbursement',
+    'add_another_expenditure'               => 'Add another Expenditure',
+    'add_another_incoming_funds'            => 'Add another Incoming funds',
     'add_this_transaction'                  => 'Add this transaction'
 ];
