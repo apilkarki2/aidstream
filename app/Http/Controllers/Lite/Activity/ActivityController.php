@@ -5,6 +5,8 @@ use App\Lite\Services\FormCreator\Activity;
 use App\Http\Controllers\Lite\LiteController;
 use App\Lite\Services\Activity\ActivityService;
 use App\Lite\Services\FormCreator\Budget;
+use App\Lite\Services\FormCreator\Transaction;
+use App\Lite\Services\Activity\Transaction\TransactionService;
 use App\Lite\Services\Validation\ValidationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -34,25 +36,47 @@ class ActivityController extends LiteController
      * Entity type for Activity.
      */
     const ENTITY_TYPE = 'Activity';
+
     /**
      * @var Budget
      */
     protected $budgetForm;
 
     /**
-     * ActivityController constructor.
-     * @param ActivityService   $activityService
-     * @param Budget            $budgetForm
-     * @param Activity          $activityForm
-     * @param ValidationService $validationService
+     * @var Transaction
      */
-    public function __construct(ActivityService $activityService, Budget $budgetForm, Activity $activityForm, ValidationService $validationService)
-    {
+    protected $transactionForm;
+
+    /**
+     * @var TransactionService
+     */
+    protected $transactionService;
+
+    /**
+     * ActivityController constructor.
+     * @param ActivityService    $activityService
+     * @param TransactionService $transactionService
+     * @param Transaction        $transactionForm
+     * @param Budget             $budgetForm
+     * @param Activity           $activityForm
+     * @param ValidationService  $validationService
+     * @internal param Transaction $transaction
+     */
+    public function __construct(
+        ActivityService $activityService,
+        TransactionService $transactionService,
+        Transaction $transactionForm,
+        Budget $budgetForm,
+        Activity $activityForm,
+        ValidationService $validationService
+    ) {
         $this->middleware('auth');
-        $this->activityService = $activityService;
-        $this->activityForm    = $activityForm;
-        $this->validation      = $validationService;
-        $this->budgetForm      = $budgetForm;
+        $this->activityService    = $activityService;
+        $this->activityForm       = $activityForm;
+        $this->validation         = $validationService;
+        $this->budgetForm         = $budgetForm;
+        $this->transactionForm    = $transactionForm;
+        $this->transactionService = $transactionService;
     }
 
     /**
@@ -62,7 +86,12 @@ class ActivityController extends LiteController
      */
     public function index()
     {
+        $organisation = auth()->user()->organization;
         $orgId = session('org_id');
+
+        if (Gate::denies('ownership', $organisation)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
 
         $activities              = $this->activityService->all();
         $stats                   = $this->activityService->getActivityStats();
@@ -82,6 +111,12 @@ class ActivityController extends LiteController
         $organisation = auth()->user()->organization;
         $settings     = $organisation->settings;
         $version      = session('version');
+
+        if (Gate::denies('ownership', $organisation)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('add_activity', $organisation);
 
         $data = ['organisation' => $organisation->toArray(), 'settings' => $settings->toArray()];
 
@@ -104,9 +139,13 @@ class ActivityController extends LiteController
     {
         $rawData = $request->except('_token');
         $version = session('version');
+        $organisation = auth()->user()->organization;
 
-        $organization = auth()->user()->organization;
-        $this->authorize('add_activity', $organization);
+        if (Gate::denies('ownership', $organisation)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('add_activity', $organisation);
 
         if (!$this->validation->passes($rawData, self::ENTITY_TYPE, $version)) {
             return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
@@ -127,14 +166,20 @@ class ActivityController extends LiteController
      */
     public function show($activityId)
     {
-        $version       = session('version');
-        $activity      = $this->activityService->find($activityId);
-        $documentLinks = $this->activityService->documentLinks($activityId, $version);
+        $activity = $this->activityService->find($activityId);
 
         if (Gate::denies('ownership', $activity)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
         }
 
+        $version          = session('version');
+        $documentLinks    = $this->activityService->documentLinks($activityId, $version);
+        $transaction      = $activity->transactions->toArray();
+        $transactions     = $this->transactionService->getFilteredTransactions($transaction);
+        $disbursement     = getVal($transactions, ['disbursement'], '');
+        $expenditure      = getVal($transactions, ['expenditure'], '');
+        $incoming         = getVal($transactions, ['incoming'], '');
+        $defaultCurrency  = $this->transactionService->getDefaultCurrency($activity);
         $statusLabel      = ['draft', 'completed', 'verified', 'published'];
         $activityWorkflow = $activity->activity_workflow;
         $btn_status_label = ['Completed', 'Verified', 'Published'];
@@ -148,7 +193,10 @@ class ActivityController extends LiteController
             $nextRoute = route('lite.activity.publish', $activityId);
         }
 
-        return view('lite.activity.show', compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute', 'documentLinks'));
+        return view(
+            'lite.activity.show',
+            compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute', 'disbursement', 'expenditure', 'incoming', 'defaultCurrency', 'documentLinks')
+        );
     }
 
     /**
@@ -240,16 +288,6 @@ class ActivityController extends LiteController
     }
 
     /**
-     * Returns budget details of all activities through AJAX Request.
-     *
-     * @return array
-     */
-    public function budgetDetails()
-    {
-        return $this->activityService->getBudgetDetails();
-    }
-
-    /**
      * Creates budget of an activity.
      *
      * @param $activityId
@@ -257,6 +295,14 @@ class ActivityController extends LiteController
      */
     public function createBudget($activityId)
     {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('add_activity', $activity);
+
         $form = $this->budgetForm->form(route('lite.activity.budget.store', $activityId));
 
         return view('lite.activity.budget.edit', compact('form'));
@@ -281,7 +327,7 @@ class ActivityController extends LiteController
 
         $model = $this->activityService->getBudgetModel($activityId, $version);
 
-        $form = $this->budgetForm->form(route('lite.activity.budget.store', $activityId), $model);
+        $form = $this->budgetForm->form(route('lite.activity.budget.update', $activityId), $model);
 
         return view('lite.activity.budget.edit', compact('form'));
     }
@@ -317,7 +363,39 @@ class ActivityController extends LiteController
     }
 
     /**
+     * Stores Budget of an activity.
+     *
+     * @param         $activityId
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateBudget($activityId, Request $request)
+    {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $rawData = $request->except('_token');
+        $version = session('version');
+
+        $this->authorize('edit_activity', $activity);
+
+        if (!$this->validation->passes($rawData, 'Budget', $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if ($this->activityService->updateBudget($activityId, $rawData, $version)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.budget_success_created')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_budget_create')]]);
+    }
+
+    /**
      * Deletes a single Budget.
+     *
      * @param         $activityId
      * @param Request $request
      * @return mixed
@@ -338,4 +416,156 @@ class ActivityController extends LiteController
 
         return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_budget_create')]]);
     }
+
+    /**
+     * Creates budget of an activity.
+     *
+     * @param $activityId
+     * @param $type
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function createTransaction($activityId, $type)
+    {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('add_activity', $activity);
+
+        if ($type == 'Disbursement' || $type == 'Expenditure' || $type == 'IncomingFunds') {
+            $form = $this->transactionForm->form(route('lite.activity.transaction.store', [$activityId, $type]), $type);
+
+            return view('lite.activity.transaction.edit', compact('form', 'type'));
+        }
+
+        return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'warning', 'messages' => [trans('error.404_not_found')]]);
+
+    }
+
+    /**
+     * Edits transaction of an activity.
+     *
+     * @param $activityId
+     * @param $transactionType
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @internal param $type
+     */
+    public function editTransaction($activityId, $transactionType)
+    {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('edit_activity', $activity);
+
+        if ($transactionType == 'Disbursement' || $transactionType == 'Expenditure' || $transactionType == 'IncomingFunds') {
+            $version = session('version');
+            $model   = $this->transactionService->getModel($activityId, $transactionType, $version);
+            $type    = $this->transactionService->getTransactionType($transactionType);
+
+            $newModel[strtolower($type)] = $model;
+
+            $form = $this->transactionForm->form(route('lite.activity.transaction.update', [$activityId, $transactionType]), $type, $newModel);
+
+            return view('lite.activity.transaction.edit', compact('form', 'type'));
+        }
+
+        return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'warning', 'messages' => [trans('error.404_not_found')]]);
+    }
+
+    /**
+     * Updates Transaction for current Activity
+     *
+     * @param         $activityId
+     * @param         $type
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateTransaction($activityId, $type, Request $request)
+    {
+        $rawData = $request->except('_token');
+        $version = session('version');
+
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('edit_activity', $activity);
+
+        if (!$this->validation->passes($rawData, 'Transaction', $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if ($this->transactionService->updateOrCreate($activityId, $type, $rawData, $version)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_updated')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_update')]]);
+    }
+
+    /**
+     * Stores Transaction of an activity.
+     *
+     * @param         $activityId
+     * @param         $type
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function storeTransaction($activityId, $type, Request $request)
+    {
+        $rawData = $request->except('_token');
+        $version = session('version');
+        $method  = sprintf('add%s', ucfirst($type));
+
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('add_activity', $activity);
+
+        if (!$this->validation->passes($rawData, 'Transaction', $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if ($this->transactionService->$method($activityId, $rawData, $version)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_created')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_create')]]);
+    }
+
+    /**
+     * Deletes a single Transaction.
+     *
+     * @param         $activityId
+     * @param Request $request
+     * @return mixed
+     */
+    public function deleteTransaction($activityId, Request $request)
+    {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('delete_activity', $activity);
+
+        $index = $request->get('index');
+
+        if ($this->transactionService->delete($index)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_delete')]]);
+    }
+
 }

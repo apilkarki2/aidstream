@@ -1,13 +1,13 @@
 <?php namespace App\Lite\Services\Activity;
 
 use App\Lite\Contracts\DocumentLinkRepositoryInterface;
-use App\Lite\Services\Data\V202\Activity\Activity;
 use App\Lite\Services\Data\Traits\TransformsData;
 use App\Lite\Services\ExchangeRate\ExchangeRateService;
 use App\Lite\Services\Settings\SettingsService;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
 use App\Models\ActivityPublished;
 use Exception;
+use Illuminate\Database\DatabaseManager;
 use Psr\Log\LoggerInterface;
 use App\Lite\Contracts\ActivityRepositoryInterface;
 
@@ -50,6 +50,11 @@ class ActivityService
     protected $documentLinkRepository;
 
     /**
+     * @var DatabaseManager
+     */
+    protected $databaseManager;
+
+    /**
      * ActivityService constructor.
      * @param ActivityRepositoryInterface     $activityRepository
      * @param SettingsService                 $settingsService
@@ -57,6 +62,8 @@ class ActivityService
      * @param ActivityPublished               $activityPublished
      * @param DocumentLinkRepositoryInterface $documentLinkRepository
      * @param LoggerInterface                 $logger
+     * @param DatabaseManager                 $databaseManager
+     * @internal param DatabaseManager $databaseManager
      */
     public function __construct(
         ActivityRepositoryInterface $activityRepository,
@@ -64,14 +71,17 @@ class ActivityService
         ExchangeRateService $exchangeRateService,
         ActivityPublished $activityPublished,
         DocumentLinkRepositoryInterface $documentLinkRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        DatabaseManager $databaseManager
     ) {
         $this->activityRepository     = $activityRepository;
         $this->logger                 = $logger;
         $this->exchangeRateService    = $exchangeRateService;
         $this->activityPublished      = $activityPublished;
         $this->settingsService        = $settingsService;
+        $this->databaseManager        = $databaseManager;
         $this->documentLinkRepository = $documentLinkRepository;
+
     }
 
     /**
@@ -106,16 +116,18 @@ class ActivityService
             $activityMappedData = $this->transform($this->getMapping($rawData, 'Activity', $version));
             $documentLinkData   = $this->transform($this->getMapping($rawData, 'DocumentLink', $version));
 
+            $this->databaseManager->beginTransaction();
             $activity = $this->activityRepository->save($activityMappedData);
-
             if ($documentLinkData) {
                 $this->documentLinkRepository->save($documentLinkData, $activity->id);
             }
+            $this->databaseManager->commit();
 
             $this->logger->info('Activity successfully saved.', $this->getContext());
 
             return $activity;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -142,12 +154,14 @@ class ActivityService
     public function delete($activityId)
     {
         try {
+            $this->databaseManager->beginTransaction();
             $activity = $this->activityRepository->delete($activityId);
-
+            $this->databaseManager->commit();
             $this->logger->info('Activity successfully deleted.', $this->getContext());
 
             return $activity;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -186,18 +200,19 @@ class ActivityService
     public function update($activityId, $rawData, $version)
     {
         try {
-            $activityMappedData = $this->transform($this->getMapping($rawData, 'Activity', $version));
-            $documentLinkData   = $this->transform($this->getMapping($rawData, 'DocumentLink', $version));
-            $this->activityRepository->update($activityId, $activityMappedData);
+            $documentLinkData = $this->transform($this->getMapping($rawData, 'DocumentLink', $version));
 
+            $this->databaseManager->beginTransaction();
+            $this->activityRepository->update($activityId, $this->transform($this->getMapping($rawData, 'Activity', $version)));
             if ($documentLinkData) {
                 $this->documentLinkRepository->update($documentLinkData, $activityId);
             }
-
+            $this->databaseManager->commit();
             $this->logger->info('Activity successfully updated.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -337,12 +352,15 @@ class ActivityService
                 $activity['budget'][] = $value;
             }
 
+            $this->databaseManager->beginTransaction();
             $this->activityRepository->update($activityId, $activity);
+            $this->databaseManager->commit();
 
             $this->logger->info('Budget successfully added.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -366,12 +384,15 @@ class ActivityService
 
             $activity->budget = array_values($budget);
 
+            $this->databaseManager->beginTransaction();
             $activity->save();
+            $this->databaseManager->commit();
 
             $this->logger->info('Budget transaction successfully deleted.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -391,5 +412,35 @@ class ActivityService
 
         return $this->transformReverse($this->getMapping($documentLinks, 'DocumentLink', $version));
     }
-}
 
+    /**
+     * Updates budget of current activity
+     *
+     * @param $activityId
+     * @param $rawData
+     * @param $version
+     * @return bool|null
+     */
+    public function updateBudget($activityId, $rawData, $version)
+    {
+        try {
+            $mappedBudget = $this->transform($this->getMapping($rawData, 'Budget', $version));
+            $activity     = $this->activityRepository->find($activityId)->toArray();
+
+            $activity['budget'] = $mappedBudget['budget'];
+
+            $this->databaseManager->beginTransaction();
+            $this->activityRepository->update($activityId, $activity);
+            $this->databaseManager->commit();
+
+            $this->logger->info('Budget successfully updated.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->databaseManager->rollback();
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+}

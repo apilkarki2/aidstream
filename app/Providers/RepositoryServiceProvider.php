@@ -5,12 +5,14 @@ use App\Lite\Contracts\DocumentLinkRepositoryInterface;
 use App\Lite\Contracts\OrganisationRepositoryInterface;
 use App\Lite\Contracts\PublishedFilesRepositoryInterface;
 use App\Lite\Contracts\SettingsRepositoryInterface;
+use App\Lite\Contracts\TransactionRepositoryInterface;
 use App\Lite\Contracts\UserRepositoryInterface;
 use App\Lite\Repositories\Activity\ActivityRepository;
 use App\Lite\Repositories\DocumentLinks\DocumentLinksRepository;
 use App\Lite\Repositories\Organisation\OrganisationRepository;
 use App\Lite\Repositories\PublishedFiles\PublishedFilesRepository;
 use App\Lite\Repositories\Settings\SettingsRepository;
+use App\Lite\Repositories\Activity\Transaction\TransactionRepository;
 use App\Lite\Repositories\Users\UserRepository;
 use App\Services\Settings\Segmentation\SegmentationInterface;
 use App\Services\Settings\Segmentation\SegmentationService;
@@ -55,5 +57,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(DocumentLinkRepositoryInterface::class, DocumentLinksRepository::class);
         $this->app->bind(PublishedFilesRepositoryInterface::class, PublishedFilesRepository::class);
+        $this->app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
     }
 }

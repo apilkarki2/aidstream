@@ -26,4 +26,8 @@ return [
     'on_boarding_success'                           => 'Congratulations. Your organisation\'s account configuration has been completed successfully. You can now publish your data to the IATI Registry.',
     'budget_success_created'                        => 'Budget successfully created.',
     'budget_success_deleted'                        => 'Budget successfully deleted.',
+    'transaction_success_created'                   => 'Transaction successfully created.',
+    'transaction_success_deleted'                   => 'Transaction successfully deleted.',
+    'transaction_success_updated'                   => 'Transaction successfully updated',
+
 ];

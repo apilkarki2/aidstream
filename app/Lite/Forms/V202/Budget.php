@@ -27,20 +27,9 @@ class Budget extends LiteBaseForm
                  trans('lite/elementForm.currency'),
                  null,
                  null,
-                 $required,
+                 false,
                  [
                      'wrapper' => ['class' => 'form-group col-sm-6']
-                 ]
-             )
-             ->add(
-                 'remove_button',
-                 'button',
-                 [
-                     'required' => $required,
-                     'label'    => 'Remove This',
-                     'attr'     => [
-                         'class' => 'remove_from_collection',
-                     ],
                  ]
              );
     }
