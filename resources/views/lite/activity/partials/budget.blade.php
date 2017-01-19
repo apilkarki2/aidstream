@@ -23,7 +23,7 @@
                         - {{ getVal($budget, ['period_end', 0, 'date']) }}]
 
                         <a data-href="{{ route('lite.activity.budget.delete', $activity->id)}}" data-index="{{ $index }}"
-                           class="delete-lite-budget" data-toggle="modal" data-target="#delete-modal"> @lang('lite/global.delete') </a>
+                           class="delete-lite-resource" data-toggle="modal" data-target="#delete-modal"> @lang('lite/global.delete') </a>
                     </li>
                 @endforeach
             </div>
@@ -41,13 +41,4 @@
     @endif
 </div>
 
-@section('script')
-    <script>
-        $('.delete-lite-budget').on('click', function(){
-            var form = $('#delete-form');
 
-            form.attr('action', $(this).attr('data-href'));
-            form.children('input#index').attr('value', $(this).attr('data-index'));
-        });
-    </script>
-@stop

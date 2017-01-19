@@ -23,7 +23,7 @@
                             [{{ getVal($transaction, ['transaction', 'value', 0, 'date']) }}]
                         @endif
                         <a data-href="{{ route('lite.activity.transaction.delete', $activity->id)}}" data-index="{{ getVal($transaction, ['id'], '') }}"
-                           class="delete-lite-transaction" data-toggle="modal" data-target="#delete-modal"> @lang('lite/global.delete') </a>
+                           class="delete-lite-resource" data-toggle="modal" data-target="#delete-modal"> @lang('lite/global.delete') </a>
                     </li>
                 @endforeach
             </div>

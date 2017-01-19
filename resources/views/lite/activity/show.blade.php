@@ -227,3 +227,14 @@
         </div>
     </div>
 @endsection
+
+@section('script')
+    <script>
+        $('.delete-lite-resource').on('click', function () {
+            var form = $('#delete-form');
+
+            form.attr('action', $(this).attr('data-href'));
+            form.children('input#index').attr('value', $(this).attr('data-index'));
+        });
+    </script>
+@stop
