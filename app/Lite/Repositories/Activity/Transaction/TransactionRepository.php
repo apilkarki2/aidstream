@@ -43,9 +43,13 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function find($id)
     {
-        return $this->transaction->where('activity_id', $id)->get();
+        return $this->transaction->findOrFail($id);
     }
 
+    public function findByActivityId($id)
+    {
+        return $this->transaction->where('activity_id', $id)->get();
+    }
     /**
      * Save the Transaction data into the database.
      *

@@ -15,7 +15,7 @@
             <div class="panel-body">
                 {!! form($form) !!}
             </div>
-{{--            <div class="collection-container hidden" data-prototype="{{ form_row($form->transaction->prototype()) }}"></div>--}}
+            <div class="collection-container hidden" data-prototype="{{ form_row($form->{strtolower($type)}->prototype()) }}"></div>
         </div>
     </div>
 @stop

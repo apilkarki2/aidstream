@@ -139,15 +139,24 @@ class TransactionService
     /**
      * Returns Budget Model in view format
      * @param $activityId
+     * @param $type
      * @param $version
      * @return array
      * @internal param $budget
      */
-    public function getModel($activityId, $version)
+    public function getModel($activityId, $type, $version)
     {
-        $model = json_decode($this->transactionRepository->find($activityId), true);
+        $model = json_decode($this->transactionRepository->findByActivityId($activityId), true);
 
-        $filteredModel = $this->transformReverse($this->getMapping($model, 'Budget', $version));
+        $newModel = [];
+
+        foreach ($model as $index => $value) {
+            if (getVal($value, ['transaction', 'transaction_type', 0, 'transaction_type_code'], '') == $type) {
+                $newModel[] = $value;
+            }
+        }
+
+        $filteredModel = $this->transformReverse($this->getMapping($newModel, 'Transaction', $version));
 
         return $filteredModel;
     }
@@ -165,19 +174,7 @@ class TransactionService
         $rawData['type']        = 3;
         $rawData['activity_id'] = $activityId;
 
-        try {
-            $mappedBudget = $this->transform($this->getMapping($rawData, 'Transaction', $version));
-
-            $this->transactionRepository->save($mappedBudget);
-
-            $this->logger->info('Transaction successfully added.', $this->getContext());
-
-            return true;
-        } catch (Exception $exception) {
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
-
-            return null;
-        }
+        return $this->addTransaction($rawData, $version);
     }
 
     /**
@@ -193,19 +190,7 @@ class TransactionService
         $rawData['type']        = 4;
         $rawData['activity_id'] = $activityId;
 
-        try {
-            $mappedBudget = $this->transform($this->getMapping($rawData, 'Transaction', $version));
-
-            $this->transactionRepository->save($mappedBudget);
-
-            $this->logger->info('Transaction successfully added.', $this->getContext());
-
-            return true;
-        } catch (Exception $exception) {
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
-
-            return null;
-        }
+        return $this->addTransaction($rawData, $version);
     }
 
     /**
@@ -221,41 +206,21 @@ class TransactionService
         $rawData['type']        = 1;
         $rawData['activity_id'] = $activityId;
 
-        try {
-            $mappedBudget = $this->transform($this->getMapping($rawData, 'Transaction', $version));
-
-            $this->transactionRepository->save($mappedBudget);
-
-            $this->logger->info('Transaction successfully added.', $this->getContext());
-
-            return true;
-        } catch (Exception $exception) {
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
-
-            return null;
-        }
+        return $this->addTransaction($rawData, $version);
     }
 
     /**
      * Deletes a transaction of current activity.
      *
-     * @param $activityId
      * @param $request
      * @return bool|null
      */
-    public function deleteTransaction($activityId, $request)
+    public function deleteTransaction($request)
     {
-
-        dd($request->get('index'));
         try {
-            $activity = $this->find($activityId);
-            $transactions   = $activity->transactions;
-
-            unset($transactions[$request->get('index')]);
-
-            $transactions = array_values($transactions);
-
-            $transactions->save();
+            $index        = $request->get('index');
+            $transactions = $this->find($index);
+            $transactions->delete();
 
             $this->logger->info('Transaction successfully deleted.', $this->getContext());
 
@@ -303,5 +268,40 @@ class TransactionService
         }
 
         return null;
+    }
+
+    protected function addTransaction($rawData, $version)
+    {
+        try {
+            $mappedBudget = $this->transform($this->getMapping($rawData, 'Transaction', $version));
+
+            foreach ($mappedBudget as $index => $value) {
+                $this->transactionRepository->save($value);
+            }
+
+            $this->logger->info('Transaction successfully added.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    public function getTransactionType($type)
+    {
+        if ($type == 3) {
+            return 'Disbursement';
+        }
+
+        if ($type == 4) {
+            return 'Expenditure';
+        }
+
+        if ($type == 1) {
+            return 'IncomingFunds';
+        }
+
     }
 }

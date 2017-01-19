@@ -23,7 +23,6 @@ class ActivityRepository implements ActivityRepositoryInterface
         $this->activity = $activity;
     }
 
-
     /**
      * Returns all the activities of an organization.
      *

@@ -1,6 +1,6 @@
 <div class="activity-element-wrapper">
     @if ($disbursement)
-        <a href="{{ route('lite.activity.transaction.edit', [$activity->id, 'Disbursement']) }}"
+        <a href="{{ route('lite.activity.transaction.edit', [$activity->id, 3]) }}"
            class="edit-element">
             <span>Edit Disbursement</span>
         </a>

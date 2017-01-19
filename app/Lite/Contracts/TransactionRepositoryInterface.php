@@ -39,4 +39,6 @@ interface TransactionRepositoryInterface
      * @return mixed
      */
     public function update($id, array $data);
+
+    public function findByActivityId($id);
 }

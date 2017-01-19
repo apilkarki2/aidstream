@@ -316,24 +316,32 @@ class ActivityController extends LiteController
     {
         $form = $this->transactionForm->form(route('lite.activity.transaction.store', [$activityId, $type]), $type);
 
-        return view('lite.activity.transaction.edit', compact('form'));
+        return view('lite.activity.transaction.edit', compact('form', 'type'));
     }
 
     /**
      * Edits transaction of an activity.
      *
      * @param $activityId
+     * @param $type
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function editTransaction($activityId)
+    public function editTransaction($activityId, $type)
     {
-        $version = session('version');
+        $version  = session('version');
+        $model    = $this->transactionService->getModel($activityId, $type, $version);
+        $type     = $this->transactionService->getTransactionType($type);
 
-        $model = $this->transactionService->getModel($activityId, $version);
+        $newModel[lcfirst($type)] = $model;
 
-        $form = $this->transactionForm->form(route('lite.activity.transaction.store', $activityId), $model);
+        $form = $this->transactionForm->form(route('lite.activity.transaction.update', $activityId), $type, $newModel);
 
-        return view('lite.activity.transaction.edit', compact('form'));
+        return view('lite.activity.transaction.edit', compact('form', 'type'));
+    }
+
+    public function updateTransaction($activityId)
+    {
+        dd($activityId);
     }
 
     /**
@@ -346,7 +354,6 @@ class ActivityController extends LiteController
      */
     public function storeTransaction($activityId, $type, Request $request)
     {
-
         $rawData = $request->except('_token');
         $version = session('version');
         $method  = sprintf('add%s', ucfirst($type));
@@ -370,12 +377,12 @@ class ActivityController extends LiteController
      */
     public function deleteTransaction($activityId, Request $request)
     {
-        dd($activityId);
-        if ($this->transactionService->deleteTransaction($activityId, $request)) {
+        if ($this->transactionService->deleteTransaction($request)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
         }
 
-        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_create')]]);
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_delete')]]);
 
     }
+
 }

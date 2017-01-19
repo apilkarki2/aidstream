@@ -113,7 +113,7 @@ $router->group(
                 );
 
                 $router->get(
-                    '/lite/activity/{activity}/transaction/edit',
+                    '/lite/activity/{activity}/transaction/{type}/edit',
                     [
                         'as'   => 'lite.activity.transaction.edit',
                         'uses' => 'ActivityController@editTransaction'
@@ -125,6 +125,14 @@ $router->group(
                     [
                         'as'   => 'lite.activity.transaction.store',
                         'uses' => 'ActivityController@storeTransaction'
+                    ]
+                );
+
+                $router->post(
+                    '/lite/activity/{activity}/transaction/update',
+                    [
+                        'as'   => 'lite.activity.transaction.update',
+                        'uses' => 'ActivityController@updateTransaction'
                     ]
                 );
 
