@@ -4385,15 +4385,14 @@ body > .skiptranslate iframe {
   overflow: hidden; }
 
 .change-logo-wrap {
-  background: #fff;
   padding: 11px 0;
-  margin: -67px 20px 0;
+  margin: -67px 10px 0;
   -webkit-border-radius: 50%;
           border-radius: 50%; }
 
 .upload-label, .change-logo {
   display: block;
-  margin-top: -86px;
+  margin-top: -76px;
   text-align: center;
   color: #00A8FF;
   font-size: 13px;
@@ -4412,7 +4411,8 @@ body > .skiptranslate iframe {
   padding: 4px 6px;
   font-size: 12px;
   -webkit-border-radius: 20px;
-          border-radius: 20px; }
+          border-radius: 20px;
+  text-transform: none; }
 
 .upload-logo img {
   width: 166px;
@@ -6237,7 +6237,7 @@ body > .skiptranslate iframe {
   .create-form > form > .collection_form.has_add_more + .add_to_collection:first-of-type {
     margin-top: -35px; }
   .upload-logo-block {
-    float: right;
+    float: right !important;
     margin-top: -300px;
     width: 50%; }
   .edit-profile-form-block {
@@ -6283,10 +6283,12 @@ body > .skiptranslate iframe {
     float: none;
     margin-left: -2px;
     vertical-align: top; }
-  .form__block .col-md-9 {
+  .lite .create-form .col-md-9 {
     padding-right: 15px !important; }
   .settings-form > form .collection_form > .form-group {
-    width: 100%; } }
+    width: 100%; }
+  .lite .upload-logo-block {
+    margin-top: -160px !important; } }
 
 @media all and (min-width: 880px) {
   #activity-elements-checklist .collection_form > .form-group > .form-group {
@@ -6677,20 +6679,29 @@ body > .skiptranslate iframe {
       background: url(../../images/ic-date.svg) no-repeat 97%; }
     .lite .create-form form .has-error {
       font-size: 12px; }
-    .lite .create-form form > .form-group {
+    .lite .create-form form .form-group {
       margin-bottom: 15px;
       padding: 0 15px; }
-      .lite .create-form form > .form-group label {
+      .lite .create-form form .form-group label {
         font-size: 12px;
         text-transform: uppercase; }
-        .lite .create-form form > .form-group label:after {
+        .lite .create-form form .form-group label:after {
           color: #aeaeae;
           content: "(Optional)";
           font-size: 10px;
           margin-left: 2px;
           text-transform: none; }
-        .lite .create-form form > .form-group label.required:after {
+        .lite .create-form form .form-group label.required:after {
           display: none; }
+  .lite .create-form .col-md-9 {
+    padding: 0; }
+
+.lite .user-form {
+  padding: 0 36px 15px; }
+  .lite .user-form form .form-group:last-child {
+    float: none; }
+  .lite .user-form .col-md-9 {
+    padding-bottom: 15px; }
 
 .lite .help-text {
   right: -8px;
@@ -6699,38 +6710,35 @@ body > .skiptranslate iframe {
 .form__block {
   border-bottom: 1px solid #d5eaf5;
   display: inline-block;
-  padding: 20px 36px 15px;
+  padding: 20px 38px 15px;
   vertical-align: top;
   width: 100%; }
-  .form__block .col-md-9 {
-    padding: 0; }
   .form__block h2 {
     font: 14px Open-Sans-Bold;
-    margin-bottom: 12px;
+    margin: 0 0 12px -2px;
     text-transform: uppercase; }
+  .form__block:first-of-type {
+    padding-top: 0; }
 
-#basics {
-  padding-top: 0; }
-
-.funding_organisations > label:after, .implementing_organisations > label:after {
+.lite .funding_organisations > label:after, .lite .implementing_organisations > label:after {
   display: none; }
 
-.funding_organisations > .form-group, .implementing_organisations > .form-group {
+.lite .funding_organisations > .form-group, .lite .implementing_organisations > .form-group {
   background: #fff !important;
   border: 1px solid transparent !important;
   display: inline-block;
-  margin-bottom: 0;
-  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
   position: relative;
   width: 100%; }
-  .funding_organisations > .form-group.fill-border, .implementing_organisations > .form-group.fill-border {
+  .lite .funding_organisations > .form-group.fill-border, .lite .implementing_organisations > .form-group.fill-border {
     border: 1px dashed #00A8FF !important; }
-  .funding_organisations > .form-group .form-group, .implementing_organisations > .form-group .form-group {
-    margin-bottom: 0; }
-  .funding_organisations > .form-group + .form-group, .implementing_organisations > .form-group + .form-group {
+  .lite .funding_organisations > .form-group .form-group, .lite .implementing_organisations > .form-group .form-group {
+    margin-bottom: 0 !important; }
+  .lite .funding_organisations > .form-group + .form-group, .lite .implementing_organisations > .form-group + .form-group {
     margin-top: 16px; }
 
-.funding_organisations .remove_from_collection, .funding_organisations .remove_from_collection:focus, .implementing_organisations .remove_from_collection, .implementing_organisations .remove_from_collection:focus {
+.lite .funding_organisations .remove_from_collection, .lite .funding_organisations .remove_from_collection:focus, .lite .implementing_organisations .remove_from_collection, .lite .implementing_organisations .remove_from_collection:focus {
   top: -10px;
   height: 22px;
   width: 22px; }
@@ -6741,7 +6749,7 @@ body > .skiptranslate iframe {
   font-size: 12px;
   float: left;
   margin: 2px 0 20px;
-  padding: 0 0 0 40px;
+  padding: 0 0 0 36px;
   position: relative; }
   .lite .add-to-collection:before {
     border: 1px solid #484848;
@@ -6752,7 +6760,7 @@ body > .skiptranslate iframe {
     font-size: 20px;
     line-height: 16px;
     position: absolute;
-    left: 16px;
+    left: 13px;
     width: 18px; }
   .lite .add-to-collection:hover {
     color: #00A8FF; }
@@ -6761,7 +6769,7 @@ body > .skiptranslate iframe {
 
 .lite .btn-form {
   height: 53px;
-  margin: 25px 15px 0;
+  margin: 25px 36px 0;
   position: static;
   width: 218px;
   -webkit-transition: all 0.5s ease-in-out;
@@ -6770,7 +6778,7 @@ body > .skiptranslate iframe {
           transition: all 0.5s ease-in-out; }
 
 .btn-go-back {
-  margin: 40px 0 0; }
+  margin: 40px 24px 0 0; }
 
 .panel__nav nav {
   background: #fff;
@@ -6780,7 +6788,7 @@ body > .skiptranslate iframe {
           box-shadow: 0 2px 40px 10px #e0ecf2;
   padding: 12px 10px;
   position: absolute;
-  top: 66px;
+  top: 36px;
   right: 30px;
   bottom: auto;
   left: auto;
@@ -6834,11 +6842,6 @@ body > .skiptranslate iframe {
 .nav--completed {
   background: url(../../images/ic-sprite.svg) no-repeat -637px -268px; }
 
-.lite .user-form {
-  padding: 0 36px 15px; }
-  .lite .user-form .form-group:last-of-type {
-    float: none; }
-
 .border-btn-line {
   border-top: 1px solid #d5eaf5;
   clear: both;
@@ -6847,6 +6850,32 @@ body > .skiptranslate iframe {
     margin-left: 35px; }
 
 .timezone {
-  clear: both; }
+  clear: both;
+  display: block !important; }
+
+.lite .upload-logo, .lite .upload-logo-block input[type=file], .lite .inputfile + label {
+  height: 140px;
+  width: 140px;
+  margin-bottom: 0; }
+
+.lite .upload-logo {
+  background-position: center 37%; }
+  .lite .upload-logo img {
+    height: 128px;
+    width: 128px; }
+
+.lite .upload-logo > .form-group {
+  margin: 0;
+  padding: 0; }
+  .lite .upload-logo > .form-group > label {
+    display: none; }
+
+.lite .upload-label {
+  font-size: 12px;
+  margin-top: -65px;
+  padding: 0 4px; }
+
+.lite .inputfile + label:after {
+  display: none; }
 
 /*# sourceMappingURL=maps/app.css.map */

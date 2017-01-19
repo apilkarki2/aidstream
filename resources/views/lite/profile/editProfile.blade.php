@@ -12,56 +12,62 @@
             <div class="panel__heading">
                 <h1>@lang('lite/title.edit_profile')</h1>
             </div>
-            <div class="panel-body">
-                {!! form_start($form) !!}
-                <div>
-                    Personal Information
-                </div>
-                {!! form_until($form, 'picture') !!}
-                <div>
-                    Organisation Information
-                </div>
-                {!! form_rest($form) !!}
-                {!! form_end($form) !!}
-
-        </div>
             <div class="panel__body">
-                <div class="create-form user-form">
-                    <div class="row">
-                        {!! form_start($form) !!}
-                        <div>
-                            Personal Information
-                        </div>
-                        {!! form_until($form, 'timeZone') !!}
-                        <div class="form-group col-sm-6 upload-logo-block edit-profile-block edit-profile-form-block">
-                            {{--<label class="control-label">Profile Picture</label>--}}
-                            <div class="upload-logo">
-                                {!! form_row($form->picture) !!}
-                                <label for="file-logo">
-                                    <div class="uploaded-logo has-image">
-                                        <img src="" height="150" width="150" alt="Uploaded Image" id="selected_picture">
-                                        <div class="change-logo-wrap">
-                                            <span class="change-logo">Change Picture</span>
+                <div class="create-form">
+                    {!! form_start($form) !!}
+                    <div class="form__block">
+                        <div class="col-md-9">
+                            <h2>@lang('lite/global.personal_information')</h2>
+                            <div class="row">
+                                {!! form_until($form, 'timeZone') !!}
+                            </div>
+                            <div class="form-group col-sm-6 upload-logo-block edit-profile-block edit-profile-form-block">
+                                <label class="control-label">Profile Picture</label>
+                                <div class="upload-logo">
+                                    {{ Form::file('profile_picture',['class'=>'inputfile form-control', 'id' => 'picture']) }}
+                                    <label for="file-logo">
+                                        <div class="uploaded-logo">
+                                            @if($loggedInUser->profile_picture)
+                                                <img src="{{ $loggedInUser->profile_url }}" height="150" width="150"
+                                                     alt="{{ $loggedInUser->profile_picture }}" id="selected_picture">
+                                            @else
+                                                <img src="" height="150" width="150" alt="Uploaded Image"
+                                                     id="selected_picture">
+                                            @endif
+                                            <div class="change-logo-wrap">
+                                                <span class="change-logo">@lang('user.change_picture')</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </label>
-                                <span class="upload-label">Upload your Profile Picture</span>
+                                    </label>
+                                    <span class="upload-label">@lang("user.upload_picture")</span>
+                                </div>
+                                <div class="description">
+                                    <span>@lang('global.image_criteria')</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="description">
-                            <span>@lang('global.image_criteria')</span>
-                        </div>
-                        <div>
-                            Organisation Information
-                        </div>
-                        {!! form_rest($form) !!}
-                        {!! form_end($form) !!}
                     </div>
+                    <div class="form__block">
+                        <div class="col-md-9">
+                            <h2>@lang('lite/global.organisation_information')</h2>
+                            <div class="row">
+                                {!! form_until($form, 'secondaryEmail') !!}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        {!! form_rest($form) !!}
+                    </div>
+                    {!! form_end($form) !!}
                 </div>
             </div>
-    </div>
-@stop
+            @stop
 
-@section('script')
+            @section('script')
+                <script src="{{url('js/chunk.js')}}"></script>
+                <script>
+                    Chunk.displayPicture();
+                    Chunk.usernameGenerator();
+                </script>
 
 @stop

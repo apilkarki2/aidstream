@@ -31,13 +31,10 @@ class Profile extends BaseForm
                     'wrapper' => ['class' => 'form-group col-sm-6 timezone'],
                 ]
             )
-            ->add(
-                'picture',
-                'file'
-            )
+//            ->add('picture','file', ['attr' => ['class' => 'form-control inputfile']])
             ->add('secondaryFirstName', 'text', ['label' => trans('lite/profile.secondary') . ' ' . trans('lite/profile.first_name'), 'wrapper' => ['class' => 'form-group col-sm-6']])
             ->add('secondaryLastName', 'text', ['label' => trans('lite/profile.secondary') . ' ' . trans('lite/profile.last_name'), 'wrapper' => ['class' => 'form-group col-sm-6']])
             ->add('secondaryEmail', 'text', ['label' => trans('lite/profile.secondary') . ' ' . trans('lite/profile.email'), 'required' => true, 'wrapper' => ['class' => 'form-group col-sm-6']])
-            ->add(trans('lite/global.save'), 'submit', ['attr' => ['class' => 'btn btn-submit btn-form'], 'wrapper' => ['class' => 'form-group col-sm-6']]);
+            ->add(trans('lite/global.save'), 'submit', ['attr' => ['class' => 'btn btn-submit btn-form']]);
     }
 }

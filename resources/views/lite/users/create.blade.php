@@ -15,7 +15,9 @@
                     <span class="hidden" id="user-identifier" data-id="{{ $organizationIdentifier }}"></span>
                     <div class="row">
                         {!! form_start($form) !!}
-                        {!! form_until($form,"role_id") !!}
+                        <div class="col-md-9">
+                            {!! form_until($form,"role_id") !!}
+                        </div>
                         <div class="border-btn-line">
                             {!! form_rest($form) !!}
                         </div>
