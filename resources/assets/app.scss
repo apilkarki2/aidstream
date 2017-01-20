@@ -185,7 +185,7 @@ form .select2-container {
 
 .select2-container .select2-selection--single .select2-selection__rendered {
   padding-left: 0 !important;
-  line-height: 22px!important;
+  line-height: 22px !important;
 }
 
 .has-error {
@@ -3182,6 +3182,8 @@ $organization-logo-width: 124px;
     display: inline-block;
     vertical-align: middle;
     border-radius: 50%;
+    @include size(170px);
+    margin-top: -10px;
   }
 }
 
@@ -5048,7 +5050,7 @@ body > .skiptranslate iframe {
 .single-form-wrap {
   > .form-group {
     padding-left: 0 !important;
-    float: left!important;
+    float: left !important;
   }
   .description {
     clear: both;
@@ -7074,6 +7076,10 @@ body > .skiptranslate iframe {
   .transaction-show .element-show .edit-value {
     margin-right: 20px;
   }
+
+  .panel-profile .panel-body {
+    padding: 0 !important;
+  }
 }
 
 @media all and (max-width: 640px) {
@@ -7577,7 +7583,7 @@ body > .skiptranslate iframe {
   }
 
   .upload-logo-block {
-    float: right!important;
+    float: right !important;
     margin-top: -300px;
     width: 50%;
   }
@@ -7662,15 +7668,15 @@ body > .skiptranslate iframe {
   }
 
   .lite .create-form .col-md-9 {
-    padding-right: 15px!important;
+    padding-right: 15px !important;
   }
 
-  .settings-form > form .collection_form>.form-group {
+  .settings-form > form .collection_form > .form-group {
     width: 100%;
   }
 
   .lite .upload-logo-block {
-    margin-top: -160px!important;
+    margin-top: -160px !important;
   }
 }
 
@@ -8119,7 +8125,7 @@ body > .skiptranslate iframe {
     margin: 23px 0;
     text-indent: 1px;
     width: auto;
-    &:hover {
+    &:hover,&:focus {
       text-decoration: none;
     }
   }
@@ -8147,7 +8153,12 @@ body > .skiptranslate iframe {
   h1 {
     font-size: 20px;
     float: left;
-    margin: 0 0 5px;
+    margin: 0 0 3px;
+    & + i {
+      display: inline-block;
+      font-size: 11px;
+      margin: 6px 5px 0;
+    }
   }
   p {
     color: rgba($color_gravel_approx, 0.5);
@@ -8234,31 +8245,33 @@ body > .skiptranslate iframe {
   }
 }
 
-.lite .funding_organisations, .lite .implementing_organisations {
-  > label:after {
-    display: none;
-  }
-  > .form-group {
-    background: $color_white!important;
-    border: 1px solid transparent!important;
-    display: inline-block;
-    margin-bottom: 0!important;
-    padding: 0!important;
-    position: relative;
-    width: 100%;
-    &.fill-border {
-      border: 1px dashed $color_dodger_blue_approx !important;
+.lite {
+  .funding_organisations, .implementing_organisations, .outcomes_document, .annual_report {
+    > label:after {
+      display: none;
     }
-    .form-group {
-      margin-bottom: 0!important;
+    > .form-group {
+      background: $color_white !important;
+      border: 1px solid transparent !important;
+      display: inline-block;
+      margin-bottom: 0 !important;
+      padding: 0 !important;
+      position: relative;
+      width: 100%;
+      &.fill-border {
+        border: 1px dashed $color_dodger_blue_approx !important;
+      }
+      .form-group {
+        margin-bottom: 0 !important;
+      }
+      & + .form-group {
+        margin-top: 16px;
+      }
     }
-    & + .form-group {
-      margin-top: 16px;
+    .remove_from_collection, .remove_from_collection:focus {
+      top: -10px;
+      @include size(22px);
     }
-  }
-  .remove_from_collection, .remove_from_collection:focus {
-    top: -10px;
-    @include size(22px);
   }
 }
 
@@ -8367,10 +8380,10 @@ body > .skiptranslate iframe {
 
 .timezone {
   clear: both;
-  display: block!important;
+  display: block !important;
 }
 
-.lite .upload-logo,.lite .upload-logo-block input[type=file],.lite .inputfile+label {
+.lite .upload-logo, .lite .upload-logo-block input[type=file], .lite .inputfile + label {
   @include size(140px);
   margin-bottom: 0;
 }
@@ -8394,7 +8407,71 @@ body > .skiptranslate iframe {
     margin-top: -65px;
     padding: 0 4px;
   }
-  .inputfile+label:after {
+  .inputfile + label:after {
     display: none;
+  }
+}
+
+#results-and-reports {
+  padding-bottom: 30px;
+  .collection_form + .collection_form {
+    padding-top: 6px;
+  }
+}
+
+//dashboard
+
+.dashboard-panel__heading {
+  margin-bottom: 0;
+}
+
+.panel__status {
+  border-bottom: 1px solid #d5eaf5;
+  .col-sm-4 {
+    background-image: radial-gradient(circle at 50% 0, #f9fdff, #f0faff);
+    height: 198px;
+    padding: 20px 26px;
+    &:nth-child(even) {
+      background-image: radial-gradient(circle at 50% 0, #f2fbff, #dff5ff);
+    }
+    h2 {
+      font-size: 14px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .count {
+      display: block;
+      line-height: 74px;
+      font-size: 72px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.published-num,.highest-budget {
+  font-size: 12px;
+  a,span {
+    font-family: $font_1;
+  }
+}
+
+.published-num span {
+  background: url(../images/ic-iati-logo.png) no-repeat 0 1px/15px;
+  font-family: $font_0;
+  padding-left: 20px;
+}
+
+.count small {
+  font-size: 36px;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+.stats {
+  svg {
+    padding-top: 10px;
+  }
+  text {
+    font-size: 12px;
   }
 }

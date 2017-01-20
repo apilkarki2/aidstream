@@ -9,21 +9,21 @@
         @include('includes.response')
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
-            <div class="panel-content-heading">
+            <div class="panel__heading dashboard-panel__heading">
                 <div>
-                    @lang('lite/activityDashboard.dashboard')
-                    <span>
+                    <h1>@lang('lite/activityDashboard.dashboard')</h1>
+                    <i>
                         @if($lastPublishedToIATI)
                             @lang('lite/activityDashboard.last_published_to_iati'): {{substr(changeTimeZone($lastPublishedToIATI),0,12)}}
                         @endif
-                    </span>
+                    </i>
+                    <p>
+                        @lang('lite/activityDashboard.find_activities_and_stats')
+                    </p>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="panel__body">
                 @if(count($activities) > 0)
-                    <div>
-                        @lang('lite/activityDashboard.find_activities_and_stats')
-                    </div>
                     @include('lite.activity.activityStats')
                     <div>
                         <select id="sortBy">

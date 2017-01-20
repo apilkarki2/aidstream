@@ -5,8 +5,8 @@
 @inject('getCode', 'App\Helpers\GetCodeName')
 @section('content')
     {{Session::get('message')}}
-
-    <div class="col-xs-9 col-lg-9 content-wrapper activity-wrapper profile-content-wrapper">
+<div class="col-xs-9 col-md-9 col-lg-9 content-wrapper">
+    <div class="col-xs-12 col-lg-12 profile-content-wrapper">
         @include('includes.response')
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default panel-profile">
@@ -28,7 +28,7 @@
                                 <span class="profile-username">{{Auth::user()->username}}</span>
                                 <a href="{{route('lite.user.profile.edit', Auth::user()->id)}}"
                                    class="edit-profile">@lang('user.edit_profile')</a>
-                                <a href="{{route('user.reset-user-password', Auth::user()->id)}}"
+                                <a href="{{route('lite.user.password.edit', Auth::user()->id)}}"
                                    class="change-password">@lang('user.change_password')</a>
                                 <span class="profile-user-email"><a
                                             href="mailto:{{Auth::user()->email}}">{{Auth::user()->email}}</a></span>
@@ -125,6 +125,7 @@
             </div>
         </div>
     </div>
+</div>
 @stop
 
 @section('script')
