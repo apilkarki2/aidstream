@@ -28,4 +28,6 @@ return [
     'budget_success_deleted'                        => 'Budget successfully deleted.',
     'transaction_success_created'                   => 'Transaction successfully created.',
     'transaction_success_deleted'                   => 'Transaction successfully deleted.',
+    'transaction_success_updated'                   => 'Transaction successfully updated',
+
 ];

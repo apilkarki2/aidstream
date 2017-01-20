@@ -2,13 +2,13 @@
     @if ($disbursement)
         <a href="{{ route('lite.activity.transaction.edit', [$activity->id, 3]) }}"
            class="edit-element">
-            <span>Edit Disbursement</span>
+            <span>@lang('lite/elementForm.edit_disbursement')</span>
         </a>
         <div>
         </div>
         <div class="activity-element-list">
             <div class="activity-element-label">
-                Disbursement
+                @lang('lite/title.disbursement')
             </div>
             <div class="activity-element-info">
                 @foreach ($disbursement as $index => $transaction)
@@ -28,15 +28,15 @@
                 @endforeach
             </div>
             <a href="{{ route('lite.activity.transaction.create', [$activity->id, 'Disbursement']) }}"
-               class="add-more"><span>Add Disbursement</span></a>
+               class="add-more"><span>@lang('lite/elementForm.add_disbursement')</span></a>
         </div>
     @else
         <div class="activity-element-list">
             <div class="title">
-                Disbursement
+                @lang('lite/title.disbursement')
             </div>
             <a href="{{ route('lite.activity.transaction.create', [$activity->id, 'Disbursement']) }}"
-               class="add-more"><span>Add Disbursement</span></a>
+               class="add-more"><span>@lang('lite/elementForm.add_disbursement')</span></a>
         </div>
     @endif
 </div>

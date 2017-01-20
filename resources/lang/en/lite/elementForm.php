@@ -36,5 +36,14 @@ return [
     'add_another_disbursement'              => 'Add another Disbursement',
     'add_another_expenditure'               => 'Add another Expenditure',
     'add_another_incoming_funds'            => 'Add another Incoming funds',
-    'add_this_transaction'                  => 'Add this transaction'
+    'add_this_transaction'                  => 'Add this transaction',
+    'edit_budget'                           => 'Edit Budget',
+    'add_budget'                            => 'Add Budget',
+    'edit_disbursement'                     => 'Edit Disbursement',
+    'add_disbursement'                      => 'Add Disbursement',
+    'edit_expenditure'                      => 'Edit Expenditure',
+    'add_expenditure'                       => 'Add Expenditure',
+    'edit_incoming_funds'                   => 'Edit Incoming Funds',
+    'add_incoming_funds'                    => 'Add Incoming Funds',
+
 ];

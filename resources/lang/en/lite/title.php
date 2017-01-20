@@ -11,5 +11,8 @@ return [
     'change_password' => 'Change Password',
     'budget'          => 'Budget',
     'transaction'     => 'Transaction',
+    'disbursement'    => 'Disbursement',
+    'expenditure'     => 'Expenditure',
+    'incoming_funds'  => 'Incoming Funds',
 
 ];

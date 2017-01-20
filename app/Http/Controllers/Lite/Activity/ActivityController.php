@@ -338,9 +338,14 @@ class ActivityController extends LiteController
      */
     public function createTransaction($activityId, $type)
     {
-        $form = $this->transactionForm->form(route('lite.activity.transaction.store', [$activityId, $type]), $type);
+        if ($type == 'Disbursement' || $type == 'Expenditure' || $type == 'IncomingFunds') {
+            $form = $this->transactionForm->form(route('lite.activity.transaction.store', [$activityId, $type]), $type);
 
-        return view('lite.activity.transaction.edit', compact('form', 'type'));
+            return view('lite.activity.transaction.edit', compact('form', 'type'));
+        }
+
+        return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'warning', 'messages' => [trans('error.404_not_found')]]);
+
     }
 
     /**
@@ -353,15 +358,20 @@ class ActivityController extends LiteController
      */
     public function editTransaction($activityId, $transactionType)
     {
-        $version = session('version');
-        $model   = $this->transactionService->getModel($activityId, $transactionType, $version);
-        $type    = $this->transactionService->getTransactionType($transactionType);
+        if ($transactionType == 'Disbursement' || $transactionType == 'Expenditure' || $transactionType == 'IncomingFunds') {
+            $version = session('version');
+            $model   = $this->transactionService->getModel($activityId, $transactionType, $version);
+            $type    = $this->transactionService->getTransactionType($transactionType);
 
-        $newModel[strtolower($type)] = $model;
+            $newModel[strtolower($type)] = $model;
 
-        $form = $this->transactionForm->form(route('lite.activity.transaction.update', [$activityId, $transactionType]), $type, $newModel);
+            $form = $this->transactionForm->form(route('lite.activity.transaction.update', [$activityId, $transactionType]), $type, $newModel);
 
-        return view('lite.activity.transaction.edit', compact('form', 'type'));
+            return view('lite.activity.transaction.edit', compact('form', 'type'));
+        }
+
+        return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'warning', 'messages' => [trans('error.404_not_found')]]);
+
     }
 
     /**
@@ -371,8 +381,12 @@ class ActivityController extends LiteController
      * @param Request $request
      * @return RedirectResponse
      */
-    public function updateTransaction($activityId, $type, Request $request)
-    {
+    public
+    function updateTransaction(
+        $activityId,
+        $type,
+        Request $request
+    ) {
         $rawData = $request->except('_token');
         $version = session('version');
 
@@ -395,8 +409,12 @@ class ActivityController extends LiteController
      * @param Request $request
      * @return RedirectResponse
      */
-    public function storeTransaction($activityId, $type, Request $request)
-    {
+    public
+    function storeTransaction(
+        $activityId,
+        $type,
+        Request $request
+    ) {
         $rawData = $request->except('_token');
         $version = session('version');
         $method  = sprintf('add%s', ucfirst($type));
@@ -419,8 +437,11 @@ class ActivityController extends LiteController
      * @param Request $request
      * @return mixed
      */
-    public function deleteTransaction($activityId, Request $request)
-    {
+    public
+    function deleteTransaction(
+        $activityId,
+        Request $request
+    ) {
         if ($this->transactionService->delete($request)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
         }
