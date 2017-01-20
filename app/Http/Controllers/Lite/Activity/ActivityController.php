@@ -7,6 +7,7 @@ use App\Lite\Services\Activity\ActivityService;
 use App\Lite\Services\FormCreator\Budget;
 use App\Lite\Services\Validation\ValidationService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Class ActivityController
@@ -78,6 +79,16 @@ class ActivityController extends LiteController
      */
     public function create()
     {
+        $organisation = auth()->user()->organization;
+        $settings     = $organisation->settings;
+        $version      = session('version');
+
+        $data = ['organisation' => $organisation->toArray(), 'settings' => $settings->toArray()];
+
+        if (!$this->validation->passes($data, 'ActivityRequiredFields', $version)) {
+            return redirect()->route('lite.settings.edit')->withResponse(['type' => 'danger', 'code' => ['settings_incomplete']]);
+        }
+
         $form = $this->activityForm->form(route('lite.activity.store'), trans('lite/elementForm.add_this_activity'));
 
         return view('lite.activity.create', compact('form'));
@@ -93,6 +104,9 @@ class ActivityController extends LiteController
     {
         $rawData = $request->except('_token');
         $version = session('version');
+
+        $organization = auth()->user()->organization;
+        $this->authorize('add_activity', $organization);
 
         if (!$this->validation->passes($rawData, self::ENTITY_TYPE, $version)) {
             return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
@@ -116,6 +130,10 @@ class ActivityController extends LiteController
         $version       = session('version');
         $activity      = $this->activityService->find($activityId);
         $documentLinks = $this->activityService->documentLinks($activityId, $version);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
 
         $statusLabel      = ['draft', 'completed', 'verified', 'published'];
         $activityWorkflow = $activity->activity_workflow;
@@ -141,9 +159,16 @@ class ActivityController extends LiteController
      */
     public function edit($activityId)
     {
-        $version  = session('version');
-        $activity = $this->activityService->edit($activityId, $version);
-        $form     = $this->activityForm->form(route('lite.activity.update', $activityId), trans('lite/elementForm.update_this_activity'), $activity);
+        $version       = session('version');
+        $activityModel = $this->activityService->find($activityId);
+        $activity      = $this->activityService->edit($activityId, $version);
+
+        if (Gate::denies('ownership', $activityModel)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
+        $this->authorize('edit_activity', $activityModel);
+
+        $form = $this->activityForm->form(route('lite.activity.update', $activityId), trans('lite/elementForm.update_this_activity'), $activity);
 
         return view('lite.activity.create', compact('form', 'activity'));
     }
@@ -157,6 +182,14 @@ class ActivityController extends LiteController
      */
     public function destroy($activityId)
     {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('delete_activity', $activity);
+
         if ($this->activityService->delete($activityId)) {
             return redirect()->back()->withResponse(['type' => 'success', 'code' => ['deleted', ['name' => trans('lite/global.activity')]]]);
         }
@@ -173,6 +206,13 @@ class ActivityController extends LiteController
      */
     public function update($activityId, Request $request)
     {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+        $this->authorize('edit_activity', $activity);
+
         $rawData = $request->except('_token');
         $version = session('version');
 
@@ -230,6 +270,13 @@ class ActivityController extends LiteController
      */
     public function editBudget($activityId)
     {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+        $this->authorize('edit_activity', $activity);
+
         $version = session('version');
 
         $model = $this->activityService->getBudgetModel($activityId, $version);
@@ -248,6 +295,13 @@ class ActivityController extends LiteController
      */
     public function storeBudget($activityId, Request $request)
     {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+        $this->authorize('add_activity', $activity);
+
         $rawData = $request->except('_token');
         $version = session('version');
 
@@ -270,11 +324,18 @@ class ActivityController extends LiteController
      */
     public function deleteBudget($activityId, Request $request)
     {
+        $activity = $this->activityService->find($activityId);
+
+        if (Gate::denies('ownership', $activity)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('delete_activity', $activity);
+
         if ($this->activityService->deleteBudget($activityId, $request)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.budget_success_deleted')]]);
         }
 
         return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_budget_create')]]);
-
     }
 }

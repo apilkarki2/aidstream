@@ -5,6 +5,7 @@ use App\Lite\Services\FormCreator\Users;
 use App\Lite\Services\Users\UserService;
 use App\Lite\Services\Validation\ValidationService;
 use App\Models\Role;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +43,8 @@ class UserController extends LiteController
      */
     public function __construct(UserService $userService, Users $userForm, ValidationService $validationService)
     {
-
+        $this->middleware('auth');
+        $this->middleware('auth.admin', ['except' => ['index']]);
         $this->userForm    = $userForm;
         $this->validation  = $validationService;
         $this->userService = $userService;
@@ -83,7 +85,7 @@ class UserController extends LiteController
      * Stores user details in the database.
      *
      * @param Request $request
-     * @return $this
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -97,6 +99,7 @@ class UserController extends LiteController
 
         return redirect()->back()->withResponse(['type' => 'danger', 'code' => ['save_failed', ['name' => trans('lite/global.user')]]]);
     }
+
 
     /**
      * Delete the user.
@@ -132,4 +135,3 @@ class UserController extends LiteController
         return false;
     }
 }
-

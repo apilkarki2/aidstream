@@ -97,6 +97,8 @@ class SettingsController extends LiteController
      */
     public function store(Request $request)
     {
+        $this->authorize('settings', auth()->user());
+
         $rawData = $request->all();
         $orgId   = session('org_id');
         $version = session('version');
@@ -121,6 +123,7 @@ class SettingsController extends LiteController
     public function upgradeVersion(Request $request)
     {
         $organizationId = session()->get('org_id');
+        $this->authorize('settings', auth()->user());
 
         if (!$this->settingsService->upgradeSystemVersion($organizationId)) {
             return redirect()->back()->withResponse(['type' => 'danger', 'messages' => ['Upgrade could not be completed.']]);

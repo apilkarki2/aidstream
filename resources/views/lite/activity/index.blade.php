@@ -119,7 +119,9 @@
 
             var searchPlaceholder = "{{trans('lite/activityDashboard.type_an_activity_title_to_search')}}";
             Lite.dataTable(searchPlaceholder);
-            Lite.budgetDetails();
+            setTimeout(function () {
+                Lite.budgetDetails();
+            }, 300);
         });
 
 

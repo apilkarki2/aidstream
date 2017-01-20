@@ -32,6 +32,8 @@ class Registration
      */
     protected $regAgencies;
 
+    protected $onBoardingDisabledSystemVersions = [2];
+
     /**
      * @param Logger                 $logger
      * @param DatabaseManager        $database
@@ -60,8 +62,11 @@ class Registration
             $orgInfo['secondary_contact'] = $users['secondary_contact'];
             $organization                 = $this->saveOrganization($orgInfo, $systemVersion);
             $users                        = $this->saveUsers($users, $organization);
-            foreach ($users as $user) {
-                ($user->userOnBoarding()->create(['has_logged_in_once' => false]));
+
+            if (!in_array($systemVersion, $this->onBoardingDisabledSystemVersions)) {
+                foreach ($users as $user) {
+                    ($user->userOnBoarding()->create(['has_logged_in_once' => false]));
+                }
             }
 
             $orgInfo['id'] = $organization->id;
