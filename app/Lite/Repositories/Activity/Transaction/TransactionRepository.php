@@ -17,6 +17,7 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     /**
      * TransactionRepository constructor.
+     *
      * @param Transaction $transaction
      */
     public function __construct(Transaction $transaction)
@@ -46,10 +47,17 @@ class TransactionRepository implements TransactionRepositoryInterface
         return $this->transaction->findOrFail($id);
     }
 
+    /**
+     * Find Transactions by activity id
+     *
+     * @param $id
+     * @return mixed
+     */
     public function findByActivityId($id)
     {
         return $this->transaction->where('activity_id', $id)->get();
     }
+
     /**
      * Save the Transaction data into the database.
      *
@@ -61,9 +69,17 @@ class TransactionRepository implements TransactionRepositoryInterface
         return $this->transaction->create($data);
     }
 
-    public function update($id, array $data)
+    /**
+     * Update current transactions
+     *
+     * @param array $data
+     * @return mixed
+     * @internal param $id
+     */
+    public function update(array $data)
     {
-        return $this->transaction->updateorCreate(['id' => $id], $data);
+        $transaction = $this->transaction->findOrFail($data['id']);
+
+        return $transaction->update($data);
     }
 }
-

@@ -97,6 +97,14 @@ $router->group(
                 );
 
                 $router->post(
+                    '/lite/activity/{activity}/budget/update',
+                    [
+                        'as'   => 'lite.activity.budget.update',
+                        'uses' => 'ActivityController@updateBudget'
+                    ]
+                );
+
+                $router->post(
                     '/lite/activity/{activity}/budget/delete',
                     [
                         'as'   => 'lite.activity.budget.delete',
@@ -129,7 +137,7 @@ $router->group(
                 );
 
                 $router->post(
-                    '/lite/activity/{activity}/transaction/update',
+                    '/lite/activity/{activity}/transaction/{type}/update',
                     [
                         'as'   => 'lite.activity.transaction.update',
                         'uses' => 'ActivityController@updateTransaction'

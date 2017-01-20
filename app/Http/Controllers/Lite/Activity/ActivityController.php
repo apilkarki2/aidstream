@@ -45,10 +45,11 @@ class ActivityController extends LiteController
      * @var Transaction
      */
     protected $transactionForm;
+
     /**
      * @var TransactionService
      */
-    private $transactionService;
+    protected $transactionService;
 
     /**
      * ActivityController constructor.
@@ -260,7 +261,7 @@ class ActivityController extends LiteController
 
         $model = $this->activityService->getBudgetModel($activityId, $version);
 
-        $form = $this->budgetForm->form(route('lite.activity.budget.store', $activityId), $model);
+        $form = $this->budgetForm->form(route('lite.activity.budget.update', $activityId), $model);
 
         return view('lite.activity.budget.edit', compact('form'));
     }
@@ -282,6 +283,29 @@ class ActivityController extends LiteController
         }
 
         if ($this->activityService->addBudget($activityId, $rawData, $version)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.budget_success_created')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_budget_create')]]);
+    }
+
+    /**
+     * Stores Budget of an activity.
+     *
+     * @param         $activityId
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateBudget($activityId, Request $request)
+    {
+        $rawData = $request->except('_token');
+        $version = session('version');
+
+        if (!$this->validation->passes($rawData, 'Budget', $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if ($this->activityService->updateBudget($activityId, $rawData, $version)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.budget_success_created')]]);
         }
 
@@ -323,25 +347,44 @@ class ActivityController extends LiteController
      * Edits transaction of an activity.
      *
      * @param $activityId
-     * @param $type
+     * @param $transactionType
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @internal param $type
      */
-    public function editTransaction($activityId, $type)
+    public function editTransaction($activityId, $transactionType)
     {
-        $version  = session('version');
-        $model    = $this->transactionService->getModel($activityId, $type, $version);
-        $type     = $this->transactionService->getTransactionType($type);
+        $version = session('version');
+        $model   = $this->transactionService->getModel($activityId, $transactionType, $version);
+        $type    = $this->transactionService->getTransactionType($transactionType);
 
-        $newModel[lcfirst($type)] = $model;
+        $newModel[strtolower($type)] = $model;
 
-        $form = $this->transactionForm->form(route('lite.activity.transaction.update', $activityId), $type, $newModel);
+        $form = $this->transactionForm->form(route('lite.activity.transaction.update', [$activityId, $transactionType]), $type, $newModel);
 
         return view('lite.activity.transaction.edit', compact('form', 'type'));
     }
 
-    public function updateTransaction($activityId)
+    /**
+     * Updates Transaction for current Activity
+     * @param         $activityId
+     * @param         $type
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateTransaction($activityId, $type, Request $request)
     {
-        dd($activityId);
+        $rawData = $request->except('_token');
+        $version = session('version');
+
+        if (!$this->validation->passes($rawData, 'Transaction', $version)) {
+            return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
+        }
+
+        if ($this->transactionService->updateOrCreate($activityId, $type, $rawData, $version)) {
+            return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_updated')]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_update')]]);
     }
 
     /**
@@ -371,18 +414,18 @@ class ActivityController extends LiteController
 
     /**
      * Deletes a single Transaction.
+     *
      * @param         $activityId
      * @param Request $request
      * @return mixed
      */
     public function deleteTransaction($activityId, Request $request)
     {
-        if ($this->transactionService->deleteTransaction($request)) {
+        if ($this->transactionService->delete($request)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
         }
 
         return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_delete')]]);
-
     }
 
 }

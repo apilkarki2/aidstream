@@ -34,11 +34,19 @@ interface TransactionRepositoryInterface
     public function save(array $data);
 
     /**
-     * @param       $id
+     * Updates a transaction
+     *
      * @param array $data
      * @return mixed
+     * @internal param $id
      */
-    public function update($id, array $data);
+    public function update(array $data);
 
+    /**
+     * Finds transactions by activity id
+     *
+     * @param $id
+     * @return mixed
+     */
     public function findByActivityId($id);
 }

@@ -46,6 +46,6 @@ class Transaction
                 'model'  => $model,
                 'url'    => $route
             ]
-        )->add('Save', 'submit', ['label' => trans('lite/elementForm.add_this_transaction'), 'attr' => ['class' => 'btn btn-submit btn-form']]);
+        )->add('Save', 'submit', ['label' => $model? trans('lite/global.save') : trans('lite/elementForm.add_this_transaction'), 'attr' => ['class' => 'btn btn-submit btn-form']]);
     }
 }

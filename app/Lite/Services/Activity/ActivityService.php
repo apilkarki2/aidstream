@@ -7,6 +7,7 @@ use App\Lite\Services\Settings\SettingsService;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
 use App\Models\ActivityPublished;
 use Exception;
+use Illuminate\Database\DatabaseManager;
 use Psr\Log\LoggerInterface;
 use App\Lite\Contracts\ActivityRepositoryInterface;
 
@@ -32,14 +33,21 @@ class ActivityService
      * @var ExchangeRateService
      */
     protected $exchangeRateService;
+
     /**
      * @var ActivityPublished
      */
     protected $activityPublished;
+
     /**
      * @var SettingsService
      */
     protected $settingsService;
+
+    /**
+     * @var DatabaseManager
+     */
+    protected $databaseManager;
 
     /**
      * ActivityService constructor.
@@ -48,19 +56,22 @@ class ActivityService
      * @param ExchangeRateService         $exchangeRateService
      * @param ActivityPublished           $activityPublished
      * @param LoggerInterface             $logger
+     * @param DatabaseManager             $databaseManager
      */
     public function __construct(
         ActivityRepositoryInterface $activityRepository,
         SettingsService $settingsService,
         ExchangeRateService $exchangeRateService,
         ActivityPublished $activityPublished,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        DatabaseManager $databaseManager
     ) {
         $this->activityRepository  = $activityRepository;
         $this->logger              = $logger;
         $this->exchangeRateService = $exchangeRateService;
         $this->activityPublished   = $activityPublished;
         $this->settingsService     = $settingsService;
+        $this->databaseManager     = $databaseManager;
     }
 
     /**
@@ -92,12 +103,14 @@ class ActivityService
     public function store(array $rawData, $version)
     {
         try {
+            $this->databaseManager->beginTransaction();
             $activity = $this->activityRepository->save($this->transform($this->getMapping($rawData, 'Activity', $version)));
-
+            $this->databaseManager->commit();
             $this->logger->info('Activity successfully saved.', $this->getContext());
 
             return $activity;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -124,12 +137,14 @@ class ActivityService
     public function delete($activityId)
     {
         try {
+            $this->databaseManager->beginTransaction();
             $activity = $this->activityRepository->delete($activityId);
-
+            $this->databaseManager->commit();
             $this->logger->info('Activity successfully deleted.', $this->getContext());
 
             return $activity;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -161,11 +176,14 @@ class ActivityService
     public function update($activityId, $rawData, $version)
     {
         try {
+            $this->databaseManager->beginTransaction();
             $this->activityRepository->update($activityId, $this->transform($this->getMapping($rawData, 'Activity', $version)));
+            $this->databaseManager->commit();
             $this->logger->info('Activity successfully updated.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -305,12 +323,15 @@ class ActivityService
                 $activity['budget'][] = $value;
             }
 
+            $this->databaseManager->beginTransaction();
             $this->activityRepository->update($activityId, $activity);
+            $this->databaseManager->commit();
 
             $this->logger->info('Budget successfully added.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
@@ -334,16 +355,49 @@ class ActivityService
 
             $activity->budget = array_values($budget);
 
+            $this->databaseManager->beginTransaction();
             $activity->save();
+            $this->databaseManager->commit();
 
             $this->logger->info('Budget transaction successfully deleted.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    /**
+     * Updates budget of current activity
+     *
+     * @param $activityId
+     * @param $rawData
+     * @param $version
+     * @return bool|null
+     */
+    public function updateBudget($activityId, $rawData, $version)
+    {
+        try {
+            $mappedBudget = $this->transform($this->getMapping($rawData, 'Budget', $version));
+            $activity     = $this->activityRepository->find($activityId)->toArray();
+
+            $activity['budget'] = $mappedBudget['budget'];
+
+            $this->databaseManager->beginTransaction();
+            $this->activityRepository->update($activityId, $activity);
+            $this->databaseManager->commit();
+
+            $this->logger->info('Budget successfully updated.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
     }
 }
-

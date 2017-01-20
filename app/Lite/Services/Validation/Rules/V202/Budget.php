@@ -170,27 +170,4 @@ class Budget
         return $this;
     }
 
-    /**
-     * Returns Currency Rules for Budget
-     *
-     * @return $this
-     */
-    protected function rulesForCurrency()
-    {
-        $this->settingsRules['budget.*.currency'] = 'required';
-
-        return $this;
-    }
-
-    /**
-     * Returns Currency Messages for Budget
-     * @return $this
-     */
-    protected function messagesForCurrency()
-    {
-        $this->settingsMessages['budget.*.currency.required'] = trans('validation.required', ['attribute' => trans('lite/elementForm.currency')]);
-
-        return $this;
-    }
-
 }

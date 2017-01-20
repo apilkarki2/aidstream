@@ -45,16 +45,20 @@ class Transaction implements MapperInterface
         foreach ($this->rawData as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $index => $field) {
-                    $mappedData[$index]['transaction']                                                          = $this->template;
+                    if ($id = getVal($field, ['id'], null)) {
+                        $mappedData[$index]['id'] = $id;
+                    }
+
+                    $mappedData[$index]['transaction'] = $this->template;
                     $mappedData[$index]['activity_id']                                                          = getVal($this->rawData, ['activity_id'], null);
-                    $mappedData[$index]['transaction']['reference']                                             = getVal($value, [$index, 'reference'], null);
+                    $mappedData[$index]['transaction']['reference']                                             = getVal($field, ['reference'], null);
                     $mappedData[$index]['transaction']['transaction_type'][0]['transaction_type_code']          = getVal($this->rawData, ['type'], null);
-                    $mappedData[$index]['transaction']['transaction_date'][0]['date']                           = getVal($value, [$index, 'date'], null);
-                    $mappedData[$index]['transaction']['value'][0]['amount']                                    = getVal($value, [$index, 'amount'], null);
-                    $mappedData[$index]['transaction']['value'][0]['currency']                                  = getVal($value, [$index, 'currency'], null);
-                    $mappedData[$index]['transaction']['value'][0]['date']                                      = getVal($value, [$index, 'date'], null);
-                    $mappedData[$index]['transaction']['description'][0]['narrative'][0]['narrative']           = getVal($value, [$index, 'description'], null);
-                    $mappedData[$index]['transaction']['receiver_organization'][0]['narrative'][0]['narrative'] = getVal($value, [$index, 'organisation'], null);
+                    $mappedData[$index]['transaction']['transaction_date'][0]['date']                           = getVal($field, ['date'], null);
+                    $mappedData[$index]['transaction']['value'][0]['amount']                                    = getVal($field, ['amount'], null);
+                    $mappedData[$index]['transaction']['value'][0]['currency']                                  = getVal($field, ['currency'], null);
+                    $mappedData[$index]['transaction']['value'][0]['date']                                      = getVal($field, ['date'], null);
+                    $mappedData[$index]['transaction']['description'][0]['narrative'][0]['narrative']           = getVal($field, ['description'], null);
+                    $mappedData[$index]['transaction']['receiver_organization'][0]['narrative'][0]['narrative'] = getVal($field, ['organisation'], null);
                 }
             }
         }
@@ -72,6 +76,7 @@ class Transaction implements MapperInterface
         $mappedData = [];
 
         foreach ($this->rawData as $index => $field) {
+            $mappedData[$index]['id']           = getVal($field, ['id'], '');
             $mappedData[$index]['reference']    = getVal($field, ['transaction', 'reference'], '');
             $mappedData[$index]['date']         = getVal($field, ['transaction', 'transaction_date', 0, 'date'], '');
             $mappedData[$index]['amount']       = getVal($field, ['transaction', 'value', 0, 'amount'], '');
@@ -93,4 +98,3 @@ class Transaction implements MapperInterface
         return file_get_contents(app_path('Services/XmlImporter/Foundation/Support/Templates/V202.json'));
     }
 }
-

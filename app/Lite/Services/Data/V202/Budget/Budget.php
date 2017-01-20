@@ -27,6 +27,7 @@ class Budget implements MapperInterface
 
     /**
      * Contains mapped data.
+     *
      * @var array
      */
     protected $mappedData = [];
@@ -38,6 +39,7 @@ class Budget implements MapperInterface
 
     /**
      * Budget constructor.
+     *
      * @param array $rawData
      */
     public function __construct(array $rawData)
@@ -84,4 +86,3 @@ class Budget implements MapperInterface
         return $this->mappedData;
     }
 }
-

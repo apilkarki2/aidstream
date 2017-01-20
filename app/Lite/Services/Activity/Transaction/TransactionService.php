@@ -4,6 +4,7 @@ use App\Lite\Services\Data\Traits\TransformsData;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
 use App\Models\Activity\Transaction;
 use Exception;
+use Illuminate\Database\DatabaseManager;
 use Psr\Log\LoggerInterface;
 use App\Lite\Contracts\TransactionRepositoryInterface;
 
@@ -26,14 +27,22 @@ class TransactionService
     protected $logger;
 
     /**
+     * @var DatabaseManager
+     */
+    protected $databaseManager;
+
+    /**
      * TransactionService constructor.
+     *
+     * @param DatabaseManager                $databaseManager
      * @param TransactionRepositoryInterface $transactionRepository
      * @param LoggerInterface                $logger
      */
-    public function __construct(TransactionRepositoryInterface $transactionRepository, LoggerInterface $logger)
+    public function __construct(DatabaseManager $databaseManager, TransactionRepositoryInterface $transactionRepository, LoggerInterface $logger)
     {
         $this->transactionRepository = $transactionRepository;
         $this->logger                = $logger;
+        $this->databaseManager       = $databaseManager;
     }
 
     /**
@@ -44,28 +53,6 @@ class TransactionService
     public function all()
     {
 
-    }
-
-    /**
-     * Store the Transaction data.
-     *
-     * @param array $rawData
-     * @param       $version
-     * @return Transaction|null
-     */
-    public function store(array $rawData, $version)
-    {
-        try {
-            $activity = $this->transactionRepository->save($this->transform($this->getMapping($rawData, 'Transaction', $version)));
-
-            $this->logger->info('Transaction successfully saved.', $this->getContext());
-
-            return $activity;
-        } catch (Exception $exception) {
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
-
-            return null;
-        }
     }
 
     /**
@@ -80,64 +67,8 @@ class TransactionService
     }
 
     /**
-     * Delete a activity.
-     *
-     * @param $activityId
-     * @return mixed|null
-     */
-    public function delete($activityId)
-    {
-        try {
-            $activity = $this->transactionRepository->delete($activityId);
-
-            $this->logger->info('Transaction successfully deleted.', $this->getContext());
-
-            return $activity;
-        } catch (Exception $exception) {
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
-
-            return null;
-        }
-    }
-
-    /**
-     * Returns reversely mapped activity data to edit.
-     *
-     * @param $activityId
-     * @param $version
-     * @return array
-     */
-    public function edit($activityId, $version)
-    {
-        $activity = $this->find($activityId)->toArray();
-
-        return $this->transformReverse($this->getMapping($activity, 'Transaction', $version));
-    }
-
-    /**
-     * Update the activity data.
-     *
-     * @param $activityId
-     * @param $rawData
-     * @param $version
-     * @return mixed|null
-     */
-    public function update($activityId, $rawData, $version)
-    {
-        try {
-            $this->transactionRepository->update($activityId, $this->transform($this->getMapping($rawData, 'Transaction', $version)));
-            $this->logger->info('Transaction successfully updated.', $this->getContext());
-
-            return true;
-        } catch (Exception $exception) {
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
-
-            return null;
-        }
-    }
-
-    /**
      * Returns Budget Model in view format
+     *
      * @param $activityId
      * @param $type
      * @param $version
@@ -215,23 +146,31 @@ class TransactionService
      * @param $request
      * @return bool|null
      */
-    public function deleteTransaction($request)
+    public function delete($request)
     {
         try {
             $index        = $request->get('index');
             $transactions = $this->find($index);
+            $this->databaseManager->beginTransaction();
             $transactions->delete();
-
+            $this->databaseManager->commit();
             $this->logger->info('Transaction successfully deleted.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
     }
 
+    /**
+     * Filters transaction according to their type
+     *
+     * @param $transactions
+     * @return array
+     */
     public function getFilteredTransactions($transactions)
     {
         $filteredTransactions = [];
@@ -251,6 +190,12 @@ class TransactionService
         return $filteredTransactions;
     }
 
+    /**
+     * Provides default currency
+     *
+     * @param $activity
+     * @return null|string
+     */
     public function getDefaultCurrency($activity)
     {
         $settings     = $activity->organization->settings;
@@ -270,25 +215,41 @@ class TransactionService
         return null;
     }
 
+    /**
+     * Add new transaction
+     *
+     * @param $rawData
+     * @param $version
+     * @return bool|null
+     */
     protected function addTransaction($rawData, $version)
     {
         try {
             $mappedBudget = $this->transform($this->getMapping($rawData, 'Transaction', $version));
 
+            $this->databaseManager->beginTransaction();
             foreach ($mappedBudget as $index => $value) {
                 $this->transactionRepository->save($value);
             }
+            $this->databaseManager->commit();
 
             $this->logger->info('Transaction successfully added.', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
+            $this->databaseManager->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
     }
 
+    /**
+     * Returns Transaction type form code
+     *
+     * @param $type
+     * @return string
+     */
     public function getTransactionType($type)
     {
         if ($type == 3) {
@@ -304,4 +265,47 @@ class TransactionService
         }
 
     }
+
+    /**
+     * Transactions are updated or created if new transaction
+     *
+     * @param $activityId
+     * @param $type
+     * @param $rawData
+     * @param $version
+     * @return bool|null
+     */
+    public function updateOrCreate($activityId, $type, $rawData, $version)
+    {
+        try {
+            $rawData['type']        = $type;
+            $rawData['activity_id'] = $activityId;
+
+            $this->databaseManager->beginTransaction();
+            $this->updateOrCreateTransactions($this->transform($this->getMapping($rawData, 'Transaction', $version)));
+            $this->databaseManager->commit();
+
+            $this->logger->info('Transactions successfully updated.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->databaseManager->rollback();
+            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+
+            return null;
+        }
+    }
+
+    /**
+     * Update or Create Transactions
+     *
+     * @param array $transactions
+     */
+    protected function updateOrCreateTransactions(array $transactions)
+    {
+        foreach ($transactions as $index => $value) {
+            (array_key_exists('id', $value)) ? $this->transactionRepository->update($value) : $this->transactionRepository->save($value);
+        }
+    }
+
 }
