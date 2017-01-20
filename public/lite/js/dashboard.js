@@ -42,7 +42,7 @@ var Dashboard = {
             .addValues()
 
     },
-    defineCanvas: function () {
+    defineCanvas: function ()   {
         this.canvas = d3.select(".stats")
                         .append("svg")
                         .attr("width", this.width)

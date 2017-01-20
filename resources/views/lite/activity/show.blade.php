@@ -41,4 +41,5 @@
         </div>
         @include('lite.activity.partials.activityList')
     </div>
+    </div>
 @endsection

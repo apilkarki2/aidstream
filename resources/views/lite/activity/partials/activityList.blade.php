@@ -181,7 +181,7 @@
                     @lang('lite/elementForm.annual_reports')
                 </div>
                 <div class="activity-element-info">
-                    @foreach(getVal($documentLinks->toArray(),['annual_report'],[]) as $index => $value)
+                    @foreach((array) getVal($documentLinks,['annual_report'],[]) as $index => $value)
                         <li>
                             @if(($url = getVal($value,['document_url'])) != "")
                                 <a href="{{$url}}">{{getVal($value,['document_title'])}}</a>

@@ -26,8 +26,9 @@
                             <div class="panel__nav">
                                 <div id="nav-anchor"></div>
                                 <nav>
+                                    <div id="activity-progress-bar"></div>
                                     <ul>
-                                        <li class="nav--completed"><a href="#basics">@lang('lite/global.basics')</a>
+                                        <li><a href="#basics">@lang('lite/global.basics')</a>
                                         </li>
                                         <li><a href="#location">@lang('lite/global.location')</a></li>
                                         <li>
@@ -66,7 +67,7 @@
                         </div>
                         <div class="col-md-9">
                             {!! form_rest($form) !!}
-                            <a href="#" class="pull-right btn-go-back">Cancel and go back</a>
+                            <a href="{{route('lite.activity.index')}}" class="pull-right btn-go-back">@lang('lite/global.cancel_and_go_back')</a>
                         </div>
                         {!! form_end($form) !!}
                         <div class="funding_organisations-container hidden"
@@ -81,8 +82,13 @@
         </div>
     </div>
 @stop
-
 @section('script')
     <script type="text/javascript" src="{{ url('/js/jquery.scrollto.js') }}"></script>
     <script type="text/javascript" src="{{ url('/lite/js/createActivity.js') }}"></script>
+    <script type="text/javascript" src="{{url('/lite/js/progressBar.js')}}"></script>
+    <script>
+        var completedText = "{{strtolower(trans('lite/global.completed'))}}";
+        ProgressBar.calculateProgressBar(completedText);
+        ProgressBar.calculate();
+    </script>
 @stop

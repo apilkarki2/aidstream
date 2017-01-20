@@ -44,5 +44,6 @@ return [
     'duplicate_activity'              => 'Duplicate Activity',
     'delete_activity'                 => 'Delete Activity',
     'confirm_duplicate'               => 'Are you sure want to duplicate?',
+    'cancel_and_go_back'              => 'Cancel and go back'
 ];
 
