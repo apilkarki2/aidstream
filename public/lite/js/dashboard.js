@@ -60,31 +60,32 @@ var Dashboard = {
             this.generateAnimation();
         }
 
-        this.rectangleSelection.attr("width", function (d) {
-                                    return (widthValue != null) ? Dashboard.widthScale(widthValue) : Dashboard.widthScale(d);
-                                })
-                                .attr("height", this.rectangleHeight)
-                                .attr("y", function (d, i) {
-                                        return i * Dashboard.spaceBetweenBars;
-                                })
-                                .attr("x", this.xCoordinateOfBars)
-                                .attr("fill", function (d, i) {
-                                        return colors[i];
-                                })
-                                .attr("rx", Dashboard.rectangleCurve)
-                                .attr("ry", Dashboard.rectangleCurve)
-                                .attr('id', (widthValue != null) ? 'rect-overlay' : 'rect');
-
-
+        this.buildRectangle(widthValue, colors);
+    },
+    buildRectangle: function(widthValue, colors){
+        return this.rectangleSelection.attr("width", function (d) {
+                                            return (widthValue != null) ? Dashboard.widthScale(widthValue) : Dashboard.widthScale(d);
+                                        })
+                                        .attr("height", this.rectangleHeight)
+                                        .attr("y", function (d, i) {
+                                            return i * Dashboard.spaceBetweenBars;
+                                        })
+                                        .attr("x", this.xCoordinateOfBars)
+                                        .attr("fill", function (d, i) {
+                                            return colors[i];
+                                        })
+                                        .attr("rx", Dashboard.rectangleCurve)
+                                        .attr("ry", Dashboard.rectangleCurve)
+                                        .attr('id', (widthValue != null) ? 'rect-overlay' : 'rect');
     },
     generateAnimation: function () {
         return this.rectangleSelection.transition()
-                                    .duration(1000)
+                                    .duration(10)
                                     .attr("width", function () {
-                                        return Dashboard.widthScale(Math.floor(Math.random() * Dashboard.totalActivities) + 1);
+                                        return Dashboard.widthScale(0);
                                     })
                                     .transition()
-                                    .duration(2000)
+                                    .duration(3000)
                                     .attr("width", function (d) {
                                         return Dashboard.widthScale(d);
                                     });

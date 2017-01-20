@@ -90,10 +90,11 @@ class ExchangeRateService
             }
         }
 
-        $totalAmountInString = $this->formatAmountIntoWord($totalAmount);
-        $maxAmountInString   = $this->formatAmountIntoWord($maxAmount);
+        $totalBudgetPlaceValue = $this->numberFormat(strlen(round($totalAmount)));
+        $totalBudget           = $this->placeValueAmount($totalAmount, $totalBudgetPlaceValue);
+        $maxBudgetInString     = $this->formatAmountIntoWord($maxAmount);
 
-        return ['total' => $totalAmountInString, 'maxBudget' => $maxAmountInString];
+        return ['totalBudget' => $totalBudget, 'totalBudgetPlaceValue' => $totalBudgetPlaceValue, 'maxBudget' => $maxBudgetInString];
     }
 
     /**
@@ -156,7 +157,7 @@ class ExchangeRateService
         if (!in_array(date('Y-m-d'), array_flatten($allDates))) {
             $exchangeRate = $this->clean(json_decode($this->curl(date('Y-m-d')), true), date('Y-m-d'));
 
-            $this->storeExchangeRates(array($exchangeRate));
+            $this->storeExchangeRates([$exchangeRate]);
         }
 
         return false;
@@ -172,7 +173,7 @@ class ExchangeRateService
     {
         $numberFormat = $this->numberFormat(strlen(round($amount)));
 
-        return $this->placeValueAmount($amount, $numberFormat);
+        return sprintf('$%s%s', $this->placeValueAmount($amount, $numberFormat), $numberFormat);
     }
 
     /**
@@ -187,7 +188,7 @@ class ExchangeRateService
         $divisor = ($numberFormat) ? constant(sprintf('self::%s_DIVISOR', $numberFormat)) : 1;
         $amount  = round(($amount / $divisor), 1);
 
-        return sprintf("$%s%s", $amount, $numberFormat);
+        return $amount;
     }
 
     /**

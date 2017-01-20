@@ -15,7 +15,7 @@
     </div>
     <div class="col-sm-4">
         <h2>@lang('lite/activityDashboard.total_budget')</h2>
-        <span class="count" id="budgetTotal"><small>$</small>0<small>m</small></span>
+        <span class="count" id="budgetTotal"><small>$</small><span id="totalBudget">0</span><small id="placeValue"></small></span>
         <div class="highest-budget">@lang('lite/activityDashboard.highest_budget_in_activity'): <span
                     id="maxBudget">$0</span></div>
     </div>
