@@ -68,6 +68,10 @@ class ProfileController extends LiteController
         $version      = session('version');
         $organisation = auth()->user()->organization;
 
+        if (Gate::denies('belongsToOrganization', $user->organization)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
+
         $model = $this->profileService->getFormModel($user->toArray(), $organisation->toArray(), $version);
         $form  = $this->formBuilder->create(
             'App\Lite\Forms\V202\Profile',
@@ -89,16 +93,20 @@ class ProfileController extends LiteController
      */
     public function storeProfile(Request $request)
     {
-        $userId  = auth()->user()->id;
+        $user    = auth()->user();
         $orgId   = session('org_id');
         $rawData = $request->all();
         $version = session('version');
+
+        if (Gate::denies('belongsToOrganization', $user->organization)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
 
         if (!$this->validationService->passes($rawData, 'Profile', $version)) {
             return redirect()->back()->with('errors', $this->validationService->errors())->withInput($rawData);
         }
 
-        if ($this->profileService->store($orgId, $userId, $rawData, $version)) {
+        if ($this->profileService->store($orgId, $user->id, $rawData, $version)) {
             return redirect()->route('lite.user.profile.index')->withResponse(['type' => 'success', 'messages' => [trans('lite/profile.profile_saved_successfully')]]);
         }
 
@@ -110,6 +118,10 @@ class ProfileController extends LiteController
      */
     public function editPassword()
     {
+        if (Gate::denies('belongsToOrganization', auth()->user()->organization)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
+
         $form = $this->formBuilder->create(
             'App\Lite\Forms\V202\Password',
             [
@@ -132,6 +144,10 @@ class ProfileController extends LiteController
         $user    = auth()->user();
         $rawData = $request->all();
         $version = session('version');
+
+        if (Gate::denies('belongsToOrganization', $user->organization)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
 
         if (!$this->validationService->passes($rawData, 'Password', $version)) {
             return redirect()->back()->with('errors', $this->validationService->errors())->withInput($rawData);

@@ -72,6 +72,14 @@ class PublishedFilesController extends LiteController
      */
     public function bulkPublish(Request $request)
     {
+        $organization = auth()->user()->organization;
+
+        if (Gate::denies('belongsToOrganization', $organization)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('publish_activity', $organization);
+
         if (!$request->get('activity_files')) {
             return redirect()->back()->withResponse(
                 [

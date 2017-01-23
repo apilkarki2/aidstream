@@ -1,6 +1,6 @@
 <?php
 
-$router->group(['namespace' => 'Lite\Profile'], function ($router) {
+$router->group(['namespace' => 'Lite\Profile', 'middleware' => 'auth.systemVersion'], function ($router) {
     $router->get('lite/user/profile', [
         'as'   => 'lite.user.profile.index',
         'uses' => 'ProfileController@index'

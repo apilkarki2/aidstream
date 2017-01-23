@@ -1,6 +1,6 @@
 <?php
 
-$router->group(['namespace' => 'Lite\Workflow'], function ($router) {
+$router->group(['namespace' => 'Lite\Workflow', 'middleware' => 'auth.systemVersion'], function ($router) {
     $router->post('lite/activity/{activity}/complete', [
         'as'   => 'lite.activity.complete',
         'uses' => 'WorkflowController@complete'

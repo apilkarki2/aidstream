@@ -20,6 +20,7 @@ class WorkflowController extends MainWorkflowController
     {
         parent::__construct($workflowManager);
         $this->middleware('auth');
+        $this->middleware('auth.systemVersion');
     }
 
     /**

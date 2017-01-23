@@ -1,6 +1,7 @@
 <?php namespace App\Http;
 
 use App\Http\Middleware\AuthenticateAdmin;
+use App\Http\Middleware\SystemVersion;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -47,7 +48,8 @@ class Kernel extends HttpKernel
         'auth.basic'             => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
         'guest'                  => 'App\Http\Middleware\RedirectIfAuthenticated',
         'auth.organizationAdmin' => 'App\Http\Middleware\AuthenticateOrganizationAdmin',
-        'auth.admin'             => AuthenticateAdmin::class
+        'auth.admin'             => AuthenticateAdmin::class,
+        'auth.systemVersion'     => SystemVersion::class
     ];
 
 }

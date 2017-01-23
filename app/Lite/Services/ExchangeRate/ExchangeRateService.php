@@ -77,7 +77,7 @@ class ExchangeRateService
                     $currency = getVal($value, ['value', 0, 'currency']);
 
                     if ($amount != "") {
-                        $currency = ($currency == "") ? $default_currency : $currency;
+                        $currency = (!$currency) ? $default_currency : $currency;
                         $this->exchangeRate($date);
                         $exchangedAmount = $this->calculate($date, $currency, $amount);
                         $totalAmount     = $totalAmount + $exchangedAmount;

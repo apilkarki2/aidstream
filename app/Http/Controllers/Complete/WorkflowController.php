@@ -35,6 +35,7 @@ class WorkflowController extends Controller
     public function __construct(WorkflowManager $workFlowManager)
     {
         $this->middleware('auth');
+        $this->middleware('auth.systemVersion');
         $this->workFlowManager = $workFlowManager;
     }
 
