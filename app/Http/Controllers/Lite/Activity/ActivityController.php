@@ -568,4 +568,13 @@ class ActivityController extends LiteController
         return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.error_transaction_delete')]]);
     }
 
+    /**
+     * Returns budget details of all activities through AJAX Request.
+     *
+     * @return array
+     */
+    public function budgetDetails()
+    {
+        return $this->activityService->getBudgetDetails();
+    }
 }
