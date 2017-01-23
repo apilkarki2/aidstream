@@ -89,7 +89,7 @@ class ActivityController extends LiteController
         $organisation = auth()->user()->organization;
         $orgId        = session('org_id');
 
-        if (Gate::denies('ownership', $organisation)) {
+        if (Gate::denies('belongsToOrganization', $organisation)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
         }
 
@@ -112,7 +112,7 @@ class ActivityController extends LiteController
         $settings     = $organisation->settings;
         $version      = session('version');
 
-        if (Gate::denies('ownership', $organisation)) {
+        if (Gate::denies('belongsToOrganization', $organisation)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
         }
 
@@ -142,7 +142,7 @@ class ActivityController extends LiteController
         $version      = session('version');
         $organisation = auth()->user()->organization;
 
-        if (Gate::denies('ownership', $organisation)) {
+        if (Gate::denies('belongsToOrganization', $organisation)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
         }
 
@@ -364,13 +364,12 @@ class ActivityController extends LiteController
         if (Gate::denies('ownership', $activity)) {
             return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
         }
+
         $this->authorize('edit_activity', $activity);
 
         $version = session('version');
-
-        $model = $this->activityService->getBudgetModel($activityId, $version);
-
-        $form = $this->budgetForm->form(route('lite.activity.budget.update', $activityId), $model);
+        $model   = $this->activityService->getBudgetModel($activityId, $version);
+        $form    = $this->budgetForm->form(route('lite.activity.budget.update', $activityId), $model);
 
         return view('lite.activity.budget.edit', compact('form'));
     }
@@ -420,10 +419,10 @@ class ActivityController extends LiteController
             return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
         }
 
+        $this->authorize('edit_activity', $activity);
+
         $rawData = $request->except('_token');
         $version = session('version');
-
-        $this->authorize('edit_activity', $activity);
 
         if (!$this->validation->passes($rawData, 'Budget', $version)) {
             return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);

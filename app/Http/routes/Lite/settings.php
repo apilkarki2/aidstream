@@ -1,6 +1,6 @@
 <?php
 
-$router->group(['namespace' => 'Lite\Settings'], function ($router) {
+$router->group(['namespace' => 'Lite\Settings', 'middleware' => 'auth.systemVersion'], function ($router) {
 //    $router->get('lite/settings', [
 //        'as'   => 'lite.settings.index',
 //        'uses' => 'SettingsController@index'

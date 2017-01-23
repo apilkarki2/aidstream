@@ -1176,3 +1176,13 @@ function checkAllVocabularies($sectors)
 
     return true;
 }
+
+/**
+ * Check if a SuperAdmin user has logged in.
+ *
+ * @return bool
+ */
+function superAdminIsLoggedIn()
+{
+    return (session('role_id') == 3);
+}

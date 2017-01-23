@@ -82,9 +82,11 @@
                                 <li><a href="{{url('user/profile')}}">@lang('trans.my_profile')</a></li>
                             @endif
                             <li><a href="{{ url('/auth/logout') }}" id="logout">@lang('trans.logout')</a></li>
-                            <li>
-                                <a href="{{ route('lite.activity.index') }}">Lite</a>
-                            </li>
+                            @if (superAdminIsLoggedIn())
+                                <li>
+                                    <a href="{{ route('lite.activity.index') }}">Lite</a>
+                                </li>
+                            @endif
                             @include('unwanted')
 
                             <li class="pull-left width-491">

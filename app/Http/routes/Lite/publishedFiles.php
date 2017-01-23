@@ -1,7 +1,7 @@
 <?php
 
 $router->group(
-    ['namespace' => 'Lite\PublishedFiles'],
+    ['namespace' => 'Lite\PublishedFiles', 'middleware' => 'auth.systemVersion'],
     function ($router) {
         $router->get(
             '/lite/published-files',

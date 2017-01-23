@@ -1,7 +1,7 @@
 <?php
 
 $router->group(
-    ['namespace' => 'Lite'],
+    ['namespace' => 'Lite', 'middleware' => 'auth.systemVersion'],
     function ($router) {
         $router->group(
             ['namespace' => 'Users'],

@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\DatabaseManager;
 use Psr\Log\LoggerInterface;
 use App\Lite\Contracts\ActivityRepositoryInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ActivityService
@@ -142,7 +143,11 @@ class ActivityService
      */
     public function find($activityId)
     {
-        return $this->activityRepository->find($activityId);
+        try {
+            return $this->activityRepository->find($activityId);
+        } catch (Exception $exception) {
+            throw new NotFoundHttpException();
+        }
     }
 
     /**
