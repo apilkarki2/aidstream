@@ -24,11 +24,6 @@
     @yield('head')
 </head>
 <body class="lite">
-{{--<div id="google_translate_element"></div><script type="text/javascript">--}}
-{{--function googleTranslateElementInit() {--}}
-{{--new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,es,fr', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false, multilanguagePage: true}, 'google_translate_element');--}}
-{{--}--}}
-{{--</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>--}}
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -151,6 +146,8 @@
     </div>
 </div>
 
+@include('lite.partials.confirm')
+
 <div class="scroll-top">
     <a href="#" class="scrollup" title="Scroll to top">icon</a>
 </div>
@@ -183,6 +180,15 @@
 @yield('humanitarian-script')
 
 <script type="text/javascript">
+    $('.delete-lite-resource').on('click', function () {
+        var form = $('#delete-form');
+
+        $('#modal-message').html($(this).attr('data-message'));
+
+        form.attr('action', $(this).attr('data-href'));
+        form.children('input#index').attr('value', $(this).attr('data-index'));
+    });
+
     $(document).ready(function () {
         $('form select').select2();
     });
@@ -195,74 +201,6 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.js"></script>
 <!--D3-->
 <script src="https://d3js.org/d3.v4.min.js"></script>
-
-<script>
-    var roleId = "{!! $loggedInUser->role_id!!}";
-</script>
-{{--@if($loggedInUser && $loggedInUser->userOnBoarding && (session('role_id')!= 3 && session('role_id')!= 4))--}}
-{{--<script src="/js/userOnBoarding.js"></script>--}}
-{{--<script type="text/javascript">--}}
-{{--var hintStatus = "{!! ($loggedInUser->userOnBoarding->display_hints) ? 1 : 0 !!}";--}}
-{{--var completedTour = "{!! ($loggedInUser->userOnBoarding->completed_tour) ? 1 : 0 !!}";--}}
-
-{{--var className = (hintStatus == 1) ? 'pull-right display Yes' : 'pull-right display No';--}}
-
-{{--$('#logout').before(--}}
-{{--"<li class='dashboard-tour'>" +--}}
-{{--"<span>Dashboard tour</span><a href='#' class='" + className + "' id='hints'></a></li>");--}}
-
-{{--var endTour = function () {--}}
-{{--introJs().exit();--}}
-{{--$('.introjs-tooltip').hide();--}}
-{{--$("[data-step='1']").removeClass('open');--}}
-{{--$(document).on('click');--}}
-{{--completedTour = 1;--}}
-{{--};--}}
-
-{{--var goNext = function (step) {--}}
-{{--$("a[data-step=" + step + "]").trigger('click');--}}
-{{--};--}}
-
-{{--var skip = function (step) {--}}
-{{--$(".introjs-tooltip").hide();--}}
-{{--$('#hints').trigger('click');--}}
-{{--if (completedTour == 0) {--}}
-{{--$("[data-step='1']").addClass('open');--}}
-{{--UserOnBoarding.finalHints();--}}
-{{--$(document).off('click');--}}
-{{--$('.introjs-tooltip').css({'right': '270px', 'top': '87px'});--}}
-{{--$('.introjs-arrow').css({'right': '-18px', 'top': '50px'});--}}
-
-{{--}--}}
-{{--};--}}
-
-{{--$('#hints').on('click', function () {--}}
-{{--if ($(this).hasClass("Yes")) {--}}
-{{--$(this).removeClass('Yes');--}}
-{{--$(this).addClass('No');--}}
-{{--$('.introjs-hints').css('visibility', 'hidden');--}}
-{{--UserOnBoarding.storeHintStatus(0);--}}
-{{--} else if ($(this).hasClass("No")) {--}}
-{{--$(this).removeClass('No');--}}
-{{--$(this).addClass('Yes');--}}
-{{--$('.introjs-hints').css('visibility', 'visible');--}}
-{{--UserOnBoarding.storeHintStatus(1);--}}
-{{--}--}}
-{{--});--}}
-
-{{--UserOnBoarding.addHintLabel();--}}
-{{--UserOnBoarding.dashboardTour();--}}
-
-{{--if (hintStatus == 0) {--}}
-{{--$('.introjs-hints').css('visibility', 'hidden');--}}
-{{--}--}}
-
-{{--if (completedTour == 0 && hintStatus == 1 && window.location.pathname == '/activity') {--}}
-{{--$("[data-step='0']").trigger('click');--}}
-{{--}--}}
-{{--</script>--}}
-{{--@endif--}}
-<!-- End of script -->
 @yield('script')
 
 @yield('foot')

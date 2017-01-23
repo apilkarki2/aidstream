@@ -44,4 +44,26 @@ class Activity
             ]
         )->add('Save', 'submit', ['label' => $model ? trans('lite/elementForm.update_this_activity') : trans('lite/elementForm.add_this_activity'), 'attr' => ['class' => 'btn btn-submit btn-form']]);
     }
+
+    /**
+     * Builds form for the activity.
+     *
+     * @param      $route
+     * @param null $buttonLabel
+     * @param null $model
+     * @return Form
+     */
+    public function duplicateForm($route, $buttonLabel = null, $model = null)
+    {
+        $formPath = $this->getFormPath('ActivityDuplicate');
+
+        return $this->formBuilder->create(
+            $formPath,
+            [
+                'method' => 'post',
+                'model'  => $model,
+                'url'    => $route
+            ]
+        )->add('Save', 'submit', ['label' => $model ? trans('lite/elementForm.duplicate_this_activity') : trans('lite/elementForm.add_this_activity'), 'attr' => ['class' => 'btn btn-submit btn-form']]);
+    }
 }

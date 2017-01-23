@@ -5,6 +5,7 @@ use App\Http\Requests\Request;
 use App\Lite\Services\Profile\ProfileService;
 use App\Lite\Services\Validation\ValidationService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Kris\LaravelFormBuilder\FormBuilder;
 
 /**
@@ -47,8 +48,11 @@ class ProfileController extends LiteController
      */
     public function index()
     {
-        $orgId        = session('org_id');
-        $organisation = $this->profileService->getOrg($orgId);
+        $organisation = auth()->user()->organization;
+
+        if (Gate::denies('belongsToOrganization', $organisation)) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
 
         return view('lite.profile.index', compact('organisation'));
     }
@@ -60,11 +64,11 @@ class ProfileController extends LiteController
      */
     public function editProfile()
     {
-        $orgId   = session('org_id');
-        $userId  = auth()->user()->id;
-        $version = session('version');
+        $user         = auth()->user();
+        $version      = session('version');
+        $organisation = auth()->user()->organization;
 
-        $model = $this->profileService->getFormModel($userId, $orgId, $version);
+        $model = $this->profileService->getFormModel($user->toArray(), $organisation->toArray(), $version);
         $form  = $this->formBuilder->create(
             'App\Lite\Forms\V202\Profile',
             [

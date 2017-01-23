@@ -42,14 +42,21 @@ $router->group(
                     ]
                 );
                 $router->get(
-                    '/lite/activity/{activity}/duplicate',
+                    '/lite/activity/duplicate/{activity}/edit',
+                    [
+                        'as'   => 'lite.activity.duplicate.edit',
+                        'uses' => 'ActivityController@createDuplicate'
+                    ]
+                );
+                $router->post(
+                    '/lite/activity/duplicate',
                     [
                         'as'   => 'lite.activity.duplicate',
                         'uses' => 'ActivityController@duplicate'
                     ]
                 );
-                $router->get(
-                    '/lite/activity/{activity}/delete',
+                $router->post(
+                    '/lite/activity/delete',
                     [
                         'as'   => 'lite.activity.delete',
                         'uses' => 'ActivityController@destroy'

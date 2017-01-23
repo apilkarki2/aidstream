@@ -443,4 +443,16 @@ class ActivityService
             return null;
         }
     }
+
+    /**
+     * Reverse transform the requested data.
+     *
+     * @param $rawData
+     * @param $version
+     * @return array
+     */
+    public function reverseTransform($rawData, $version)
+    {
+        return $this->transformReverse($this->getMapping($rawData, 'Activity', $version));
+    }
 }

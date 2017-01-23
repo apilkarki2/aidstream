@@ -52,5 +52,5 @@ return [
     'add_expenditure'                       => 'Add Expenditure',
     'edit_incoming_funds'                   => 'Edit Incoming Funds',
     'add_incoming_funds'                    => 'Add Incoming Funds',
-
+    'duplicate_this_activity'               => 'Duplicate this activity',
 ];

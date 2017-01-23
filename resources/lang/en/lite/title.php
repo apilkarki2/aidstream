@@ -15,5 +15,5 @@ return [
     'disbursement'      => 'Disbursement',
     'expenditure'       => 'Expenditure',
     'incoming_funds'    => 'Incoming Funds',
-
+    'duplicate'         => 'Duplicate',
 ];

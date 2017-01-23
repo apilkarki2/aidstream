@@ -71,7 +71,7 @@
                                     {{--@endif--}}
                                 </td>
                                 <td>
-                                    {{--                                    <a href="{{ route('lite.activity.show', [$activity->id]) }}" class="view"></a>--}}
+                                    {{--<a href="{{ route('lite.activity.show', [$activity->id]) }}" class="view"></a>--}}
 
                                     {{--Use Delete Form to delete--}}
                                     {{--<a href="{{ url(sprintf('/lite/activity/%s/delete', $activity->id)) }}" class="delete">Delete</a>--}}
@@ -79,17 +79,15 @@
                                         <a href="#">&ctdot;</a>
                                         <div class="view-more-actions">
                                             <ul>
-                                                <li class="duplicate-activity"><a href="#">Duplicate activity</a></li>
-                                                <li class="delete-activity"><a href="#">Delete this activity</a></li>
+                                                <li class="duplicate-activity">
+                                                    <a href="{{ route('lite.activity.duplicate.edit', $activity->id) }}">@lang('lite/global.duplicate_activity')</a>
+                                                </li>
+                                                <li class="delete-activity">
+                                                    <a data-toggle="modal" data-target="#delete-modal" data-href="{{ route('lite.activity.delete') }}" class="delete-lite-resource"
+                                                       data-index="{{ $activity->id }}" data-message="@lang('lite/global.confirm_delete')">@lang('lite/global.delete_activity')</a>
+                                                </li>
                                             </ul>
                                         </div>
-                                    </div>
-                                    <div class="hidden">
-                                        <a href="{{route('lite.activity.delete',$activity->id)}}"
-                                           class="delete">@lang('lite/global.delete')</a>
-                                        {{--Use Delete Form--}}
-                                        <a href="{{ route('lite.activity.duplicate', [$activity->id]) }}"
-                                           class="duplicate"></a>
                                     </div>
                                 </td>
                             </tr>
@@ -123,7 +121,5 @@
                 Lite.budgetDetails();
             }, 300);
         });
-
-
     </script>
 @stop

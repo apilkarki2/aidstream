@@ -5,7 +5,7 @@
     @if(isset($response['messages']) && (array) $response['messages'])
         <div class="alert alert-{{$response['type']}}">
             <ul>
-                @foreach($response['messages'] as $message)
+            @foreach($response['messages'] as $message)
                     <li>- {!! $message !!}</li>
                 @endforeach
             </ul>

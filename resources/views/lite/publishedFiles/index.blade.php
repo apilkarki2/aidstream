@@ -40,7 +40,8 @@
                                            target="_blank">@lang('lite/global.csv')</a></td>
                                     <td>
                                         @if($publishedFile->published_to_register == 0)
-                                            <a data-href="{{ route('lite.published-files.delete', [$publishedFile->id])}}" class="delete-lite-published-files" data-toggle="modal" data-target="#delete-published-files-modal"> @lang('lite/global.delete') </a>
+                                            <a data-href="{{ route('lite.published-files.delete', [$publishedFile->id])}}" class="delete-lite-published-files" data-toggle="modal"
+                                               data-target="#delete-published-files-modal"> @lang('lite/global.delete') </a>
                                         @endif
                                     </td>
                                 </tr>

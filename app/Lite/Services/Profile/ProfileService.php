@@ -76,17 +76,6 @@ class ProfileService
     }
 
     /**
-     * Provides Organisation
-     *
-     * @param $orgId
-     * @return \App\Models\Organization\Organization
-     */
-    public function getOrg($orgId)
-    {
-        return $this->organisationRepository->find($orgId);
-    }
-
-    /**
      * Provides user
      *
      * @param $userId
@@ -169,21 +158,16 @@ class ProfileService
     /**
      * Provides settings formModel
      *
-     * @param $userId
-     * @param $orgId
+     * @param $user
+     * @param $organisation
      * @param $version
      * @return array
      */
-    public function getFormModel($userId, $orgId, $version)
+    public function getFormModel($user, $organisation, $version)
     {
-        $organisation = json_decode($this->organisationRepository->find($orgId), true);
-        $user         = json_decode($this->userRepository->find($userId), true);
-
-        $model = array_merge($organisation, $user);
-
-        $filteredModel = $this->transformReverse($this->getMapping($model, 'Profile', $version));
-
-        return $filteredModel;
+        return $this->transformReverse(
+            $this->getMapping(array_merge($organisation, $user), 'Profile', $version)
+        );
     }
 
     /**

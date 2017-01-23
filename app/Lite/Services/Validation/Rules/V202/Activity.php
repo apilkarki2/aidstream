@@ -284,7 +284,6 @@ class Activity
         } else {
             $activities = ActivityModel::where('organization_id', session('org_id'))->get();
         }
-
         $activityIdentifiers = [];
 
         foreach ($activities as $activity) {

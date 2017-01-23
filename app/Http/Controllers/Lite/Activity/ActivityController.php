@@ -87,7 +87,7 @@ class ActivityController extends LiteController
     public function index()
     {
         $organisation = auth()->user()->organization;
-        $orgId = session('org_id');
+        $orgId        = session('org_id');
 
         if (Gate::denies('ownership', $organisation)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
@@ -137,8 +137,8 @@ class ActivityController extends LiteController
      */
     public function store(Request $request)
     {
-        $rawData = $request->except('_token');
-        $version = session('version');
+        $rawData      = $request->except('_token');
+        $version      = session('version');
         $organisation = auth()->user()->organization;
 
         if (Gate::denies('ownership', $organisation)) {
@@ -225,11 +225,13 @@ class ActivityController extends LiteController
     /**
      * Delete an activity
      *
-     * @param $activityId
+     * @param Request $request
      * @return RedirectResponse
      */
-    public function destroy($activityId)
+    public function destroy(Request $request)
     {
+        $activityId = $request->get('index');
+
         $activity = $this->activityService->find($activityId);
 
         if (Gate::denies('ownership', $activity)) {
@@ -278,13 +280,52 @@ class ActivityController extends LiteController
     /**
      * Duplicate an activity
      *
+     * @param Request $request
+     * @return RedirectResponse
+     * @internal param $activityId
+     */
+    public function duplicate(Request $request)
+    {
+        $activityId                                   = $request->get('activityId');
+        $activityIdentifier                           = $request->get('activityIdentifier');
+        $rawData                                      = $this->activityService->find($activityId)->toArray();
+        $rawData['identifier']['activity_identifier'] = $activityIdentifier;
+
+        $version      = session('version');
+        $organisation = auth()->user()->organization;
+
+        $reverseMapped = $this->activityService->reverseTransform($rawData, $version);
+
+        if (Gate::denies('belongsToOrganization', $organisation)) {
+            return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
+        }
+
+        $this->authorize('add_activity', $organisation);
+
+        if (!$this->validation->passes($reverseMapped, self::ENTITY_TYPE, $version)) {
+            return redirect()->back()->withResponse(['messages' => ['Your data is not properly validated.'], 'type' => 'error'])->withInput($rawData);
+        }
+
+        if (!($activity = $this->activityService->store($reverseMapped, $version))) {
+            return redirect()->route('lite.activity.index')->withResponse(['type' => 'danger', 'code' => ['save_failed', ['name' => trans('lite/global.activity')]]]);
+        }
+
+        return redirect()->route('lite.activity.show', [$activity->id])->withResponse(['type' => 'success', 'code' => ['created', ['name' => trans('lite/global.activity')]]]);
+    }
+
+    /**
+     * Provides duplicate form
+     *
      * @param $activityId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function duplicate($activityId)
+    public function createDuplicate($activityId)
     {
-//        $activity = $this->activityService->find($activityId);
-//        return view('lite.activity.index', compact('activity'));
+        $model = ['activityId' => $activityId];
+
+        $form = $this->activityForm->duplicateForm(route('lite.activity.duplicate'), trans('lite/global.create_activity'), $model);
+
+        return view('lite.activity.duplicate', compact('form', 'activityId'));
     }
 
     /**

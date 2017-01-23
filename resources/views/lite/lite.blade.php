@@ -16,12 +16,12 @@
 @include('lite.partials.header')
 
 @yield('content')
-
 @include('lite.partials.footer')
 <script src="/js/jquery.js"></script>
 <script src="/js/modernizr.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 <script>
+
     $(document).ready(function () {
         function hamburgerMenu() {
             $('.navbar-toggle.collapsed').click(function () {

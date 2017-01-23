@@ -40,6 +40,9 @@ return [
     'bulk_publish_successful'         => 'File(s) successfully published to the IATI Registry.',
     'bulk_publish_unsuccessful'       => 'File(s) could not be published to the IATI Registry.',
     'personal_information'            => 'Personal Information',
-    'organisation_information'        => 'Organisation Information'
+    'organisation_information'        => 'Organisation Information',
+    'duplicate_activity'              => 'Duplicate Activity',
+    'delete_activity'                 => 'Delete Activity',
+    'confirm_duplicate'               => 'Are you sure want to duplicate?',
 ];
 

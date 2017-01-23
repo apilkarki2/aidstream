@@ -61,13 +61,14 @@
                     {!! form_end($form) !!}
                 </div>
             </div>
-            @stop
+        </div>
+    </div>
+@stop
 
-            @section('script')
-                <script src="{{url('js/chunk.js')}}"></script>
-                <script>
-                    Chunk.displayPicture();
-                    Chunk.usernameGenerator();
-                </script>
-
+@section('script')
+    <script src="{{url('js/chunk.js')}}"></script>
+    <script>
+        Chunk.displayPicture();
+        Chunk.usernameGenerator();
+    </script>
 @stop
