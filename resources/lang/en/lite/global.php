@@ -49,5 +49,10 @@ return [
     'activity_detail'                 => 'Activity Detail',
     'back_to_activities_list'         => 'Back to activities list',
     'published_in_iati'               => 'Published in IATI',
+    'settings'                        => 'Settings',
+    'users'                           => 'Users',
+    'published_files'                 => 'Published Files',
+    'activities'                      => 'Activities',
+    'download_as_csv'                 => 'Download as CSV'
 ];
 

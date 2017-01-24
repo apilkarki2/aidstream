@@ -47,6 +47,18 @@ class Activity implements MapperInterface
     const LOCATION_SRS_NAME_VALUE = 'http://www.opengis.net/def/crs/EPSG/0/4326';
 
     /**
+     * Code for budget type
+     */
+    const BUDGET_TYPE = 1;
+
+    /**
+     * Code for budget status
+     */
+    const BUDGET_STATUS = 2;
+
+    const DEFAULT_RECIPIENT_COUNTRY_PERCENTAGE = 100;
+
+    /**
      * Raw data holder for Activity entity.
      *
      * @var array
@@ -265,6 +277,7 @@ class Activity implements MapperInterface
     {
         $this->mappedData['recipient_country'][$this->index]                 = $template;
         $this->mappedData['recipient_country'][$this->index]['country_code'] = $value;
+        $this->mappedData['recipient_country'][$this->index]['percentage']   = self::DEFAULT_RECIPIENT_COUNTRY_PERCENTAGE;
     }
 
     /**

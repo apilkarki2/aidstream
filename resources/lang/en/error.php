@@ -57,4 +57,5 @@ return [
     'error_transaction_create'                               => 'Error creating transaction',
     'error_transaction_delete'                               => 'Error deleting transaction',
     '404_not_found'                                          => 'Invalid link',
+    'not_available_for_v201'                                 => 'Sorry this feature is not available for V201. Please upgrade to latest version to download.'
 ];

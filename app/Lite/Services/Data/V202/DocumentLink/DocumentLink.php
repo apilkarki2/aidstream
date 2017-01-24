@@ -95,6 +95,9 @@ class DocumentLink implements MapperInterface
     {
         foreach ((array) $this->rawData as $index => $documentLink) {
             $documentCategory = $this->getDocumentCategory(getVal($documentLink, ['document_link', 'category', 0, 'code']), true);
+            if (!$documentCategory) {
+                return $this->mappedData;
+            }
 
             if (!array_key_exists($documentCategory, $this->mappedData)) {
                 $index = 0;
@@ -146,8 +149,8 @@ class DocumentLink implements MapperInterface
                     $this->mappedData['document_link'][$this->index]['url']                      = $documentUrl;
                     $this->mappedData['document_link'][$this->index]['title'][0]['narrative'][0] = ['narrative' => $documentTitle, 'language' => ''];
                     $this->mappedData['document_link'][$this->index]['category'][0]['code']      = $documentCategory;
-                    $this->mappedData['document_link'][$this->index]['document_date'][0]['date'] = date('Y-m-d');
                     $this->mappedData['document_link'][$this->index]['format']                   = self::DOCUMENT_FORMAT;
+                    ($documentId != "") ?: $this->mappedData['document_link'][$this->index]['document_date'][0]['date'] = date('Y-m-d');
                     $this->index ++;
                 }
             }

@@ -157,7 +157,7 @@ class OrganizationController extends Controller
         $database = app(DatabaseManager::class);
         $settings = $this->settingsManager->getSettings($orgId);
         Session::put('org_id', $orgId);
-
+        Session::put('system_version', $settings->organization->system_version_id);
         $current_version = (isset($settings)) ? $settings->version : config('app.default_version');
         Session::put('current_version', $current_version);
         $versions_db = $database->table('versions')->get();

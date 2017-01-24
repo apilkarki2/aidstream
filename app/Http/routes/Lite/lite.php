@@ -158,6 +158,7 @@ $router->group(
                         'uses' => 'ActivityController@deleteTransaction'
                     ]
                 );
+
             }
         );
     }
