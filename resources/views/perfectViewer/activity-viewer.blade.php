@@ -57,8 +57,8 @@
                 </div>
                 <div class="organisation-more-info">
                 <span class="organisation-name">
-                    <a href="#" title="{{ getVal($organization, [0, 'name'], '')}}">
-                        {{ getVal($organization, [0, 'name'], '')}}
+                    <a href="#" title="{{ getVal($organization, [0, 'reporting_org', 0, 'narrative', 0, 'narrative'], '')}}">
+                        {{ getVal(json_decode(getVal($organization, [0, 'reporting_org'], []), true), [0, 'narrative', 0, 'narrative'], '')}}
                     </a>
                 </span>
                     @if(getVal($organization, [0, 'address'], null))
