@@ -1040,7 +1040,9 @@ label {
 .navbar-admin-dropdown li {
   > span {
     display: inline-block;
-    padding: 20px 10px 20px 15px;
+    font-size: 13px;
+    padding: 22px 10px 23px 15px;
+    vertical-align: middle;
   }
 }
 
@@ -1240,10 +1242,10 @@ label {
   border-right: 1px solid $color_gallery_approx;
   li.dropdown {
     > a {
-      background: $url_3 no-repeat -140px 20px;
+      background: $url_3 no-repeat -143px 20px;
       font-size: 13px;
       color: $color_gravel_approx;
-      padding: 21px 16px 21px 34px;
+      padding: 21px 12px 21px 30px;
       display: block;
       .caret {
         float: right;
@@ -1302,7 +1304,7 @@ label {
         background: $url_3 no-repeat -73px 0;
         width: 35px;
         height: 35px;
-        @include position(absolute, 24% auto auto 16px);
+        @include position(absolute, 24% auto auto 12px);
       }
       &:hover, &:focus {
         opacity: 1;
@@ -3375,8 +3377,7 @@ $organization-logo-width: 124px;
 }
 
 .version-wrap {
-  margin-top: 18px;
-  margin-right: 14px;
+  margin: 15px 14px 8px 0;
 }
 
 .element-show {
@@ -7081,6 +7082,19 @@ body > .skiptranslate iframe {
   .panel-profile .panel-body {
     padding: 0 !important;
   }
+
+  .navbar-admin-dropdown li > span {
+    padding-left: 10px;
+    padding-right: 0;
+  }
+
+  .version {
+    margin-left: 10px;
+  }
+
+  .version-wrap {
+    margin-right: 10px;
+  }
 }
 
 @media all and (max-width: 640px) {
@@ -7097,7 +7111,7 @@ body > .skiptranslate iframe {
 @media all and (max-width: 630px) {
   .add-new-activity li.dropdown > a {
     text-indent: -9999px;
-    padding: 21px 0 21px 10px;
+    padding: 21px 0 22px 10px;
     .caret {
       margin-right: 10px;
     }
@@ -7253,6 +7267,11 @@ body > .skiptranslate iframe {
         font-size: 16px;
       }
     }
+  }
+
+  .view-more-actions ul li {
+    float: left;
+    margin-right: 20px;
   }
 }
 
@@ -7681,13 +7700,17 @@ body > .skiptranslate iframe {
   }
 
   .settings-lite-form .col-md-9 > .form-group {
-    &:nth-last-child(2),&:nth-last-child(3) {
+    &:nth-last-child(2), &:nth-last-child(3) {
       clear: both;
     }
   }
 
   .settings-lite-form .upload-logo-block {
     margin-top: -230px !important;
+  }
+
+  .edit-activity {
+    @include size(10px);
   }
 }
 
@@ -8158,7 +8181,7 @@ body > .skiptranslate iframe {
 
 .panel__heading {
   border-bottom: 1px solid #d5eaf5;
-  padding: 15px 36px 10px;
+  padding: 15px 24px 10px;
   margin-bottom: 20px;
   overflow: hidden;
   h1 {
@@ -8228,6 +8251,7 @@ body > .skiptranslate iframe {
 .lite .user-form {
   padding: 0 36px 15px;
   form .form-group:last-child {
+    clear: both;
     float: none;
   }
   .col-md-9 {
@@ -8491,9 +8515,9 @@ body > .skiptranslate iframe {
 
 .sort-by-wrap {
   background: none;
-  border: 1px solid #e7e7e7;
+  border: 1px solid darken($color_white, 10%);
   border-radius: 19px;
-  margin: 4px 36px 0 0;
+  margin: 4px 24px 0 0;
   padding: 0 10px;
   width: 90px;
   select {
@@ -8508,20 +8532,33 @@ body > .skiptranslate iframe {
 
 .lite table.dataTable {
   &.no-footer {
-    margin: 0 36px;
-    width: calc(100% - 72px) !important;
+    margin: 0 24px;
+    width: calc(100% - 46px) !important;
   }
   tr {
     background: #f8fdff !important;
+    border: 1px solid #d5eaf5;
+    border-top: 0;
+    &:first-of-type {
+      border-top: 1px solid #d5eaf5;
+    }
     td {
-      border-bottom: 1px solid #d5eaf5;
-      padding: 10px;
+      //border-bottom: 1px solid #d5eaf5;
+      //padding: 10px;
+      border: 0 !important;
+      min-height: inherit;
+      padding: 4px 10px !important;
       vertical-align: top;
+      &:before {
+        display: none;
+      }
       &:first-child {
         border-left: 0 !important;
+        display: none;
       }
       &.activity_title {
         font: normal 14px $font_0;
+        padding-top: 10px !important;
       }
       &.updated-date {
         color: rgba($color_gravel_approx, 0.7);
@@ -8529,13 +8566,14 @@ body > .skiptranslate iframe {
       }
       .view-more {
         position: relative;
-        a {
+        > a {
           color: $color_gravel_approx;
+          display: none;
           font-size: 24px;
-          line-height: 23px;
+          line-height: 16px;
         }
         &:hover, &:focus {
-          a {
+          > a {
             color: $color_dodger_blue_approx;
             text-decoration: none;
           }
@@ -8558,56 +8596,59 @@ body > .skiptranslate iframe {
   .completed, .draft, .published, .verified {
     border: 0;
     color: $color_gravel_approx;
+    display: block;
     font-size: 11px;
+    padding: 0 0 0 14px;
     text-transform: uppercase;
+    &:before {
+      left: 0;
+      top: 38%;
+    }
   }
 }
 
 .lite .dataTables_wrapper .dataTables_filter {
   float: left;
-  margin: -57px 0 20px 36px;
+  margin: 0 0 20px 24px;
+  width: calc(100% - 48px);
   label {
     text-indent: -9999px;
     margin: 0 !important;
   }
   input {
     background: $color_white $url_3 -136px -122px !important;
-    border: 1px solid darken($color_white, 20%) !important;
+    border: 1px solid darken($color_white, 10%) !important;
     border-radius: 19px;
     box-shadow: none !important;
     font-size: 13px;
     height: 38px;
     margin: 0;
     padding-left: 36px;
-    width: 478px;
+    width: 100%;
   }
 }
 
 .dataTables_info {
   color: rgba($color_gravel_approx, 0.7) !important;
   font-size: 13px;
-  margin: 20px 36px;
+  margin: 20px 24px;
+  padding-top: 0 !important;
+  text-align: left !important;
 }
 
 .edit-activity {
   background: $url_27 no-repeat 0 0;
   display: inline-block;
-  @include size(10px);
 }
 
 .view-more-actions {
-  background: $color_white;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
-  display: none;
-  @include position(absolute, 22px 0 auto auto);
-  padding: 20px;
-  width: 132px;
-  z-index: 1;
+  overflow: hidden;
+  padding-bottom: 5px;
   ul li {
     a {
+      color: $color_gravel_approx;
       font-size: 12px !important;
-      padding-left: 20px;
+      padding-left: 14px;
       position: relative;
       &:before {
         background: $url_27 no-repeat -1px -34px;
@@ -8616,19 +8657,15 @@ body > .skiptranslate iframe {
         @include size(10px 14px);
       }
       &:hover {
+        color: $color_dodger_blue_approx;
         &:before {
           background-position: -41px -34px;
         }
       }
     }
-    & + li {
-      border-top: 1px solid #ececec;
-      margin-top: 10px;
-      padding-top: 10px;
-    }
     &.delete-activity a {
       &:before {
-        background-position: -1px -66px;
+        background-position: 0 -66px;
         top: 2px;
       }
       &:hover {
@@ -8637,9 +8674,95 @@ body > .skiptranslate iframe {
         }
       }
     }
+    &.edit-activity {
+      background: none;
+      a {
+        padding-left: 18px;
+        &:before {
+          background-position: 0 0;
+          top: 3px;
+          left: 2px;
+        }
+        &:hover {
+          &:before {
+            background-position: -40px 0;
+          }
+        }
+      }
+    }
   }
 }
 
 .view-more:hover .view-more-actions {
   display: block;
+}
+
+@media all and (min-width: 600px) {
+  .lite .dataTables_wrapper .dataTables_filter {
+    margin: -57px 0 20px 24px;
+    input {
+      width: 380px;
+    }
+  }
+}
+
+@media all and (min-width: 768px) {
+  .panel__heading {
+    padding-left: 36px;
+    padding-right: 36px;
+  }
+
+  .lite table.dataTable {
+    &.no-footer {
+      margin: 0 36px;
+      width: calc(100% - 72px) !important;
+    }
+    tr {
+      td {
+        border-bottom: 1px solid #d5eaf5 !important;
+        padding: 10px !important;
+        &:first-child {
+          display: table-cell;
+        }
+        .view-more > a {
+          display: block;
+        }
+        &.activity_title {
+          width: 60%;
+        }
+      }
+    }
+  }
+
+  .lite .dataTables_wrapper .dataTables_filter {
+    margin-left: 36px;
+    input {
+      width: 478px;
+    }
+  }
+
+  .dataTables_info {
+    margin: 20px 36px;
+  }
+
+  .view-more-actions {
+    background: $color_white;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+    display: none;
+    @include position(absolute, 22px 0 auto auto);
+    padding: 20px;
+    width: 132px;
+    z-index: 1;
+    ul li {
+      &.delete-activity {
+        border-top: 1px solid #ececec;
+        margin-top: 10px;
+        padding-top: 10px;
+      }
+      &.edit-activity {
+        display: none;
+      }
+    }
+  }
 }

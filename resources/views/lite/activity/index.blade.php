@@ -5,7 +5,7 @@
 @section('content')
     {{Session::get('message')}}
 
-    <div class="col-xs-9 col-lg-9 content-wrapper activity-wrapper">
+    <div class="col-xs-9 col-lg-9 content-wrapper">
         @include('includes.response')
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
@@ -34,7 +34,7 @@
                             <option value="3">@lang('lite/activityDashboard.date')</option>
                         </select>
                     </div>
-                    <table class="table table-striped" id="dataTable">
+                    <table class="table table-striped no-header-table" id="dataTable">
                         <thead>
                         <tr>
                             <th class="hidden"></th>
@@ -79,6 +79,7 @@
                                         <a href="#">&ctdot;</a>
                                         <div class="view-more-actions">
                                             <ul>
+                                                <li class="edit-activity"><a href="{{ route('lite.activity.edit', [$activity->id]) }}">Edit activity</a></li>
                                                 <li class="duplicate-activity">
                                                     <a href="{{ route('lite.activity.duplicate.edit', $activity->id) }}">@lang('lite/global.duplicate_activity')</a>
                                                 </li>
