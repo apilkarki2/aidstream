@@ -44,6 +44,8 @@ class Activity implements MapperInterface
      */
     const GENERAL_DESCRIPTION = 1;
 
+    const LOCATION_SRS_NAME_VALUE = 'http://www.opengis.net/def/crs/EPSG/0/4326';
+
     /**
      * Raw data holder for Activity entity.
      *
@@ -90,6 +92,7 @@ class Activity implements MapperInterface
         'country'                    => 'recipient_country',
         'funding_organisations'      => 'participating_organization',
         'implementing_organisations' => 'participating_organization',
+        'location'                   => 'location'
     ];
 
     /**
@@ -138,7 +141,8 @@ class Activity implements MapperInterface
         $this->reverseMapDescription()
              ->reverseMapActivityDate()
              ->reverseMapRecipientCountry()
-             ->reverseMapParticipatingOrganisation();
+             ->reverseMapParticipatingOrganisation()
+             ->reverseMapLocation();
 
         return $this->mappedData;
     }
@@ -290,6 +294,13 @@ class Activity implements MapperInterface
         }
     }
 
+    protected function location($key, $value, $template)
+    {
+        $this->mappedData[$key][$this->index]                         = $template;
+        $this->mappedData[$key][$this->index]['point'][0]['srs_name'] = self::LOCATION_SRS_NAME_VALUE;
+        $this->mappedData[$key][$this->index]['point'][0]['position'] = $value;
+    }
+
     /**
      * Reverse map description for form.
      *
@@ -367,6 +378,14 @@ class Activity implements MapperInterface
         }
 
         return $this;
+    }
+
+    protected function reverseMapLocation()
+    {
+        foreach (getVal($this->rawData, ['location'], []) as $index => $location) {
+            $this->mappedData['location'] = getVal($location, ['point', 0, 'position']);
+        }
+
     }
 
     /**

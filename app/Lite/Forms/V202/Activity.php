@@ -19,6 +19,7 @@ class Activity extends LiteBaseForm
     {
         $participatingOrganisationFormPath = $this->getFormPath('ParticipatingOrganisation');
         $documentLinksFormPath             = $this->getFormPath('DocumentLinks');
+        $locationFormPath                  = $this->getFormPath('Point');
 
         $this->addText('activity_identifier', trans('lite/elementForm.activity_identifier'))
              ->addText('activity_title', trans('lite/elementForm.activity_title'))
@@ -54,6 +55,7 @@ class Activity extends LiteBaseForm
                  true,
                  ['wrapper' => ['class' => 'form-group col-sm-6']]
              )
+             ->addToCollection('location', ' ', $locationFormPath, 'collection_form location hidden')
              ->addToCollection('funding_organisations', ' ', $participatingOrganisationFormPath, 'collection_form funding_organisations')
              ->addButton('add_more_funding', trans('lite/elementForm.add_another_funding_organisation'), 'funding_organisations', 'add_more')
              ->addToCollection('implementing_organisations', ' ', $participatingOrganisationFormPath, 'collection_form implementing_organisations')

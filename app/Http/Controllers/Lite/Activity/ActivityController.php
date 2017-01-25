@@ -118,7 +118,8 @@ class ActivityController extends LiteController
 
         $this->authorize('add_activity', $organisation);
 
-        $data = ['organisation' => $organisation->toArray(), 'settings' => $settings->toArray()];
+        $data           = ['organisation' => $organisation->toArray(), 'settings' => $settings->toArray()];
+        $countryDetails = file_get_contents(public_path('/data/countriesDetails.json'));
 
         if (!$this->validation->passes($data, 'ActivityRequiredFields', $version)) {
             return redirect()->route('lite.settings.edit')->withResponse(['type' => 'danger', 'code' => ['settings_incomplete']]);
@@ -126,7 +127,7 @@ class ActivityController extends LiteController
 
         $form = $this->activityForm->form(route('lite.activity.store'), trans('lite/elementForm.add_this_activity'));
 
-        return view('lite.activity.create', compact('form'));
+        return view('lite.activity.create', compact('form', 'countryDetails'));
     }
 
     /**
@@ -216,9 +217,10 @@ class ActivityController extends LiteController
         }
         $this->authorize('edit_activity', $activityModel);
 
-        $form = $this->activityForm->form(route('lite.activity.update', $activityId), trans('lite/elementForm.update_this_activity'), $activity);
+        $countryDetails = file_get_contents(public_path('/data/countriesDetails.json'));
+        $form           = $this->activityForm->form(route('lite.activity.update', $activityId), trans('lite/elementForm.update_this_activity'), $activity);
 
-        return view('lite.activity.create', compact('form', 'activity'));
+        return view('lite.activity.create', compact('form', 'activity', 'countryDetails'));
     }
 
 

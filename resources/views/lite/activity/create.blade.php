@@ -45,7 +45,7 @@
                             <div class="col-md-9">
                                 <h2>@lang('lite/global.location')</h2>
                                 <div class="row">
-                                    {!! form_row($form->country) !!}
+                                    {!! form_until($form,'location') !!}
                                 </div>
                             </div>
                         </div>
@@ -86,9 +86,20 @@
     <script type="text/javascript" src="{{ url('/js/jquery.scrollto.js') }}"></script>
     <script type="text/javascript" src="{{ url('/lite/js/createActivity.js') }}"></script>
     <script type="text/javascript" src="{{url('/lite/js/progressBar.js')}}"></script>
-    <script>
+    <script type="text/javascript" src="{{url('/js/leaflet.js')}}"></script>
+    <script type="text/javascript" src="{{url('/js/map.js')}}"></script>
+    <script type="text/javascript" src="{{ url('/lite/js/location.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var countryDetails = [{!! $countryDetails !!}];
+            Location.loadMap(countryDetails);
+            Location.onCountryChange();
+        })
+    </script>
+    <script type="text/javascript">
         var completedText = "{{strtolower(trans('lite/global.completed'))}}";
         ProgressBar.calculateProgressBar(completedText);
         ProgressBar.calculate();
+        ProgressBar.onMapClicked();
     </script>
 @stop

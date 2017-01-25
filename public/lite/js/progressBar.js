@@ -1,5 +1,5 @@
 var ProgressBar = {
-    totalFields: 18,
+    totalFields: 20,
     filledFields: {
         'activity_identifier': false,
         'activity_title': false,
@@ -11,6 +11,8 @@ var ProgressBar = {
         'objectives': false,
         'target_groups': false,
         'country': false,
+        'location[0][latitude]': false,
+        'location[0][longitude]': false,
         'funding_organisations[0][organisation_name]': false,
         'funding_organisations[0][organisation_type]': false,
         'implementing_organisations[0][organisation_name]': false,
@@ -33,7 +35,7 @@ var ProgressBar = {
     involvedOrganisations: 0,
     resultAndReports: 0,
     totalBasicsField: 9,
-    totalLocationField: 1,
+    totalLocationField: 3,
     totalInvolvedOrganisationField: 4,
     totalResultAndReportsField: 4,
     completedLocalisedText: 'completed',
@@ -95,7 +97,9 @@ var ProgressBar = {
         return percentage(value);
     },
     changeStatusOfField: function (name, status) {
-        this.filledFields[name] = status;
+        if (this.filledFields[name] != undefined) {
+            this.filledFields[name] = status;
+        }
     },
     updateFilledFields: function () {
         this.countOfFilledFields = 0;
@@ -208,6 +212,18 @@ var ProgressBar = {
         } else {
             $("a[href = '#results-and-reports']").parent().removeClass('nav--completed');
         }
+    },
+    onMapClicked: function () {
+        $('.map_container').on('click', function () {
+            var name = 'location[0][latitude]';
+            for (var i = 0; i < 2; i++) {
+                ProgressBar.changeStatusOfField(name, true);
+                name = 'location[0][longitude]';
+            }
+            ProgressBar.updateFilledFields();
+            ProgressBar.updatePercentage();
+            ProgressBar.updateWidthOfRectangle("bar");
+        });
     }
 
 };
