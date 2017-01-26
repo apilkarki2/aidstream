@@ -10,9 +10,9 @@
         @include('includes.response')
         <div class="panel panel-default">
             <div class="panel__heading">
-                <h1>
+                <div class="panel__title">
                     @lang('lite/title.user_list')
-                </h1>
+                </div>
                 @if (auth()->user()->isAdmin())
                     <div class="add-user-link">
                         <a href="{{ route('lite.users.create') }}">Add a user</a>

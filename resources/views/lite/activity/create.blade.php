@@ -9,7 +9,7 @@
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
             <div class="panel__heading">
-                <h1>@lang('lite/global.add_an_activity')</h1>
+                <div class="panel__title">@lang('lite/global.add_an_activity')</div>
                 <p>@lang('lite/global.add_an_activity_in_simple_steps')</p>
             </div>
             <div class="panel__body">

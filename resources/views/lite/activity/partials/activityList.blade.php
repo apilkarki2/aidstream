@@ -1,25 +1,25 @@
 <div class="panel panel-default panel-element-detail element-show">
-    <div class="activity-element-wrapper">
-        <div class="activity-element-list">
-            <div class="activity-element-label">
-                @lang('lite/elementForm.activity_identifier')
-            </div>
-            <div class="activity-element-info">
-                {{getVal($activity->identifier,['iati_identifier_text'])}}
-            </div>
-        </div>
-    </div>
+    {{--<div class="activity-element-wrapper">--}}
+        {{--<div class="activity-element-list">--}}
+            {{--<div class="activity-element-label">--}}
+                {{--@lang('lite/elementForm.activity_identifier')--}}
+            {{--</div>--}}
+            {{--<div class="activity-element-info">--}}
+                {{--{{getVal($activity->identifier,['iati_identifier_text'])}}--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 
-    <div class="activity-element-wrapper">
-        <div class="activity-element-list">
-            <div class="activity-element-label">
-                @lang('lite/elementForm.activity_title')
-            </div>
-            <div class="activity-element-info">
-                {{$activity->title[0]['narrative']}}
-            </div>
-        </div>
-    </div>
+    {{--<div class="activity-element-wrapper">--}}
+        {{--<div class="activity-element-list">--}}
+            {{--<div class="activity-element-label">--}}
+                {{--@lang('lite/elementForm.activity_title')--}}
+            {{--</div>--}}
+            {{--<div class="activity-element-info">--}}
+                {{--{{$activity->title[0]['narrative']}}--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 
     <div class="activity-element-wrapper">
         @foreach (getVal($activity->toArray(), ['description'], []) as $description)

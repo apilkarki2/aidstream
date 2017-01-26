@@ -44,6 +44,10 @@ return [
     'duplicate_activity'              => 'Duplicate Activity',
     'delete_activity'                 => 'Delete Activity',
     'confirm_duplicate'               => 'Are you sure want to duplicate?',
-    'cancel_and_go_back'              => 'Cancel and go back'
+    'cancel_and_go_back'              => 'Cancel and go back',
+    'edit_activity'                   => 'Edit activity',
+    'activity_detail'                 => 'Activity Detail',
+    'back_to_activities_list'         => 'Back to activities list',
+    'published_in_iati'               => 'Published in IATI',
 ];
 

@@ -8184,16 +8184,6 @@ body > .skiptranslate iframe {
   padding: 15px 24px 10px;
   margin-bottom: 20px;
   overflow: hidden;
-  h1 {
-    font-size: 20px;
-    float: left;
-    margin: 0 0 3px;
-    & + i {
-      display: inline-block;
-      font-size: 11px;
-      margin: 6px 5px 0;
-    }
-  }
   p {
     color: rgba($color_gravel_approx, 0.5);
     clear: both;
@@ -8203,10 +8193,34 @@ body > .skiptranslate iframe {
   .add-user-link {
     margin-top: 4px;
   }
+  .edit-activity {
+    height: initial;
+    margin-top: 14px;
+    padding-left: 15px;
+    width: auto;
+    &:before {
+      top: 3px;
+    }
+  }
+}
+
+.panel__title {
+  font-size: 20px;
+  float: left;
+  margin: 0 0 3px;
+  & + i {
+    display: inline-block;
+    font-size: 11px;
+    margin: 6px 5px 0;
+  }
 }
 
 .panel__body {
   background: #fdffff;
+}
+
+.lite .create-project-form {
+  padding-bottom: 120px;
 }
 
 .lite .create-form {
@@ -8353,7 +8367,7 @@ body > .skiptranslate iframe {
   background: $color_white;
   border-radius: 4px;
   box-shadow: 0 2px 40px 10px #e0ecf2;
-  padding: 12px 10px;
+  padding: 12px 10px 20px;
   @include position(absolute, 36px 30px auto auto);
   transition: all 0.5s ease-in-out;
   width: 226px;
@@ -8637,8 +8651,15 @@ body > .skiptranslate iframe {
 }
 
 .edit-activity {
-  background: $url_27 no-repeat 0 0;
   display: inline-block;
+  font-size: 12px;
+  position: relative;
+  &:before {
+    background: $url_27 no-repeat 0 0;
+    content: "";
+    @include position(absolute, 0 auto auto 0);
+    @include size(10px);
+  }
 }
 
 .view-more-actions {
@@ -8676,6 +8697,9 @@ body > .skiptranslate iframe {
     }
     &.edit-activity {
       background: none;
+      &:before {
+        display: none;
+      }
       a {
         padding-left: 18px;
         &:before {
@@ -8697,6 +8721,121 @@ body > .skiptranslate iframe {
   display: block;
 }
 
+#activity-progress-bar {
+  margin-bottom: 12px;
+}
+
+.activity__detail__wrapper {
+  .panel__heading {
+    margin-bottom: 0;
+  }
+}
+
+.panel__heading__info {
+  > .panel__title {
+    float: none;
+  }
+}
+
+.back-to-activities-list {
+  display: inline-block;
+  font-size: 12px;
+  padding-left: 15px;
+  position: relative;
+  &:before {
+    content: "←";
+    @include position(absolute, 0 auto auto 0);
+    @include size(5px);
+  }
+}
+
+.panel__activity__detail {
+  padding: 34px 24px;
+  h1 {
+    font-size: 32px;
+    margin-bottom: 14px;
+  }
+}
+
+.activity-iati-info {
+  overflow: hidden;
+  > div {
+    margin: 0 0 14px;
+  }
+  .iati-identifier-wrapper {
+    color: rgba($color_gravel_approx,0.7);
+    font-size: 14px;
+    margin-top: 3px;
+  }
+  .activity-publish-state > span {
+    font-size: 13px;
+    padding: 3px 10px;
+  }
+}
+
+.iati-identifier {
+  color: $color_gravel_approx;
+}
+
+
+.activity-publish-state {
+  margin: 40px 0 8px;
+  > span {
+    font-size: 12px;
+    color: $color_white;
+    font-style: italic;
+    line-height: 19px;
+    border-radius: 100px;
+    margin: 1px 6px 0 0;
+    padding: 1px 10px;
+    &.published-in-iati {
+      background: #80CA9C;
+    }
+    &.unpublished-in-iati {
+      background: #E15454;
+    }
+  }
+}
+
+.activity-info {
+  > ul {
+    padding: 0;
+    margin: 0;
+    > li {
+      float: left;
+      list-style: none;
+      margin: 0 14px 6px 0;
+      .material-icons {
+        margin-right: 2px;
+      }
+      &:first-of-type {
+        border-right: 1px solid rgba($color_gravel_approx,0.2);
+        padding-right: 12px;
+      }
+    }
+  }
+}
+
+.activity-more-info {
+  overflow: hidden;
+  background: #ECF9FF;
+  border-radius: 4px;
+  padding: 10px 10px 4px;
+  margin-bottom: 26px;
+  .links .material-icons {
+    font-size: 20px;
+    margin-right: 4px;
+  }
+  > li + li {
+    border-left: 1px solid #D9E5EB;
+    padding-left: 10px;
+  }
+}
+
+.material-icons {
+  font-size: 20px!important;
+}
+
 @media all and (min-width: 600px) {
   .lite .dataTables_wrapper .dataTables_filter {
     margin: -57px 0 20px 24px;
@@ -8707,7 +8846,7 @@ body > .skiptranslate iframe {
 }
 
 @media all and (min-width: 768px) {
-  .panel__heading {
+  .panel__heading,.panel__activity__detail {
     padding-left: 36px;
     padding-right: 36px;
   }
@@ -8727,6 +8866,9 @@ body > .skiptranslate iframe {
         .view-more > a {
           display: block;
         }
+        &.sorting_1 {
+          width: 10px;
+        }
         &.activity_title {
           width: 60%;
         }
@@ -8743,6 +8885,10 @@ body > .skiptranslate iframe {
 
   .dataTables_info {
     margin: 20px 36px;
+  }
+
+  .sort-by-wrap {
+    margin-right: 36px;
   }
 
   .view-more-actions {

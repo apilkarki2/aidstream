@@ -11,7 +11,7 @@
         <div class="panel panel-default">
             <div class="panel__heading dashboard-panel__heading">
                 <div>
-                    <h1>@lang('lite/activityDashboard.dashboard')</h1>
+                    <div class="panel__title">@lang('lite/activityDashboard.dashboard')</div>
                     <i>
                         @if($lastPublishedToIATI)
                             @lang('lite/activityDashboard.last_published_to_iati')
@@ -79,7 +79,7 @@
                                         <a href="#">&ctdot;</a>
                                         <div class="view-more-actions">
                                             <ul>
-                                                <li class="edit-activity"><a href="{{ route('lite.activity.edit', [$activity->id]) }}">Edit activity</a></li>
+                                                <li class="edit-activity"><a href="{{ route('lite.activity.edit', [$activity->id]) }}">@lang('lite/global.edit_activity')</a></li>
                                                 <li class="duplicate-activity">
                                                     <a href="{{ route('lite.activity.duplicate.edit', $activity->id) }}">@lang('lite/global.duplicate_activity')</a>
                                                 </li>

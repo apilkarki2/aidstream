@@ -11,7 +11,7 @@
         <div class="panel panel-default">
             <div class="panel__heading">
                 <div>
-                    <h1>@lang('lite/title.settings')</h1>
+                    <div class="panel__title">@lang('lite/title.settings')</div>
                     @if ($loggedInUser->isAdmin() && session('version') == 'V202')
                         <button class="btn btn-sm pull-right" data-toggle="modal"
                                 data-target="#system-upgrade-modal">@lang('lite/settings.version_upgrade')</button>

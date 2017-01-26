@@ -8,7 +8,7 @@
         @include('includes.response')
         <div class="panel panel-default">
             <div class="panel__heading">
-                <h1>@lang('lite/title.add_user')</h1>
+                <div class="panel__title">@lang('lite/title.add_user')</div>
             </div>
             <div class="panel__body">
                 <div class="create-form user-form">
