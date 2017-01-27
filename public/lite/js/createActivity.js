@@ -5,7 +5,6 @@ var CreateActivity = {
             var source = $(this).attr('data-collection');
             var collection = $('.' + source + '-container');
             var parentContainer = $('.' + source);
-
             var count = $('.' + source + '> div.form-group').length;
             var proto = collection.data('prototype').replace(/__NAME__/g, count);
 
