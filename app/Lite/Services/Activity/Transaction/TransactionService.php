@@ -265,7 +265,7 @@ class TransactionService
      */
     public function getTransactionType($type)
     {
-        if ($type == self::EXPENDITURE) {
+        if ($type == self::DISBURSEMENT) {
             return 'Disbursement';
         }
 

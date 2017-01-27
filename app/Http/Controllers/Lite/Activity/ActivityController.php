@@ -501,13 +501,12 @@ class ActivityController extends LiteController
         if (Gate::denies('ownership', $activity)) {
             return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
         }
-
         $this->authorize('edit_activity', $activity);
+        $type    = $this->transactionService->getTransactionType($transactionType);
 
-        if ($transactionType == 'Disbursement' || $transactionType == 'Expenditure' || $transactionType == 'IncomingFunds') {
+        if ($type == 'Disbursement' || $type == 'Expenditure' || $type == 'IncomingFunds') {
             $version = session('version');
             $model   = $this->transactionService->getModel($activityId, $transactionType, $version);
-            $type    = $this->transactionService->getTransactionType($transactionType);
 
             $newModel[strtolower($type)] = $model;
 

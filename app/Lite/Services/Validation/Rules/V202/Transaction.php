@@ -11,15 +11,28 @@ class Transaction
     use GetCodes;
 
     /**
+     * @var mixed
+     */
+    protected $transaction;
+
+    /**
+     * Transaction constructor.
+     */
+    public function __construct()
+    {
+        $this->transaction = key(request()->except('_token'));
+    }
+
+    /**
      * @return array
      */
     public function rules()
     {
         return [
-            'transaction.*.reference' => 'required',
-            'transaction.*.date'      => 'required|date',
-            'transaction.*.amount'    => 'required',
-            'transaction.*.currency'  => 'required'
+            $this->transaction . '.*.reference' => 'required',
+            $this->transaction . '.*.date'      => 'required|date',
+            $this->transaction . '.*.amount'    => 'required',
+            $this->transaction . '.*.currency'  => 'required'
         ];
     }
 
@@ -29,11 +42,11 @@ class Transaction
     public function messages()
     {
         return [
-            'transaction.*.reference.required' => trans('validation.required', ['attribute' => trans('lite/elementForm.reference')]),
-            'transaction.*.date.required'      => trans('validation.required', ['attribute' => trans('lite/elementForm.date')]),
-            'transaction.*.date.date'          => trans('validation.date', ['attribute' => trans('lite/elementForm.date')]),
-            'transaction.*.amount.required'    => trans('validation.required', ['attribute' => trans('lite/elementForm.amount')]),
-            'transaction.*.currency.required'  => trans('validation.required', ['attribute' => trans('lite/elementForm.currency')]),
+            $this->transaction . '.*.reference.required' => trans('validation.required', ['attribute' => trans('lite/elementForm.reference')]),
+            $this->transaction . '.*.date.required'      => trans('validation.required', ['attribute' => trans('lite/elementForm.date')]),
+            $this->transaction . '.*.date.date'          => trans('validation.date', ['attribute' => trans('lite/elementForm.date')]),
+            $this->transaction . '.*.amount.required'    => trans('validation.required', ['attribute' => trans('lite/elementForm.amount')]),
+            $this->transaction . '.*.currency.required'  => trans('validation.required', ['attribute' => trans('lite/elementForm.currency')]),
         ];
     }
 }
