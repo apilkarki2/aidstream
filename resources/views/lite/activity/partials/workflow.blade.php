@@ -1,12 +1,12 @@
 @if($btn_text != "")
-    <form method="POST" id="change_status" class="pull-right" action="{{ $nextRoute }}">
+    <form method="POST" id="change_status" action="{{ $nextRoute }}">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         <input type="hidden" name="activity_workflow" value="{{ $activityWorkflow + 1 }}">
         @if($activityWorkflow == 2)
-            <input type="button" value="Mark as {{ trans(sprintf('lite/global.%s',strtolower($btn_text)))}}" class="btn_confirm"
+            <input type="button" value="Mark this activity as {{ trans(sprintf('lite/global.%s',strtolower($btn_text)))}}" class="btn_confirm"
                    data-title="{{trans('lite/global.confirmation')}}" data-message="{{trans('lite/global.are_you_sure_to_publish')}}">
         @else
-            <input type="submit" value="Mark as {{ trans(sprintf('lite/global.%s',strtolower($btn_text)))}}">
+            <input type="submit" value="Mark this activity as {{ trans(sprintf('lite/global.%s',strtolower($btn_text)))}}">
         @endif
     </form>
 @else

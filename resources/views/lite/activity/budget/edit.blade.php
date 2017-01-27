@@ -9,11 +9,15 @@
         @include('includes.response')
         <div id="xml-import-status-placeholder"></div>
         <div class="panel panel-default">
-            <div class="panel-content-heading">
-                <div>@lang('lite/title.budget')</div>
+            <div class="panel__heading">
+                <div class="panel__title">@lang('lite/title.budget')</div>
             </div>
-            <div class="panel-body">
-                {!! form($form) !!}
+            <div class="panel__body">
+                <div class="create-form">
+                    <div class="col-md-9">
+                        {!! form($form) !!}
+                    </div>
+                </div>
             </div>
             <div class="collection-container hidden" data-prototype="{{ form_row($form->budget->prototype()) }}"></div>
         </div>

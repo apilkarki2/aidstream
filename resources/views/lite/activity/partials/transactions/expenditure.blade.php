@@ -1,4 +1,4 @@
-<div class="activity-element-wrapper">
+<div class="activity__detail">
     @if ($expenditure)
         <a href="{{ route('lite.activity.transaction.edit', [$activity->id, 4]) }}"
            class="edit-element">
@@ -6,11 +6,11 @@
         </a>
         <div>
         </div>
-        <div class="activity-element-list">
+        <div class="activity__element__list">
             <div class="activity-element-label">
                 @lang('lite/title.expenditure')
             </div>
-            <div class="activity-element-info">
+            <div class="activity__element--info">
                 @foreach ($expenditure as $index => $transaction)
                     <li>
                         {{ getVal($transaction, ['transaction', 'value', 0, 'amount']) }}
@@ -31,10 +31,7 @@
                class="add-more"><span>@lang('lite/elementForm.add_expenditure')</span></a>
         </div>
     @else
-        <div class="activity-element-list">
-            <div class="title">
-                @lang('lite/title.expenditure')
-            </div>
+        <div class="activity__element__list">
             <a href="{{ route('lite.activity.transaction.create', [$activity->id, 'Expenditure']) }}"
                class="add-more"><span>@lang('lite/elementForm.add_expenditure')</span></a>
         </div>

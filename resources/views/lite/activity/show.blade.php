@@ -13,7 +13,6 @@
                     @lang('lite/global.activity_detail')
                 </div>
                 <a href="#" class="back-to-activities-list">@lang('lite/global.back_to_activities_list')</a>
-                {{--<span>{{ $activity->identi{ $activity->identifier['activity_identifier'] }}</span>--}}
             </div>
             <a href="{{ route('lite.activity.edit', $activity->id) }}"
                class="edit-activity pull-right">@lang('lite/global.edit_activity')</a>
@@ -45,21 +44,61 @@
                         </li>
                     </ul>
                 </div>
-                {{--<div class="activity-status activity-status-{{ $statusLabel[$activityWorkflow] }}">--}}
-                {{--<ol>--}}
-                {{--@foreach($statusLabel as $key => $value)--}}
-                {{--@if($key == $activityWorkflow)--}}
-                {{--<li class="active"><span>{{ trans(sprintf('lite/global.%s',strtolower($value)))}}</span>--}}
-                {{--</li>--}}
-                {{--@else--}}
-                {{--<li><span>{{ trans(sprintf('lite/global.%s',strtolower($value)))}}</span></li>--}}
-                {{--@endif--}}
-                {{--@endforeach--}}
-                {{--</ol>--}}
-                {{--@include('lite.activity.partials.workflow')--}}
-                {{--</div>--}}
                 @include('lite.activity.partials.activityList')
+            </div>
+            <div class="col-xs-12 col-sm-3 panel__activity__more--info">
+                <div class="activity__block activity__status activity-status-{{ $statusLabel[$activityWorkflow] }}">
+                    <h4>Activity Status</h4>
+                    {{--<div class="info-icon"></div>--}}
+                @foreach($statusLabel as $key => $value)
+                @if($key == $activityWorkflow)
+                <div class="active"><span>{{ trans(sprintf('lite/global.%s',strtolower($value)))}}</span>
+                </div>
+                @endif
+                @endforeach
+                @include('lite.activity.partials.workflow')
+                </div>
+                {{--<div class="activity__block activity__map">--}}
+                    {{--map--}}
+                {{--</div>--}}
+                <div class="activity__block activity__detail__block">
+                    <ul>
+                        <li><span>@lang('lite/global.activity_detail')</span></li>
+                        <li><a href="#">Budget Information</a><i>(0)</i></li>
+                        <li><a href="#">Transactions</a><i>(0)</i></li>
+                    </ul>
+                </div>
+                <div class="activity__block activity__updated__date">
+                    <span class="last-updated-date"><i>@lang('lite/global.last_updated_on'): {{ changeTimeZone($activity['updated_at'], 'M d, Y H:i') }}</i></span>
+                </div>
             </div>
         </div>
     </div>
 @endsection
+@section ('script')
+    <script>
+        $(document).ready(function () {
+            function fixedTop() {
+                var fixmeTop = $('.panel__activity__more--info').offset().top - 61;
+                $(window).scroll(function () {
+                    var currentScroll = $(window).scrollTop();
+                    if (currentScroll >= fixmeTop) {
+                        $('.panel__activity__more--info').css({
+                            position: 'fixed',
+                            top: '63px',
+                            right: '1px'
+                        });
+                    } else {
+                        $('.panel__activity__more--info').css({
+                            position: 'static'
+                        });
+                    }
+                });
+            }
+            fixedTop();
+            $(window).resize(function () {
+                fixedTop();
+            });
+        });
+    </script>
+@stop
