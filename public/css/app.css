@@ -6362,6 +6362,8 @@ body > .skiptranslate iframe {
     vertical-align: top; }
   .lite .create-form .col-md-9 {
     padding-right: 15px !important; }
+    .lite .create-form .col-md-9 .collection_form > .form-group {
+      padding: 0; }
   .settings-form > form .collection_form > .form-group {
     width: 100%; }
   .lite .upload-logo-block {

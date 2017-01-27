@@ -13,8 +13,8 @@
                 <div class="panel__title">@lang('lite/title.transaction')</div>
             </div>
             <div class="panel-body">
-                <div class="create-form">
-                    <div class="col-md-9">
+                <div class="create-form user-form">
+                    <div class="row">
                         {!! form_start($form) !!}
                         @foreach($ids as $index => $id)
                             <input name="ids[]" type="hidden" value={{ $id }}>
@@ -22,6 +22,7 @@
                         {!! form_rest($form) !!}
                         {!! form_end($form) !!}
                         <input class="ids" type="hidden" data-ids=$ids>
+                    </div>
                     </div>
                 </div>
             </div>
