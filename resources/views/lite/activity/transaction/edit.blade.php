@@ -25,8 +25,14 @@
                     </div>
                 </div>
             </div>
-            <div class="collection-container hidden"
+            <div class="transaction-container hidden"
                  data-prototype="{{ form_row($form->{strtolower($type)}->prototype()) }}"></div>
         </div>
     </div>
 @stop
+@section('script')
+    <script type="text/javascript" src="{{ url('/lite/js/createActivity.js') }}"></script>
+    <script type="text/javascript">
+        CreateActivity.addToCollection();
+    </script>
+@endsection

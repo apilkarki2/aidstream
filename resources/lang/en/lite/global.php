@@ -53,6 +53,10 @@ return [
     'users'                           => 'Users',
     'published_files'                 => 'Published Files',
     'activities'                      => 'Activities',
-    'download_as_csv'                 => 'Download as CSV'
+    'download_as_csv'                 => 'Download as CSV',
+    'iati_identifier'                 => 'IATI Identifier',
+    'budget_information'              => 'Budget Information',
+    'transactions'                    => 'Transactions',
+    'activity_status'                 => 'Activity Status'
 ];
 

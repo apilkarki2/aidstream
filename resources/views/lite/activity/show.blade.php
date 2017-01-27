@@ -23,7 +23,7 @@
                     {{ $activity->title ? $activity->title[0]['narrative'] : trans('lite/global.no_title') }}
                 </h1>
                 <div class="activity-iati-info">
-                    <div class="pull-left iati-identifier-wrapper">IATI Identifier:
+                    <div class="pull-left iati-identifier-wrapper">@lang('lite/global.iati_identifier'):
                         <span class="iati-identifier">{{ $activity->identifier['activity_identifier'] }}</span>
                     </div>
                     <div class="pull-right activity-publish-state">
@@ -35,12 +35,21 @@
                     <ul class="pull-left">
                         <li>
                             <i class="pull-left material-icons">date_range</i>
-                            <span>Apr 01, 2012</span>
-                            <span> - Mar 31, 2015 </span>
+                            @foreach (getVal($activity->toArray(), ['activity_date'], []) as $date)
+                                @if(getVal($date, ['type']) == 2)
+                                    <span>  {{ formatDate($date['date']) }} </span>
+                                @endif
+
+                                @if(getVal($date, ['type']) == 4)
+                                    <span> {{ formatDate($date['date']) }} </span>
+                                @endif
+                            @endforeach
                         </li>
                         <li>
                             <i class="pull-left material-icons">autorenew</i>
-                            <span>Implementation<i>(Status)</i></span>
+                            @if($activity->activity_status)
+                                <span>{{  $getCode->getCodeNameOnly('ActivityStatus', $activity->activity_status) }}<i>(Status)</i></span>
+                            @endif
                         </li>
                     </ul>
                 </div>
@@ -48,24 +57,24 @@
             </div>
             <div class="col-xs-12 col-sm-3 panel__activity__more--info">
                 <div class="activity__block activity__status activity-status-{{ $statusLabel[$activityWorkflow] }}">
-                    <h4>Activity Status</h4>
+                    <h4>@lang('lite/global.activity_status')</h4>
                     {{--<div class="info-icon"></div>--}}
-                @foreach($statusLabel as $key => $value)
-                @if($key == $activityWorkflow)
-                <div class="active"><span>{{ trans(sprintf('lite/global.%s',strtolower($value)))}}</span>
-                </div>
-                @endif
-                @endforeach
-                @include('lite.activity.partials.workflow')
+                    @foreach($statusLabel as $key => $value)
+                        @if($key == $activityWorkflow)
+                            <div class="active"><span>{{ trans(sprintf('lite/global.%s',strtolower($value)))}}</span>
+                            </div>
+                        @endif
+                    @endforeach
+                    @include('lite.activity.partials.workflow')
                 </div>
                 {{--<div class="activity__block activity__map">--}}
-                    {{--map--}}
+                {{--map--}}
                 {{--</div>--}}
                 <div class="activity__block activity__detail__block">
                     <ul>
                         <li><span>@lang('lite/global.activity_detail')</span></li>
-                        <li><a href="#">Budget Information</a><i>(0)</i></li>
-                        <li><a href="#">Transactions</a><i>(0)</i></li>
+                        <li><a href="#">@lang('lite/global.budget_information')</a><i>(0)</i></li>
+                        <li><a href="#">@lang('lite/global.transactions')</a><i>(0)</i></li>
                     </ul>
                 </div>
                 <div class="activity__block activity__updated__date">
@@ -95,6 +104,7 @@
                     }
                 });
             }
+
             fixedTop();
             $(window).resize(function () {
                 fixedTop();

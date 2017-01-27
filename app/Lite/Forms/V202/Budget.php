@@ -31,6 +31,7 @@ class Budget extends LiteBaseForm
                  [
                      'wrapper' => ['class' => 'form-group col-sm-6']
                  ]
-             );
+             )
+             ->addButton('remove_button', trans('lite/elementForm.remove'), 'budget', 'remove_from_collection');
     }
 }

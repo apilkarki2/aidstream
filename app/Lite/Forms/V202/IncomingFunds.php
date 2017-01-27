@@ -21,6 +21,6 @@ class IncomingFunds extends LiteBaseForm
 
         return $this
             ->addToCollection('incomingfunds', ' ', $formPath, 'collection_form transaction')
-            ->addAddMoreButton('add_more_transaction', 'transaction', trans('lite/elementForm.add_another_incoming_funds'));
+            ->addButton('add_more_transaction', trans('lite/elementForm.add_another_incoming_funds'), 'transaction', 'add_more');
     }
 }
