@@ -101,5 +101,7 @@
         ProgressBar.calculateProgressBar(completedText);
         ProgressBar.calculate();
         ProgressBar.onMapClicked();
+        CreateActivity.addToCollection();
+        CreateActivity.scroll();
     </script>
 @stop

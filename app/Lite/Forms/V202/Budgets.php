@@ -21,6 +21,6 @@ class Budgets extends LiteBaseForm
 
         return $this
             ->addToCollection('budget', ' ', $budgetFormPath, 'collection_form budget')
-            ->addAddMoreButton('add_more_budget', 'budget', trans('lite/elementForm.add_another_budget'));
+            ->addButton('add_more_budget', trans('lite/elementForm.add_another_budget'), 'budget', 'add_more');
     }
 }

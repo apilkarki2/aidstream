@@ -55,14 +55,16 @@ class Budget implements MapperInterface
     public function map()
     {
         foreach ($this->rawData as $key => $value) {
-            foreach ($value as $index => $field) {
-                $this->mappedData['budget'][$index]['budget_type']             = self::BUDGET_TYPE;
-                $this->mappedData['budget'][$index]['status']                  = self::BUDGET_STATUS;
-                $this->mappedData['budget'][$index]['period_start'][0]['date'] = $value[$index]['startDate'];
-                $this->mappedData['budget'][$index]['period_end'][0]['date']   = $value[$index]['endDate'];
-                $this->mappedData['budget'][$index]['value'][0]['amount']      = $value[$index]['amount'];
-                $this->mappedData['budget'][$index]['value'][0]['currency']    = $value[$index]['currency'];
-                $this->mappedData['budget'][$index]['value'][0]['value_date']  = Date('Y-m-d');
+            if(is_array($value)){
+                foreach ($value as $index => $field) {
+                    $this->mappedData['budget'][$index]['budget_type']             = self::BUDGET_TYPE;
+                    $this->mappedData['budget'][$index]['status']                  = self::BUDGET_STATUS;
+                    $this->mappedData['budget'][$index]['period_start'][0]['date'] = $value[$index]['startDate'];
+                    $this->mappedData['budget'][$index]['period_end'][0]['date']   = $value[$index]['endDate'];
+                    $this->mappedData['budget'][$index]['value'][0]['amount']      = $value[$index]['amount'];
+                    $this->mappedData['budget'][$index]['value'][0]['currency']    = $value[$index]['currency'];
+                    $this->mappedData['budget'][$index]['value'][0]['value_date']  = Date('Y-m-d');
+                }
             }
         }
 

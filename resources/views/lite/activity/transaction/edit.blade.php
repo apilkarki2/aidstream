@@ -15,12 +15,22 @@
             <div class="panel-body">
                 <div class="create-form">
                     <div class="col-md-9">
-                        {!! form($form) !!}
+                        {!! form_start($form) !!}
+                        {!! form_until($form, 'add_more_transaction') !!}
+                    </div>
+                    <div class="col-md-9">
+                        {!! form_rest($form) !!}
                     </div>
                 </div>
             </div>
-            <div class="collection-container hidden"
+            <div class="transaction-container hidden"
                  data-prototype="{{ form_row($form->{strtolower($type)}->prototype()) }}"></div>
         </div>
     </div>
 @stop
+@section('script')
+    <script type="text/javascript" src="{{ url('/lite/js/createActivity.js') }}"></script>
+    <script type="text/javascript">
+        CreateActivity.addToCollection();
+    </script>
+@endsection
