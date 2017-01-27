@@ -463,12 +463,14 @@ class ActivityController extends LiteController
      * Creates budget of an activity.
      *
      * @param $activityId
-     * @param $type
+     * @param $typeCode
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @internal param $type
      */
-    public function createTransaction($activityId, $type)
+    public function createTransaction($activityId, $typeCode)
     {
         $activity = $this->activityService->find($activityId);
+        $ids = [];
 
         if (Gate::denies('ownership', $activity)) {
             return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
@@ -476,10 +478,11 @@ class ActivityController extends LiteController
 
         $this->authorize('add_activity', $activity);
 
-        if ($type == 'Disbursement' || $type == 'Expenditure' || $type == 'IncomingFunds') {
+        if ($typeCode == 3 || $typeCode == 4 || $typeCode == 1) {
+            $type = $this->transactionService->getTransactionType($typeCode);
             $form = $this->transactionForm->form(route('lite.activity.transaction.store', [$activityId, $type]), $type);
 
-            return view('lite.activity.transaction.edit', compact('form', 'type'));
+            return view('lite.activity.transaction.edit', compact('form', 'type', 'ids'));
         }
 
         return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'warning', 'messages' => [trans('error.404_not_found')]]);
@@ -501,19 +504,20 @@ class ActivityController extends LiteController
         if (Gate::denies('ownership', $activity)) {
             return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
         }
-
         $this->authorize('edit_activity', $activity);
+        $type = $this->transactionService->getTransactionType($transactionType);
 
-        if ($transactionType == 'Disbursement' || $transactionType == 'Expenditure' || $transactionType == 'IncomingFunds') {
+        if ($type == 'Disbursement' || $type == 'Expenditure' || $type == 'IncomingFunds') {
             $version = session('version');
             $model   = $this->transactionService->getModel($activityId, $transactionType, $version);
-            $type    = $this->transactionService->getTransactionType($transactionType);
 
             $newModel[strtolower($type)] = $model;
 
+            $ids = $this->transactionService->getIds($model);
+
             $form = $this->transactionForm->form(route('lite.activity.transaction.update', [$activityId, $transactionType]), $type, $newModel);
 
-            return view('lite.activity.transaction.edit', compact('form', 'type'));
+            return view('lite.activity.transaction.edit', compact('form', 'type', 'ids'));
         }
 
         return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'warning', 'messages' => [trans('error.404_not_found')]]);
@@ -529,9 +533,9 @@ class ActivityController extends LiteController
      */
     public function updateTransaction($activityId, $type, Request $request)
     {
-        $rawData = $request->except('_token');
+        $rawData = $request->except(['_token', 'ids']);
         $version = session('version');
-
+        $ids     = $request->get('ids');
         $activity = $this->activityService->find($activityId);
 
         if (Gate::denies('ownership', $activity)) {
@@ -543,6 +547,8 @@ class ActivityController extends LiteController
         if (!$this->validation->passes($rawData, 'Transaction', $version)) {
             return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
         }
+
+        $this->transactionService->updateTransaction($ids, $rawData);
 
         if ($this->transactionService->updateOrCreate($activityId, $type, $rawData, $version)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_updated')]]);

@@ -27,12 +27,12 @@
                     </li>
                 @endforeach
             </div>
-            <a href="{{ route('lite.activity.transaction.create', [$activity->id, 'Expenditure']) }}"
+            <a href="{{ route('lite.activity.transaction.create', [$activity->id, 4]) }}"
                class="add-more"><span>@lang('lite/elementForm.add_expenditure')</span></a>
         </div>
     @else
         <div class="activity__element__list">
-            <a href="{{ route('lite.activity.transaction.create', [$activity->id, 'Expenditure']) }}"
+            <a href="{{ route('lite.activity.transaction.create', [$activity->id, 4]) }}"
                class="add-more"><span>@lang('lite/elementForm.add_expenditure')</span></a>
         </div>
     @endif
