@@ -63,12 +63,13 @@ class ExchangeRateService
      */
     public function budgetDetails($activities)
     {
-        $totalAmount = 0;
-        $maxAmount   = 0;
+        $totalAmount      = 0;
+        $totalAmountArray = [];
 
         foreach ($activities as $activity) {
-            $budget           = $activity->budget;
-            $default_currency = $this->getDefaultCurrency($activity);
+            $totalAmountInActivity = 0;
+            $budget                = $activity->budget;
+            $default_currency      = $this->getDefaultCurrency($activity);
 
             if ($budget) {
                 foreach ($budget as $key => $value) {
@@ -85,14 +86,13 @@ class ExchangeRateService
                 }
             }
 
-            if ($maxAmount < $totalAmount) {
-                $maxAmount = $totalAmount;
-            }
+            $totalAmount += $totalAmountInActivity;
+            $totalAmountArray[] = $totalAmountInActivity;
         }
 
         $totalBudgetPlaceValue = $this->numberFormat(strlen(round($totalAmount)));
         $totalBudget           = $this->placeValueAmount($totalAmount, $totalBudgetPlaceValue);
-        $maxBudgetInString     = $this->formatAmountIntoWord($maxAmount);
+        $maxBudgetInString     = $this->formatAmountIntoWord(max($totalAmountArray));
 
         return ['totalBudget' => $totalBudget, 'totalBudgetPlaceValue' => $totalBudgetPlaceValue, 'maxBudget' => $maxBudgetInString];
     }
