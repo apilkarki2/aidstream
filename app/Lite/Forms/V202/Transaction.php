@@ -39,7 +39,7 @@ class Transaction extends LiteBaseForm
                      'wrapper' => ['class' => 'form-group col-sm-6']
                  ]
              )
-             ->add('description', 'text', ['label' => trans('lite/elementForm.description'), 'wrapper' => ['class' => 'form-group col-sm-6']])
+             ->add('description', 'textarea', ['label' => trans('lite/elementForm.description'), 'wrapper' => ['class' => 'form-group col-sm-6']])
              ->add('organisation', 'text', ['label' => $organisation, 'wrapper' => ['class' => 'form-group col-sm-6']])
              ->addRemoveThisButton('remove-transaction');
     }
