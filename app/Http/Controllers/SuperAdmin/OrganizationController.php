@@ -7,6 +7,7 @@ use App\SuperAdmin\Services\OrganizationGroupManager;
 use App\SuperAdmin\Services\SuperAdminManager;
 use Auth;
 use Illuminate\Contracts\Logging\Log;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Illuminate\Database\DatabaseManager;
@@ -17,6 +18,9 @@ use Illuminate\Database\DatabaseManager;
  */
 class OrganizationController extends Controller
 {
+    const CORE_VERSION_ID = 1;
+
+    const LITE_VERSION_ID = 2;
     /**
      * @var SuperAdminManager
      */
@@ -172,8 +176,13 @@ class OrganizationController extends Controller
         Session::put('next_version', $next_version);
         Session::put('version', 'V' . str_replace('.', '', $current_version));
         Auth::loginUsingId($userId);
+        $organization = $settings->organization;
 
-        return redirect()->to(config('app.admin_dashboard'));
+        if ($organization->system_version_id == self::CORE_VERSION_ID) {
+            return redirect()->to(config('app.admin_dashboard'));
+        }
+
+        return redirect()->route('lite.activity.index');
     }
 
     /**
@@ -210,5 +219,21 @@ class OrganizationController extends Controller
         $organizationDetails = $this->adminManager->getAllOrganizationInfo();
 
         return $this->adminManager->exportDetails($organizationDetails);
+    }
+
+    /**
+     * Changes system version
+     *
+     * @param         $orgId
+     * @param Request $request
+     */
+    public function changeSystemVersion($orgId, Request $request){
+        $system_version = $request->except('_token');
+
+        if($this->groupManager->updateSystemVersion($orgId, $system_version)){
+            return redirect()->back()->withResponse(['type' => 'success', 'code' => ['updated', ['name' => trans('global.system_version')]]]);
+        }
+
+        return redirect()->back()->withResponse(['type' => 'danger', 'code' => ['update_failed', ['name' => trans('global.system_version')]]]);
     }
 }
