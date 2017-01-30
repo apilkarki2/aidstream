@@ -11,8 +11,11 @@ var UserOnBoarding = {
         this.callAsync('/onBoarding/localisedText', 'get').success(function (data) {
             UserOnBoarding.localisedFile = JSON.parse(data);
             UserOnBoarding.loadedLocalisedFile = true;
-            UserOnBoarding.addHintLabel();
-            UserOnBoarding.dashboardTour();
+
+            setTimeout(function () {
+                UserOnBoarding.addHintLabel();
+                UserOnBoarding.dashboardTour();
+            });
         });
     },
     addHintLabel: function () {
