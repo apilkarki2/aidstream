@@ -73,8 +73,8 @@
                 <div class="activity__block activity__detail__block">
                     <ul>
                         <li><span>@lang('lite/global.activity_detail')</span></li>
-                        <li><a href="#">@lang('lite/global.budget_information')</a><i>(0)</i></li>
-                        <li><a href="#">@lang('lite/global.transactions')</a><i>(0)</i></li>
+                        <li><a href="#">@lang('lite/global.budget_information')</a><i>({{ getVal($count, ['budget'], 0) }})</i></li>
+                        <li><a href="#">@lang('lite/global.transactions')</a><i>({{ getVal($count, ['transaction'], 0) }})</i></li>
                     </ul>
                 </div>
                 <div class="activity__block activity__updated__date">

@@ -168,6 +168,7 @@ class ActivityController extends LiteController
     public function show($activityId)
     {
         $activity = $this->activityService->find($activityId);
+        $count = [];
 
         if (Gate::denies('ownership', $activity)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
@@ -194,9 +195,12 @@ class ActivityController extends LiteController
             $nextRoute = route('lite.activity.publish', $activityId);
         }
 
+        $count['budget'] = ($activity->budget ? count($activity->budget) : 0);
+        $count['transaction'] = ($disbursement ? count($disbursement) : 0) + ($expenditure ? count($expenditure) : 0) + ($incoming ? count($incoming) : 0);
+
         return view(
             'lite.activity.show',
-            compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute', 'disbursement', 'expenditure', 'incoming', 'defaultCurrency', 'documentLinks')
+            compact('activity', 'statusLabel', 'activityWorkflow', 'btn_text', 'nextRoute', 'disbursement', 'expenditure', 'incoming', 'defaultCurrency', 'documentLinks', 'count')
         );
     }
 
