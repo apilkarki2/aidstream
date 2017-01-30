@@ -29,10 +29,8 @@ class Transaction
     public function rules()
     {
         return [
-            $this->transaction . '.*.reference' => 'required',
             $this->transaction . '.*.date'      => 'required|date',
             $this->transaction . '.*.amount'    => 'required',
-            $this->transaction . '.*.currency'  => 'required'
         ];
     }
 
@@ -42,11 +40,9 @@ class Transaction
     public function messages()
     {
         return [
-            $this->transaction . '.*.reference.required' => trans('validation.required', ['attribute' => trans('lite/elementForm.reference')]),
             $this->transaction . '.*.date.required'      => trans('validation.required', ['attribute' => trans('lite/elementForm.date')]),
             $this->transaction . '.*.date.date'          => trans('validation.date', ['attribute' => trans('lite/elementForm.date')]),
             $this->transaction . '.*.amount.required'    => trans('validation.required', ['attribute' => trans('lite/elementForm.amount')]),
-            $this->transaction . '.*.currency.required'  => trans('validation.required', ['attribute' => trans('lite/elementForm.currency')]),
         ];
     }
 }

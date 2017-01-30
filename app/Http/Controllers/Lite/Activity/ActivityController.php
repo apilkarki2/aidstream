@@ -463,10 +463,11 @@ class ActivityController extends LiteController
      * Creates budget of an activity.
      *
      * @param $activityId
-     * @param $type
+     * @param $typeCode
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @internal param $type
      */
-    public function createTransaction($activityId, $type)
+    public function createTransaction($activityId, $typeCode)
     {
         $activity = $this->activityService->find($activityId);
 
@@ -476,7 +477,8 @@ class ActivityController extends LiteController
 
         $this->authorize('add_activity', $activity);
 
-        if ($type == 'Disbursement' || $type == 'Expenditure' || $type == 'IncomingFunds') {
+        if ($typeCode == 3 || $typeCode == 4 || $typeCode == 1) {
+            $type = $this->transactionService->getTransactionType($typeCode);
             $form = $this->transactionForm->form(route('lite.activity.transaction.store', [$activityId, $type]), $type);
 
             return view('lite.activity.transaction.edit', compact('form', 'type'));
