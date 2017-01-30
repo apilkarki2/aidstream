@@ -13,13 +13,15 @@
                 <div class="panel__title">@lang('lite/title.budget')</div>
             </div>
             <div class="panel__body">
-                <div class="create-form">
-                    <div class="col-md-9">
+                <div class="create-form user-form">
+                    <div class="row">
                         {!! form_start($form) !!}
-                        {!! form_until($form,'add_more_budget') !!}
-                    </div>
-                    <div class="col-md-9">
-                        {!! form_rest($form) !!}
+                        <div class="col-md-9">
+                            {!! form_until($form,'add_more_budget') !!}
+                        </div>
+                        <div class="border-btn-line">
+                            {!! form_rest($form) !!}
+                        </div>
                     </div>
                 </div>
             </div>

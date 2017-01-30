@@ -1,18 +1,18 @@
 <div class="activity__detail">
     @if ($activity->budget)
-        <a href="{{ route('lite.activity.budget.edit', $activity->id) }}"
-           class="edit-element">
-            <span>@lang('lite/elementForm.edit_budget')</span>
-        </a>
         <div>
         </div>
         <div class="activity__element__list">
-            <div class="activity-element-label">
+            <h3>
                 @lang('lite/title.budget')
-            </div>
+                <a href="{{ route('lite.activity.budget.edit', $activity->id) }}"
+                   class="edit-activity" title="Edit">@lang('lite/elementForm.edit_budget')
+                </a>
+            </h3>
             <div class="activity__element--info">
                 @foreach ($activity->budget as $index => $budget)
                     <li>
+                        <span>
                         {{ getVal($budget, ['value', 0, 'amount']) }}
                         @if(getVal($budget, ['value', 0, 'currency']))
                             {{ getVal($budget, ['value', 0, 'currency']) }}
@@ -23,7 +23,8 @@
                         - {{ getVal($budget, ['period_end', 0, 'date']) }}]
 
                         <a data-href="{{ route('lite.activity.budget.delete', $activity->id)}}" data-index="{{ $index }}"
-                           class="delete-lite-resource" data-toggle="modal" data-target="#delete-modal" data-message="@lang('lite/global.confirm_delete')"> @lang('lite/global.delete') </a>
+                           class="delete-activity" data-toggle="modal" data-target="#delete-modal" data-message="@lang('lite/global.confirm_delete')"> @lang('lite/global.delete') </a>
+                            </span>
                     </li>
                 @endforeach
             </div>

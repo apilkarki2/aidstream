@@ -79,13 +79,13 @@
                                         <a href="#">&ctdot;</a>
                                         <div class="view-more-actions">
                                             <ul>
-                                                <li class="edit-activity"><a href="{{ route('lite.activity.edit', [$activity->id]) }}">@lang('lite/global.edit_activity')</a></li>
-                                                <li class="duplicate-activity">
-                                                    <a href="{{ route('lite.activity.duplicate.edit', $activity->id) }}">@lang('lite/global.duplicate_activity')</a>
+                                                <li><a href="{{ route('lite.activity.edit', [$activity->id]) }}" class="edit-activity">@lang('lite/global.edit_activity')</a></li>
+                                                <li>
+                                                    <a href="{{ route('lite.activity.duplicate.edit', $activity->id) }}" class="duplicate-activity">@lang('lite/global.duplicate_activity')</a>
                                                 </li>
-                                                <li class="delete-activity">
-                                                    <a data-toggle="modal" data-target="#delete-modal" data-href="{{ route('lite.activity.delete') }}" class="delete-lite-resource"
-                                                       data-index="{{ $activity->id }}" data-message="@lang('lite/global.confirm_delete')">@lang('lite/global.delete_activity')</a>
+                                                <li>
+                                                    <a data-toggle="modal" data-target="#delete-modal" data-href="{{ route('lite.activity.delete') }}"
+                                                       data-index="{{ $activity->id }}" data-message="@lang('lite/global.confirm_delete')" class="delete-activity">@lang('lite/global.delete_activity')</a>
                                                 </li>
                                             </ul>
                                         </div>

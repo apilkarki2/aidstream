@@ -12,7 +12,7 @@
             <div class="panel__heading">
                 <div class="panel__title">@lang('lite/title.transaction')</div>
             </div>
-            <div class="panel-body">
+            <div class="panel__body">
                 <div class="create-form user-form">
                     <div class="row">
                         {!! form_start($form) !!}
