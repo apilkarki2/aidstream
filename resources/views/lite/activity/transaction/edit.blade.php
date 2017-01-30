@@ -15,7 +15,13 @@
             <div class="panel-body">
                 <div class="create-form">
                     <div class="col-md-9">
-                        {!! form($form) !!}
+                        {!! form_start($form) !!}
+                        @foreach($ids as $index => $id)
+                            <input name="ids[]" type="hidden" value={{ $id }}>
+                        @endforeach
+                        {!! form_rest($form) !!}
+                        {!! form_end($form) !!}
+                        <input class="ids" type="hidden" data-ids=$ids>
                     </div>
                 </div>
             </div>

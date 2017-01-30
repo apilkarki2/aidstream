@@ -321,4 +321,31 @@ class TransactionService
         }
     }
 
+    public function getIds(array $model)
+    {
+        $ids = [];
+
+        foreach ($model as $index => $value) {
+            $ids[$index] = getVal($value, ['id'], '');
+        }
+
+        return $ids;
+    }
+
+    public function updateTransaction(array $ids, $rawData)
+    {
+        $newIds = [];
+
+        foreach ($rawData as $index => $value) {
+            foreach ($value as $id) {
+                $newIds[] = getVal($id, ['id'], '');
+            }
+        }
+
+        $diffId = array_diff($ids, $newIds);
+
+        foreach ($diffId as $id) {
+            $this->delete($id);
+        }
+    }
 }

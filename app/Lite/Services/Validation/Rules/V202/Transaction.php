@@ -20,7 +20,7 @@ class Transaction
      */
     public function __construct()
     {
-        $this->transaction = key(request()->except('_token'));
+        $this->transaction = key(request()->except(['_token', 'ids']));
     }
 
     /**

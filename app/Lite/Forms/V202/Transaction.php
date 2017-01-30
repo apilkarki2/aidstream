@@ -40,22 +40,7 @@ class Transaction extends LiteBaseForm
                  ]
              )
              ->add('description', 'text', ['label' => trans('lite/elementForm.description'), 'wrapper' => ['class' => 'form-group col-sm-6']])
-             ->add('organisation', 'text', ['label' => $organisation, 'wrapper' => ['class' => 'form-group col-sm-6']]);
-
-        if (!$this->isEditRequest()) {
-            $this->addRemoveThisButton('remove-transaction');
-        }
-    }
-
-    /**
-     * Check if the request is for resource edit.
-     *
-     * @return bool
-     */
-    protected function isEditRequest()
-    {
-        $request = request()->segments();
-
-        return (end($request) == 'edit');
+             ->add('organisation', 'text', ['label' => $organisation, 'wrapper' => ['class' => 'form-group col-sm-6']])
+             ->addRemoveThisButton('remove-transaction');
     }
 }
