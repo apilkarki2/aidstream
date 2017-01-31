@@ -16,9 +16,9 @@
                     <div class="row">
                         {!! form_start($form) !!}
                         <div class="col-md-9">
-                            {!! form_until($form,"role_id") !!}
+                            {!! form_until($form,'role_id') !!}
                         </div>
-                        <div class="border-btn-line">
+                        <div class="border-btn-line no-margin">
                             {!! form_rest($form) !!}
                         </div>
                         {!! form_end($form) !!}

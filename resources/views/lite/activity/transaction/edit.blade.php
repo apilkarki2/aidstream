@@ -16,19 +16,24 @@
                 <div class="create-form user-form">
                     <div class="row">
                         {!! form_start($form) !!}
-                        @foreach($ids as $index => $id)
-                            <input name="ids[]" type="hidden" value={{ $id }}>
-                        @endforeach
-                        {!! form_rest($form) !!}
+                        <div class="col-md-9">
+                            @foreach($ids as $index => $id)
+                                <input name="ids[]" type="hidden" value={{ $id }}>
+                            @endforeach
+                                {!! form_until($form,'add_more_transaction') !!}
+                        </div>
+                        <div class="border-btn-line">
+                            {!! form_rest($form) !!}
+                        </div>
                         {!! form_end($form) !!}
                         <input class="ids" type="hidden" data-ids=$ids>
-                    </div>
+
                     </div>
                 </div>
             </div>
-            <div class="transaction-container hidden"
-                 data-prototype="{{ form_row($form->{strtolower($type)}->prototype()) }}"></div>
         </div>
+        <div class="transaction-container hidden"
+             data-prototype="{{ form_row($form->{strtolower($type)}->prototype()) }}"></div>
     </div>
 @stop
 @section('script')

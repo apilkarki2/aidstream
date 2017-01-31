@@ -7451,6 +7451,12 @@ body > .skiptranslate iframe {
   right: 0;
   top: 8px; }
 
+.form__description {
+  clear: both; }
+
+.no-margin {
+  margin-top: 0; }
+
 @media all and (min-width: 600px) {
   .lite .dataTables_wrapper .dataTables_filter {
     margin: -57px 0 20px 24px; }
@@ -7502,11 +7508,11 @@ body > .skiptranslate iframe {
     padding: 20px;
     width: 132px;
     z-index: 1; }
-    .view-more-actions ul li.delete-activity {
+    .view-more-actions ul li + li {
       border-top: 1px solid #ececec;
       margin-top: 10px;
       padding-top: 10px; }
-    .view-more-actions ul li.edit-activity {
+    .view-more-actions ul li .edit-activity {
       display: none; }
   .panel__activity__more--info {
     width: 280px; }
@@ -7538,7 +7544,7 @@ body > .skiptranslate iframe {
     clear: both; }
   .settings-lite-form .upload-logo-block {
     margin-top: -230px !important; }
-  .collection_form + .add-to-collection {
+  .collection_form.budget + .add-to-collection, .collection_form.transaction + .add-to-collection {
     margin: -16px 0 10px; } }
 
 /*# sourceMappingURL=maps/app.css.map */
