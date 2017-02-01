@@ -12,7 +12,7 @@
                 <div class="panel__title">
                     @lang('lite/global.activity_detail')
                 </div>
-                <a href="#" class="back-to-activities-list">@lang('lite/global.back_to_activities_list')</a>
+                <a href="{{ route('lite.activity.index') }}" class="back-to-activities-list">@lang('lite/global.back_to_activities_list')</a>
             </div>
             <a href="{{ route('lite.activity.edit', $activity->id) }}"
                class="edit-activity pull-right">@lang('lite/global.edit_activity')</a>

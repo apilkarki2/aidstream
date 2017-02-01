@@ -25,7 +25,7 @@
                             @endif
                             <a data-href="{{ route('lite.activity.transaction.delete', $activity->id) }}"
                                data-index="{{ getVal($transaction, ['id'], '') }}"
-                               class="delete-activity" data-toggle="modal" data-target="#delete-modal"
+                               class="delete-activity delete-confirm" data-toggle="modal" data-target="#delete-modal"
                                data-message="@lang('lite/global.confirm_delete')"> @lang('lite/global.delete') </a>
                     </span>
                         </li>

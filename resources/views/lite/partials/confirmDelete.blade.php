@@ -9,7 +9,7 @@
                 {{ csrf_field() }}
                 <input id="index" type="hidden" value="" name="index">
                 <div class="modal-body">
-                    <p id="modal-message"></p>
+                    <p id="delete-modal-message"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="submit-delete-transaction" class="btn btn-primary">@lang('lite/settings.yes')</button>

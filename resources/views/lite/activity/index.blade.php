@@ -85,7 +85,7 @@
                                                 </li>
                                                 <li>
                                                     <a data-toggle="modal" data-target="#delete-modal" data-href="{{ route('lite.activity.delete') }}"
-                                                       data-index="{{ $activity->id }}" data-message="@lang('lite/global.confirm_delete')" class="delete-activity">@lang('lite/global.delete_activity')</a>
+                                                       data-index="{{ $activity->id }}" data-message="@lang('lite/global.confirm_delete')" class="delete-activity delete-confirm">@lang('lite/global.delete_activity')</a>
                                                 </li>
                                             </ul>
                                         </div>

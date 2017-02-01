@@ -83,6 +83,12 @@ var CreateActivity = {
                 }
             });
         });
+    },
+    formCollection: function () {
+        $(document).ready(function (){
+            $('.collection_form > div:not(:first)').addClass('added-new-block');
+        });
     }
-}
+};
 
+CreateActivity.formCollection();

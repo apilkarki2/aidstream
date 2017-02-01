@@ -67,7 +67,7 @@
                         </div>
                         <div class="col-md-9">
                             {!! form_rest($form) !!}
-                            <a href="{{route('lite.activity.index')}}" class="pull-right btn-go-back">@lang('lite/global.cancel_and_go_back')</a>
+                            <a href="{{ $form->getModel() ? route('lite.activity.show', $activityId) : route('lite.activity.index')}}" class="pull-right btn-go-back">@lang('lite/global.cancel_and_go_back')</a>
                         </div>
                         {!! form_end($form) !!}
                         <div class="funding_organisations-container hidden"

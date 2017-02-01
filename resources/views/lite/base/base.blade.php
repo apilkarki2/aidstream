@@ -148,7 +148,7 @@
     </div>
 </div>
 
-@include('lite.partials.confirm')
+@include('lite.partials.confirmDelete')
 
 <div class="scroll-top">
     <a href="#" class="scrollup" title="Scroll to top">icon</a>
@@ -182,10 +182,10 @@
 @yield('humanitarian-script')
 
 <script type="text/javascript">
-    $('.delete-lite-resource').on('click', function () {
+    $('.delete-confirm').on('click', function () {
         var form = $('#delete-form');
 
-        $('#modal-message').html($(this).attr('data-message'));
+        $('#delete-modal-message').html($(this).attr('data-message'));
 
         form.attr('action', $(this).attr('data-href'));
         form.children('input#index').attr('value', $(this).attr('data-index'));

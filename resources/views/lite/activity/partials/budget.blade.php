@@ -23,7 +23,7 @@
                         - {{ getVal($budget, ['period_end', 0, 'date']) }}]
 
                         <a data-href="{{ route('lite.activity.budget.delete', $activity->id)}}" data-index="{{ $index }}"
-                           class="delete-activity" data-toggle="modal" data-target="#delete-modal" data-message="@lang('lite/global.confirm_delete')"> @lang('lite/global.delete') </a>
+                           class="delete-activity delete-confirm" data-toggle="modal" data-target="#delete-modal" data-message="@lang('lite/global.confirm_delete')"> @lang('lite/global.delete') </a>
                             </span>
                     </li>
                 @endforeach

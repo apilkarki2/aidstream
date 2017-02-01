@@ -224,7 +224,7 @@ class ActivityController extends LiteController
         $countryDetails = file_get_contents(public_path('/data/countriesDetails.json'));
         $form           = $this->activityForm->form(route('lite.activity.update', $activityId), trans('lite/elementForm.update_this_activity'), $activity);
 
-        return view('lite.activity.create', compact('form', 'activity', 'countryDetails'));
+        return view('lite.activity.create', compact('form', 'activity', 'countryDetails', 'activityId'));
     }
 
 
