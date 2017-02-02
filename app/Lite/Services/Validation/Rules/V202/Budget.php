@@ -153,7 +153,7 @@ class Budget
      */
     protected function rulesForAmount()
     {
-        $this->settingsRules['budget.*.amount'] = 'required';
+        $this->settingsRules['budget.*.amount'] = 'required|numeric';
 
         return $this;
     }
@@ -166,6 +166,7 @@ class Budget
     protected function messagesForAmount()
     {
         $this->settingsMessages['budget.*.amount.required'] = trans('validation.required', ['attribute' => trans('lite/elementForm.amount')]);
+        $this->settingsMessages['budget.*.amount.numeric'] = trans('validation.numeric', ['attribute' => trans('lite/elementForm.amount')]);
 
         return $this;
     }

@@ -30,7 +30,7 @@ class Transaction
     {
         return [
             $this->transaction . '.*.date'      => 'required|date',
-            $this->transaction . '.*.amount'    => 'required',
+            $this->transaction . '.*.amount'    => 'required|numeric',
         ];
     }
 
@@ -43,6 +43,7 @@ class Transaction
             $this->transaction . '.*.date.required'      => trans('validation.required', ['attribute' => trans('lite/elementForm.date')]),
             $this->transaction . '.*.date.date'          => trans('validation.date', ['attribute' => trans('lite/elementForm.date')]),
             $this->transaction . '.*.amount.required'    => trans('validation.required', ['attribute' => trans('lite/elementForm.amount')]),
+            $this->transaction . '.*.amount.numeric'    => trans('validation.numeric', ['attribute' => trans('lite/elementForm.amount')]),
         ];
     }
 }
