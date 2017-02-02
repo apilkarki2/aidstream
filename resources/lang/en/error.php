@@ -57,5 +57,6 @@ return [
     'error_transaction_create'                               => 'Error creating transaction',
     'error_transaction_delete'                               => 'Error deleting transaction',
     '404_not_found'                                          => '<span><b>404! Not Found</b><br>The requested url cannot be found in our system.</span>',
-    'not_available_for_v201'                                 => 'Sorry this feature is not available for V201. Please upgrade to latest version to download.'
+    'not_available_for_v201'                                 => 'Sorry this feature is not available for V201. Please upgrade to latest version to download.',
+    'upgrade_not_completed'                                  => 'Upgrade could not be completed.'
 ];

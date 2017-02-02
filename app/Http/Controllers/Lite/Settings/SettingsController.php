@@ -126,10 +126,12 @@ class SettingsController extends LiteController
         $this->authorize('settings', auth()->user());
 
         if (!$this->settingsService->upgradeSystemVersion($organizationId)) {
-            return redirect()->back()->withResponse(['type' => 'danger', 'messages' => ['Upgrade could not be completed.']]);
+            return redirect()->back()->withResponse(['type' => 'danger', 'messages' => [trans('error.upgrade_not_completed')]]);
         }
 
-        return redirect()->route('activity.index')->withResponse(['type' => 'success', 'messages' => ['Congratulations! You have upgraded AidStream!']]);
+        session('first_login', true);
+
+        return redirect()->route('welcome')->withResponse(['type' => 'success', 'messages' => [trans('success.aidstream_upgraded')]]);
     }
 
 }

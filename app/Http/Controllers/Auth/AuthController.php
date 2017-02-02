@@ -378,10 +378,6 @@ class AuthController extends Controller
             }
         } elseif ($user->role_id == 3 || $user->role_id == 4) {
             $redirectPath = config('app.super_admin_dashboard');
-        } else {
-//            Auth::user()->userOnBoarding()->create(['has_logged_in_once' => false]);
-//            Session::put('first_login', true);
-//            $redirectPath = 'welcome';
         }
 
         return $redirectPath;

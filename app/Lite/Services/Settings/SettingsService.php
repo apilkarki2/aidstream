@@ -5,6 +5,7 @@ use App\Lite\Contracts\OrganisationRepositoryInterface;
 use App\Lite\Repositories\Settings\SettingsRepository;
 use App\Lite\Services\Data\Traits\TransformsData;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
+use App\User;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Collection;
@@ -196,12 +197,33 @@ class SettingsService
      */
     protected function enableOnBoardingFor(Collection $users)
     {
-        return $users->each(function ($user) {
-            if ($user->userOnBoarding) {
-                $user->userOnBoarding()->update(['has_logged_in_once' => false, 'completed_tour' => false, 'settings_completed_steps' => null, 'display_hints' => true]);
-            } else {
-                $user->userOnBoarding()->create(['has_logged_in_once' => false]);
+        return $users->each(
+            function ($user) {
+                $completedSteps = $this->completedStepsFor($user);
+                if ($user->userOnBoarding) {
+                    $user->userOnBoarding()->update(['has_logged_in_once' => false, 'completed_tour' => false, 'settings_completed_steps' => $completedSteps, 'display_hints' => true]);
+                } else {
+                    $user->userOnBoarding()->create(['has_logged_in_once' => false, 'settings_completed_steps' => $completedSteps]);
+                }
             }
-        });
+        );
+    }
+
+    /**
+     * Returns the completed steps for onboarding before upgrading.
+     * 
+     * @param User $user
+     * @return array
+     */
+    protected function completedStepsFor(User $user)
+    {
+        $settings       = $user->organization->settings;
+        $completedSteps = [];
+
+        (getVal((array) $settings->registry_info, [0, 'publisher_id']) == "" && getVal((array) $settings, [0, 'api_id']) == "") ?: array_push($completedSteps, 1);
+        (getVal((array) $settings->registry_info, [0, 'publish_files']) == "") ?: array_push($completedSteps, 3);
+        ($settings->publishing_type == "") ?: array_push($completedSteps, 2);
+
+        return $completedSteps;
     }
 }
