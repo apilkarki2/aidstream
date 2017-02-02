@@ -58,11 +58,9 @@ class Profile implements MapperInterface
 
         $profile['organisation'] = [
             'secondary_contact' => [
-                [
-                    'first_name' => getVal($this->rawData, ['secondaryFirstName'], ''),
-                    'last_name'  => getVal($this->rawData, ['secondaryLastName'], ''),
-                    'email'      => getVal($this->rawData, ['secondaryEmail'], '')
-                ]
+                'first_name' => getVal($this->rawData, ['secondaryFirstName'], ''),
+                'last_name'  => getVal($this->rawData, ['secondaryLastName'], ''),
+                'email'      => getVal($this->rawData, ['secondaryEmail'], '')
             ]
         ];
 
@@ -90,9 +88,9 @@ class Profile implements MapperInterface
             'email'              => getVal($this->rawData, ['email'], ''),
             'timeZone'           => getVal($this->rawData, ['time_zone_id'], '') . ' : ' . getVal($this->rawData, ['time_zone'], ''),
             'permission'         => getVal($roles, [getVal($this->rawData, ['role_id'], '')], ''),
-            'secondaryFirstName' => getVal($this->rawData, ['secondary_contact', 0, 'first_name'], ''),
-            'secondaryLastName'  => getVal($this->rawData, ['secondary_contact', 0, 'last_name'], ''),
-            'secondaryEmail'     => getVal($this->rawData, ['secondary_contact', 0, 'email'], ''),
+            'secondaryFirstName' => getVal($this->rawData, ['secondary_contact', 'first_name'], ''),
+            'secondaryLastName'  => getVal($this->rawData, ['secondary_contact', 'last_name'], ''),
+            'secondaryEmail'     => getVal($this->rawData, ['secondary_contact', 'email'], ''),
             'picture'            => getVal($this->rawData, ['profile_url'], '')
         ];
 
