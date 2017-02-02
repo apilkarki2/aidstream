@@ -8199,6 +8199,9 @@ body > .skiptranslate iframe {
 
 .panel__body {
   background: #fdffff;
+  display: inline-block;
+  padding-bottom: 60px;
+  width: 100%;
 }
 
 .lite .create-form {
@@ -8245,10 +8248,6 @@ body > .skiptranslate iframe {
   padding: 0;
 }
 
-.lite .create-project-form {
-  padding-bottom: 120px;
-}
-
 .lite .user-form {
   padding: 0 24px 15px;
   form .form-group:last-child {
@@ -8268,7 +8267,7 @@ body > .skiptranslate iframe {
 .form__block {
   border-bottom: 1px solid #d5eaf5;
   display: inline-block;
-  padding: 20px 38px 15px;
+  padding: 20px 24px 15px;
   vertical-align: top;
   width: 100%;
   h2 {
@@ -8347,7 +8346,11 @@ body > .skiptranslate iframe {
 }
 
 .btn-go-back {
-  margin: 40px 24px 0 0;
+  margin: 45px 24px 0 0;
+}
+
+.panel__nav {
+  display: none;
 }
 
 .panel__nav nav {
@@ -8520,7 +8523,9 @@ body > .skiptranslate iframe {
   border-radius: 19px;
   margin: 4px 24px 0 0;
   padding: 0 10px;
+  position: relative;
   width: 90px;
+  z-index: 1;
   select {
     background: transparent !important;
     border: none;
@@ -8531,15 +8536,28 @@ body > .skiptranslate iframe {
   }
 }
 
-.lite table.dataTable {
-  &.no-footer {
-    margin: 0 24px;
-    width: calc(100% - 46px) !important;
+.lite table {
+  border-collapse: collapse;
+  border: 0;
+  margin: 0 24px;
+  table-layout: auto;
+  width: calc(100% - 46px) !important;
+  thead tr {
+    border: 0 !important;
+    th {
+      background: $color_white;
+      border-bottom: 1px solid #d5eaf5;
+      font: normal 13px $font_1;
+      padding: 10px;
+    }
   }
   tr {
     background: #f8fdff !important;
     border: 1px solid #d5eaf5;
-    border-top: 0;
+    border-bottom: 0;
+    &:last-child {
+      border-bottom: 1px solid #d5eaf5;;
+    }
     &:first-of-type {
       border-top: 1px solid #d5eaf5;
     }
@@ -8701,18 +8719,6 @@ body > .skiptranslate iframe {
     }
   }
 }
-
-//.edit-activity {
-//  display: inline-block;
-//  font-size: 12px;
-//  position: relative;
-//  &:before {
-//    background: $url_27 no-repeat 0 0;
-//    content: "";
-//    @include position(absolute, 0 auto auto 0);
-//    @include size(10px);
-//  }
-//}
 
 .view-more:hover .view-more-actions {
   display: block;
@@ -8914,7 +8920,6 @@ body > .skiptranslate iframe {
 .panel__activity__more--info {
   background: #F8FCFF;
   border-left: 1px solid lighten($color_dodger_blue_approx, 40%);
-  height: 100vh;
   padding: 0;
 }
 
@@ -9021,6 +9026,47 @@ body > .skiptranslate iframe {
   margin-top: 0;
 }
 
+#delete-modal .modal-header {
+  padding-top: 0;
+}
+
+.panel__sub__heading {
+  font: 14px $font_1;
+  padding-left: 24px;
+  margin-top: 30px;
+  text-transform: uppercase;
+}
+
+.lite .publish-btn {
+  margin: 0 24px 14px;
+}
+
+.published-wrapper {
+  .delete-activity {
+    display: block;
+    height: 14px;
+    margin-top: 2px;
+    text-indent: -9999px;
+  }
+}
+
+.lite .permission {
+  select {
+    font-size: 13px;
+    height: 28px;
+  }
+}
+
+#name + p {
+  margin: 0;
+}
+
+.lite {
+  .panel-users-settings {
+    margin: 0;
+  }
+}
+
 @media all and (min-width: 600px) {
   .lite .dataTables_wrapper .dataTables_filter {
     margin: -57px 0 20px 24px;
@@ -9028,10 +9074,14 @@ body > .skiptranslate iframe {
       width: 380px;
     }
   }
+
+  .lite .publish-btn {
+    margin-top: -36px;
+  }
 }
 
 @media all and (min-width: 768px) {
-  .panel__heading, .panel__activity__detail, .lite .user-form {
+  .panel__heading, .panel__activity__detail, .lite .user-form, .panel__sub__heading {
     padding-left: 36px;
     padding-right: 36px;
   }
@@ -9046,6 +9096,8 @@ body > .skiptranslate iframe {
       width: calc(100% - 72px) !important;
     }
     tr {
+      border-left: 0;
+      border-right: 0;
       td {
         border-bottom: 1px solid #d5eaf5 !important;
         padding: 10px !important;
@@ -9063,6 +9115,10 @@ body > .skiptranslate iframe {
         }
       }
     }
+  }
+
+  .form__block {
+    padding: 20px 38px 15px;
   }
 
   .lite .dataTables_wrapper .dataTables_filter {
@@ -9090,10 +9146,16 @@ body > .skiptranslate iframe {
     width: 132px;
     z-index: 1;
     ul li {
+      width: 100%;
       & + li {
         border-top: 1px solid #ececec;
         margin-top: 10px;
         padding-top: 10px;
+      }
+      &:nth-child(2) {
+        border: 0;
+        padding: 0;
+        margin: 0;
       }
       .edit-activity {
         display: none;
@@ -9103,6 +9165,13 @@ body > .skiptranslate iframe {
 
   .panel__activity__more--info {
     width: 280px;
+    height: calc(100vh - 134px);
+    right: 2px;
+    &.fixed {
+      height: calc(100vh - 64px);
+      position: fixed;
+      top: 63px;
+    }
   }
 
   .panel__activity__detail {
@@ -9160,5 +9229,80 @@ body > .skiptranslate iframe {
         margin: -16px 0 10px;
       }
     }
+  }
+
+  .lite .btn-form {
+    margin: 25px 36px 0;
+  }
+
+  .lite .funding_organisations, .implementing_organisations, .outcomes_document, .annual_report {
+    .form-group {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .border-btn-line {
+    margin-top: 10px;
+  }
+
+  .lite .publish-btn {
+    margin: -36px 36px 14px;
+  }
+}
+
+@media all and (min-width: 1024px) {
+  .panel__nav {
+    display: block;
+  }
+}
+
+@media all and (min-width: 601px) and (max-width: 767px) {
+  .lite {
+    .table-header {
+      margin-top: 20px;
+    }
+    .publish-btn {
+      margin-top: -56px;
+    }
+  }
+}
+
+@media all and (max-width: 767px) {
+  .table-header thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  .table-header > tbody > tr > td {
+    /* Behave  like a "row" */
+    border: none;
+    position: relative;
+    padding-left: 50% !important;
+    word-wrap: break-word;
+    &:before {
+      /* Now like a table header */
+      display: block !important;
+      @include position(absolute, 4px auto auto 6px);
+      padding-right: 10px;
+      position: absolute;
+      white-space: nowrap;
+      width: 45%;
+    }
+    &:last-child {
+      padding-bottom: 8px !important;
+    }
+  }
+
+  .lite .panel-users-settings table tr td:first-child {
+    display: block;
+  }
+
+  .lite .panel-users-settings table td:nth-of-type(4):before {
+    content: "Action";
+  }
+
+  .panel-users-settings .table-header>tbody>tr>td:last-child {
+    padding-bottom: 28px!important;
   }
 }

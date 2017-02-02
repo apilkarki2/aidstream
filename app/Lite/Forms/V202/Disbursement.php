@@ -20,7 +20,7 @@ class Disbursement extends LiteBaseForm
         $formPath = $this->getFormPath('Transaction');
 
         return $this
-            ->addToCollection('disbursement', ' ', $formPath, 'collection_form transaction')
+            ->addToCollection('disbursement', ' ', $formPath, 'collection_form separator transaction')
             ->addButton('add_more_transaction', trans('lite/elementForm.add_another_disbursement'), 'transaction', 'add_more');
     }
 }

@@ -13,61 +13,54 @@
                 <p>@lang('lite/global.add_an_activity_in_simple_steps')</p>
             </div>
             <div class="panel__body">
-                <div class="panel__form">
-                    <div class="create-form create-project-form edit-form">
-                        {!! form_start($form) !!}
-                        <div class="form__block" id="basics">
-                            <div class="col-md-9">
-                                <h2>@lang('lite/global.basics')</h2>
-                                <div class="row">
-                                    {!! form_until($form,'target_groups') !!}
-                                </div>
+                <div class="create-form create-project-form edit-form">
+                    {!! form_start($form) !!}
+                    <div class="form__block" id="basics">
+                        <div class="col-md-9">
+                            <h2>@lang('lite/global.basics')</h2>
+                            <div class="row">
+                                {!! form_until($form,'target_groups') !!}
                             </div>
-                            <div class="panel__nav">
-                                <div id="nav-anchor"></div>
-                                <nav>
-                                    <div id="activity-progress-bar"></div>
-                                    <ul>
-                                        <li><a href="#basics">@lang('lite/global.basics')</a>
-                                        </li>
-                                        <li><a href="#location">@lang('lite/global.location')</a></li>
-                                        <li>
-                                            <a href="#involved-organisations">@lang('lite/global.involved_organisations')</a>
-                                        </li>
-                                        <li><a href="#results-and-reports">@lang('lite/global.results_and_reports')</a>
-                                        </li>
+                        </div>
+                        <div class="panel__nav">
+                            <div id="nav-anchor"></div>
+                            <nav>
+                                <div id="activity-progress-bar"></div>
+                                <ul>
+                                    <li><a href="#basics">@lang('lite/global.basics')</a>
+                                    </li>
+                                    <li><a href="#location">@lang('lite/global.location')</a></li>
+                                    <li>
+                                        <a href="#involved-organisations">@lang('lite/global.involved_organisations')</a>
+                                    </li>
+                                    <li><a href="#results-and-reports">@lang('lite/global.results_and_reports')</a>
+                                    </li>
 
-                                    </ul>
-                                </nav>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="form__block" id="location">
+                        <div class="col-md-9">
+                            <h2>@lang('lite/global.location')</h2>
+                            <div class="row">
+                                {!! form_until($form,'location') !!}
                             </div>
                         </div>
-                        <div class="form__block" id="location">
-                            <div class="col-md-9">
-                                <h2>@lang('lite/global.location')</h2>
-                                <div class="row">
-                                    {!! form_until($form,'location') !!}
-                                </div>
+                    </div>
+                    <div class="form__block" id="involved-organisations">
+                        <div class="col-md-9">
+                            <h2>@lang('lite/global.involved_organisations')</h2>
+                            <div class="row">
+                                {!! form_until($form,"add_more_implementing") !!}
                             </div>
                         </div>
-                        <div class="form__block" id="involved-organisations">
-                            <div class="col-md-9">
-                                <h2>@lang('lite/global.involved_organisations')</h2>
-                                <div class="row">
-                                    {!! form_until($form,"add_more_implementing") !!}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form__block" id="results-and-reports">
-                            <div class="col-md-9">
-                                <h2>@lang('lite/global.results_and_reports')</h2>
-                                <div class="row">
-                                    {!! form_until($form,"annual_report") !!}
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                    <div class="form__block" id="results-and-reports">
                         <div class="col-md-9">
                             {!! form_rest($form) !!}
-                            <a href="{{ $form->getModel() ? route('lite.activity.show', $activityId) : route('lite.activity.index')}}" class="pull-right btn-go-back">@lang('lite/global.cancel_and_go_back')</a>
+                            <a href="{{ $form->getModel() ? route('lite.activity.show', $activityId) : route('lite.activity.index')}}"
+                               class="pull-right btn-go-back">@lang('lite/global.cancel_and_go_back')</a>
                         </div>
                         {!! form_end($form) !!}
                         <div class="funding_organisations-container hidden"
@@ -75,6 +68,12 @@
                         </div>
                         <div class="implementing_organisations-container hidden"
                              data-prototype="{{ form_row($form->implementing_organisations->prototype()) }}">
+
+                            <h2>@lang('lite/global.results_and_reports')</h2>
+                            <div class="row">
+                                {!! form_until($form,"annual_report") !!}
+                            </div>
+
                         </div>
                     </div>
                 </div>

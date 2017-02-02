@@ -1,4 +1,4 @@
-<div class="activity__detail">
+<div class="activity__detail" id="activity__budget">
     @if ($activity->budget)
         <div>
         </div>

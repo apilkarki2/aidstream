@@ -8,12 +8,14 @@ var CreateActivity = {
             var count = $('.' + source + '> div.form-group').length;
             var proto = collection.data('prototype').replace(/__NAME__/g, count);
 
-            if (source == "funding_organisations" || source == "implementing_organisations") {
-                $(parentContainer).append(proto);
-            } else {
-                proto = $(proto).addClass('added-new-block');
-                $(parentContainer).append(proto);
-            }
+            proto = $(proto).addClass('added-new-block');
+            $(parentContainer).append(proto);
+            // if (source == "funding_organisations" || source == "implementing_organisations") {
+            //     $(parentContainer).append(proto);
+            // } else {
+            //     proto = $(proto).addClass('added-new-block');
+            //     $(parentContainer).append(proto);
+            // }
 
             $('form select').select2();
             $("[type='date']").attr('type', 'text').addClass('datepicker').datetimepicker({timepicker: false, format: 'Y-m-d'});
@@ -85,8 +87,11 @@ var CreateActivity = {
         });
     },
     formCollection: function () {
-        $(document).ready(function (){
-            $('.collection_form > div:not(:first)').addClass('added-new-block');
+        $(document).ready(function () {
+            var separator = $('.collection_form.separator');
+            separator.each(function () {
+                $(this).children('div:not(:first)').addClass('added-new-block');
+            });
         });
     }
 };

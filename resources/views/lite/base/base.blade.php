@@ -24,7 +24,7 @@
 
     @yield('head')
 </head>
-<body class="lite">
+<body class="lite" data-spy="scroll" data-target=".activity__detail">
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">

@@ -55,7 +55,7 @@ return [
     'activities'                      => 'Activities',
     'download_as_csv'                 => 'Download as CSV',
     'iati_identifier'                 => 'IATI Identifier',
-    'budget_information'              => 'Budget Information',
+    'budget'                          => 'Budget',
     'transactions'                    => 'Transactions',
     'activity_status'                 => 'Activity Status'
 ];
