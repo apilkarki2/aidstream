@@ -31,28 +31,32 @@
                         <img src="{{asset('images/ic-iati-logo.png')}}" alt="IATI" width="27" height="25">
                     </div>
                 </div>
-                <div class="activity-info activity-more-info">
-                    <ul class="pull-left">
-                        <li>
-                            <i class="pull-left material-icons">date_range</i>
-                            @foreach (getVal($activity->toArray(), ['activity_date'], []) as $date)
-                                @if(getVal($date, ['type']) == 2)
-                                    <span>  {{ formatDate($date['date']) }} </span>
-                                @endif
+                @if($activity->activity_date || $activity->activity_status)
+                    <div class="activity-info activity-more-info">
+                        <ul class="pull-left">
+                            @if($activity->activity_date)
+                                <li>
+                                    <i class="pull-left material-icons">date_range</i>
+                                    @foreach (getVal($activity->toArray(), ['activity_date'], []) as $date)
+                                        @if(getVal($date, ['type']) == 2)
+                                            <span>  {{ formatDate($date['date']) }} </span>
+                                        @endif
 
-                                @if(getVal($date, ['type']) == 4)
-                                    <span> {{ formatDate($date['date']) }} </span>
-                                @endif
-                            @endforeach
-                        </li>
-                        <li>
-                            <i class="pull-left material-icons">autorenew</i>
-                            @if($activity->activity_status)
-                                <span>{{  $getCode->getCodeNameOnly('ActivityStatus', $activity->activity_status) }}<i>(Status)</i></span>
+                                        @if(getVal($date, ['type']) == 4)
+                                            <span> {{ formatDate($date['date']) }} </span>
+                                        @endif
+                                    @endforeach
+                                </li>
                             @endif
-                        </li>
-                    </ul>
-                </div>
+                            @if($activity->activity_status)
+                                <li>
+                                    <i class="pull-left material-icons">autorenew</i>
+                                    <span>{{  $getCode->getCodeNameOnly('ActivityStatus', $activity->activity_status) }}<i>(Status)</i></span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
+                @endif
                 @include('lite.activity.partials.activityList')
             </div>
             <div class="col-xs-12 col-sm-3 panel__activity__more--info">
