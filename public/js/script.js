@@ -566,7 +566,7 @@ $(document).ready(function () {
     $("form").delegate('textarea', 'keyup', function (e) {
         adaptiveheight(this);
     });
-    $("textarea").trigger('keyup');
+    // $("textarea").trigger('keyup');
 
     $(window).scroll(function () {
         if ($(this).scrollTop() > 100) {

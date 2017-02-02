@@ -46,6 +46,6 @@ class Budget
                 'model'  => $model,
                 'url'    => $route
             ]
-        )->add('Save', 'submit', ['label' => trans('lite/elementForm.add_this_budget'), 'attr' => ['class' => 'btn btn-submit btn-form'], ['wrapper' => ['class' => 'border-btn-line']]]);
+        )->add('Save', 'submit', ['label' => $model ? trans('lite/global.save') : trans('lite/elementForm.add_this_budget'), 'attr' => ['class' => 'btn btn-submit btn-form'], ['wrapper' => ['class' => 'border-btn-line']]]);
     }
 }

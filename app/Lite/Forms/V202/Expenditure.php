@@ -20,7 +20,7 @@ class Expenditure extends LiteBaseForm
         $formPath = $this->getFormPath('Transaction');
 
         return $this
-            ->addToCollection('expenditure', ' ', $formPath, 'collection_form transaction')
+            ->addToCollection('expenditure', ' ', $formPath, 'collection_form separator transaction')
             ->addButton('add_more_transaction', trans('lite/elementForm.add_another_expenditure'), 'transaction', 'add_more');
     }
 }
