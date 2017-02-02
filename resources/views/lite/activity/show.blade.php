@@ -78,7 +78,10 @@
                     <ul>
                         <li><span>@lang('lite/global.activity_detail')</span></li>
                         <li><a href="#activity__budget">@lang('lite/global.budget')</a><i>({{ getVal($count, ['budget'], 0) }})</i></li>
-                        <li><a href="#">@lang('lite/global.transactions')</a><i>({{ getVal($count, ['transaction'], 0) }})</i></li>
+                        <li><a href="#activity__disbursement">@lang('lite/title.disbursement')</a><i>({{ getVal($count, ['disbursement'], 0) }})</i></li>
+                        <li><a href="#activity__expenditure">@lang('lite/title.expenditure')</a><i>({{ getVal($count, ['expenditure'], 0) }})</i></li>
+                        <li><a href="#activity__incoming">@lang('lite/title.incoming_funds')</a><i>({{ getVal($count, ['incoming_funds'], 0) }})</i></li>
+                        {{--<li><a href="#">@lang('lite/global.transactions')</a><i>({{ getVal($count, ['transaction'], 0) }})</i></li>--}}
                     </ul>
                 </div>
                 <div class="activity__block activity__updated__date">
@@ -106,6 +109,14 @@
             fixedTop();
             $(window).resize(function () {
                 fixedTop();
+            });
+
+            $('.activity__detail__block a').bind('click', function(event) {
+                var $anchor = $(this);
+                $('html, body').stop().animate({
+                    scrollTop: $($anchor.attr('href')).offset().top - 60
+                }, 1000);
+                event.preventDefault();
             });
         });
     </script>

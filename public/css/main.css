@@ -3038,7 +3038,8 @@ html, body {
 
 body {
   font: 14px Open-Sans-Regular;
-  color: #484848; }
+  color: #484848;
+  position: relative; }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: Open-Sans-Regular; }
@@ -9624,7 +9625,7 @@ body > .skiptranslate iframe {
   width: 100%; }
   .form__block h2 {
     font: 14px Open-Sans-Bold;
-    margin: 0 0 12px -2px;
+    margin: 0 0 12px -3px;
     text-transform: uppercase; }
   .form__block:first-of-type {
     padding-top: 0; }
@@ -9642,8 +9643,6 @@ body > .skiptranslate iframe {
   width: 100%; }
   .lite .funding_organisations > .form-group.fill-border, .lite .implementing_organisations > .form-group.fill-border, .lite .outcomes_document > .form-group.fill-border, .lite .annual_report > .form-group.fill-border {
     border: 0 !important; }
-  .lite .funding_organisations > .form-group .form-group, .lite .implementing_organisations > .form-group .form-group, .lite .outcomes_document > .form-group .form-group, .lite .annual_report > .form-group .form-group {
-    margin-bottom: 0 !important; }
   .lite .funding_organisations > .form-group + .form-group, .lite .implementing_organisations > .form-group + .form-group, .lite .outcomes_document > .form-group + .form-group, .lite .annual_report > .form-group + .form-group {
     margin-top: 16px; }
 
@@ -9651,6 +9650,15 @@ body > .skiptranslate iframe {
   top: -10px;
   height: 22px;
   width: 22px; }
+
+.lite .create-form .funding_organisations .added-new-block, .lite .create-form .implementing_organisations .added-new-block {
+  border-top: 1px dashed #A9C6DE !important;
+  padding-top: 15px !important;
+  width: -webkit-calc(100% - 30px);
+  width: -moz-calc(100% - 30px);
+  width: calc(100% - 30px); }
+  .lite .create-form .funding_organisations .added-new-block .remove_from_collection, .lite .create-form .implementing_organisations .added-new-block .remove_from_collection {
+    top: 5px; }
 
 .lite .add-to-collection {
   background: none;
@@ -9678,7 +9686,7 @@ body > .skiptranslate iframe {
 
 .lite .btn-form {
   height: 53px;
-  margin: 25px 36px 0;
+  margin: 25px 24px 0;
   position: static;
   width: 218px;
   -webkit-transition: all 0.5s ease-in-out;

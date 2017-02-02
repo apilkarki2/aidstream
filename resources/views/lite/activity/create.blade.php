@@ -58,23 +58,23 @@
                     </div>
                     <div class="form__block" id="results-and-reports">
                         <div class="col-md-9">
-                            {!! form_rest($form) !!}
-                            <a href="{{ $form->getModel() ? route('lite.activity.show', $activityId) : route('lite.activity.index')}}"
-                               class="pull-right btn-go-back">@lang('lite/global.cancel_and_go_back')</a>
-                        </div>
-                        {!! form_end($form) !!}
-                        <div class="funding_organisations-container hidden"
-                             data-prototype="{{ form_row($form->funding_organisations->prototype()) }}">
-                        </div>
-                        <div class="implementing_organisations-container hidden"
-                             data-prototype="{{ form_row($form->implementing_organisations->prototype()) }}">
-
                             <h2>@lang('lite/global.results_and_reports')</h2>
                             <div class="row">
                                 {!! form_until($form,"annual_report") !!}
                             </div>
-
                         </div>
+                    </div>
+                    <div class="col-md-9">
+                        {!! form_rest($form) !!}
+                        <a href="{{ $form->getModel() ? route('lite.activity.show', $activityId) : route('lite.activity.index')}}"
+                           class="pull-right btn-go-back">@lang('lite/global.cancel_and_go_back')</a>
+                    </div>
+                    {!! form_end($form) !!}
+                    <div class="funding_organisations-container hidden"
+                         data-prototype="{{ form_row($form->funding_organisations->prototype()) }}">
+                    </div>
+                    <div class="implementing_organisations-container hidden"
+                         data-prototype="{{ form_row($form->implementing_organisations->prototype()) }}">
                     </div>
                 </div>
             </div>

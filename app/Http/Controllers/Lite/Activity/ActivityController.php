@@ -196,7 +196,10 @@ class ActivityController extends LiteController
         }
 
         $count['budget'] = ($activity->budget ? count($activity->budget) : 0);
-        $count['transaction'] = ($disbursement ? count($disbursement) : 0) + ($expenditure ? count($expenditure) : 0) + ($incoming ? count($incoming) : 0);
+//        $count['transaction'] = ($disbursement ? count($disbursement) : 0) + ($expenditure ? count($expenditure) : 0) + ($incoming ? count($incoming) : 0);
+        $count['disbursement'] = $disbursement ? count($disbursement) : 0;
+        $count['expenditure'] = $expenditure ? count($expenditure) : 0;
+        $count['incoming_funds'] = $incoming ? count($incoming) : 0;
 
         return view(
             'lite.activity.show',

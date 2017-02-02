@@ -90,6 +90,7 @@ html, body {
 body {
   font: 14px $font_0;
   color: $color_gravel_approx;
+  position: relative;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -8272,7 +8273,7 @@ body > .skiptranslate iframe {
   width: 100%;
   h2 {
     font: 14px $font_1;
-    margin: 0 0 12px -2px;
+    margin: 0 0 12px -3px;
     text-transform: uppercase;
   }
   &:first-of-type {
@@ -8296,9 +8297,6 @@ body > .skiptranslate iframe {
       &.fill-border {
         border: 0 !important;
       }
-      .form-group {
-        margin-bottom: 0 !important;
-      }
       & + .form-group {
         margin-top: 16px;
       }
@@ -8306,6 +8304,19 @@ body > .skiptranslate iframe {
     .remove_from_collection, .remove_from_collection:focus {
       top: -10px;
       @include size(22px);
+    }
+  }
+}
+
+.lite .create-form {
+  .funding_organisations, .implementing_organisations {
+    .added-new-block {
+      border-top: 1px dashed #A9C6DE !important;
+      padding-top: 15px !important;
+      width: calc(100% - 30px);
+      .remove_from_collection {
+        top: 5px;
+      }
     }
   }
 }
@@ -8339,7 +8350,7 @@ body > .skiptranslate iframe {
 
 .lite .btn-form {
   height: 53px;
-  margin: 25px 36px 0;
+  margin: 25px 24px 0;
   position: static;
   width: 218px;
   transition: all 0.5s ease-in-out;

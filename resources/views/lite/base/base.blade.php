@@ -24,7 +24,7 @@
 
     @yield('head')
 </head>
-<body class="lite" data-spy="scroll" data-target=".activity__detail">
+<body class="lite">
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -185,7 +185,7 @@
     $('.delete-confirm').on('click', function () {
         var form = $('#delete-form');
 
-        $('#delete-modal-message').html($(this).attr('data-message'));
+        $('#modal-message').html($(this).attr('data-message'));
 
         form.attr('action', $(this).attr('data-href'));
         form.children('input#index').attr('value', $(this).attr('data-index'));
