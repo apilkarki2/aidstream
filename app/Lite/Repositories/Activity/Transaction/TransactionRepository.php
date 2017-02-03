@@ -1,6 +1,8 @@
 <?php namespace App\Lite\Repositories\Activity\Transaction;
 
+use App\Lite\Contracts\ActivityRepositoryInterface;
 use App\Lite\Contracts\TransactionRepositoryInterface;
+use App\Lite\Repositories\Activity\ActivityRepository;
 use App\Models\Activity\Transaction;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,15 +16,21 @@ class TransactionRepository implements TransactionRepositoryInterface
      * @var Transaction
      */
     protected $transaction;
+    /**
+     * @var ActivityRepositoryInterface
+     */
+    private $activityRepository;
 
     /**
      * TransactionRepository constructor.
      *
-     * @param Transaction $transaction
+     * @param Transaction                 $transaction
+     * @param ActivityRepositoryInterface $activityRepository
      */
-    public function __construct(Transaction $transaction)
+    public function __construct(Transaction $transaction, ActivityRepositoryInterface $activityRepository)
     {
-        $this->transaction = $transaction;
+        $this->transaction        = $transaction;
+        $this->activityRepository = $activityRepository;
     }
 
     /**
@@ -66,6 +74,9 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function save(array $data)
     {
+        $activity = $this->activityRepository->find(getVal($data, ['activity_id']));
+        $this->activityRepository->resetWorkflow($activity)->save();
+
         return $this->transaction->create($data);
     }
 
@@ -78,8 +89,28 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function update(array $data)
     {
+        $activity = $this->activityRepository->find(getVal($data, ['activity_id']));
+        $this->activityRepository->resetWorkflow($activity)->save();
+
         $transaction = $this->transaction->findOrFail($data['id']);
 
         return $transaction->update($data);
+    }
+
+    /**
+     * Deletes a transaction
+     *
+     * @param $activityId
+     * @param $index
+     * @return mixed
+     */
+    public function delete($activityId, $index)
+    {
+        $activity = $this->activityRepository->find($activityId);
+        $this->activityRepository->resetWorkflow($activity)->save();
+
+        $transactions = $this->find($index);
+
+        return $transactions->delete();
     }
 }

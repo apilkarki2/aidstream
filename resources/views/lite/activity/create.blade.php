@@ -100,6 +100,7 @@
         ProgressBar.calculateProgressBar(completedText);
         ProgressBar.calculate();
         ProgressBar.onMapClicked();
+        CreateActivity.editTextArea({!! empty(!$form->getModel()) !!});
         CreateActivity.addToCollection();
         CreateActivity.scroll();
     </script>

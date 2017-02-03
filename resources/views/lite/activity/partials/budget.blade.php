@@ -13,14 +13,14 @@
                 @foreach ($activity->budget as $index => $budget)
                     <li>
                         <span>
-                        {{ getVal($budget, ['value', 0, 'amount']) }}
+                        {{ number_format(round(getVal($budget, ['value', 0, 'amount']),2)) }}
                         @if(getVal($budget, ['value', 0, 'currency']))
                             {{ getVal($budget, ['value', 0, 'currency']) }}
                         @else
                             {{ $defaultCurrency }}
                         @endif
-                        [{{ getVal($budget, ['period_start', 0, 'date']) }}
-                        - {{ getVal($budget, ['period_end', 0, 'date']) }}]
+                        [{{ formatDate(getVal($budget, ['period_start', 0, 'date'])) }}
+                        - {{ formatDate(getVal($budget, ['period_end', 0, 'date'])) }}]
 
                         <a data-href="{{ route('lite.activity.budget.delete', $activity->id)}}" data-index="{{ $index }}"
                            class="delete-activity delete-confirm" data-toggle="modal" data-target="#delete-modal" data-message="@lang('lite/global.confirm_delete')"> @lang('lite/global.delete') </a>

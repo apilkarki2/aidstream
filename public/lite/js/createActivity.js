@@ -93,6 +93,11 @@ var CreateActivity = {
                 $(this).children('div:not(:first)').addClass('added-new-block');
             });
         });
+    },
+    editTextArea: function (model) {
+        if (model) {
+            $("textarea").css('height', '79px');
+        }
     }
 };
 

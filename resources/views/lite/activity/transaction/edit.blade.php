@@ -20,7 +20,7 @@
                             @foreach($ids as $index => $id)
                                 <input name="ids[]" type="hidden" value={{ $id }}>
                             @endforeach
-                                {!! form_until($form,'add_more_transaction') !!}
+                            {!! form_until($form,'add_more_transaction') !!}
                         </div>
                         <div class="border-btn-line">
                             {!! form_rest($form) !!}
@@ -39,6 +39,7 @@
 @section('script')
     <script type="text/javascript" src="{{ url('/lite/js/createActivity.js') }}"></script>
     <script type="text/javascript">
+        CreateActivity.editTextArea({!! empty(!$form->getModel()) !!});
         CreateActivity.addToCollection();
     </script>
 @endsection

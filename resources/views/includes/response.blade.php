@@ -6,7 +6,7 @@
         <div class="alert alert-{{$response['type']}}">
             <ul>
             @foreach($response['messages'] as $message)
-                    <li>- {!! $message !!}</li>
+                    <li>{!! $message !!}</li>
                 @endforeach
             </ul>
             @if(array_key_exists('organization', $response))

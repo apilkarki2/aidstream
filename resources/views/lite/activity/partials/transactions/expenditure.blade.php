@@ -14,14 +14,14 @@
                     @foreach ($expenditure as $index => $transaction)
                         <li>
                         <span>
-                        {{ getVal($transaction, ['transaction', 'value', 0, 'amount']) }}
+                        {{ number_format(round(getVal($transaction, ['transaction', 'value', 0, 'amount']), 2)) }}
                             @if(getVal($transaction, ['transaction', 'value', 0, 'currency']))
                                 {{ getVal($transaction, ['transaction', 'value', 0, 'currency']) }}
                             @else
                                 {{ $defaultCurrency }}
                             @endif
                             @if(getVal($transaction, ['transaction', 'value', 0, 'date']))
-                                [{{ getVal($transaction, ['transaction', 'value', 0, 'date']) }}]
+                                [{{ formatDate(getVal($transaction, ['transaction', 'value', 0, 'date'])) }}]
                             @endif
                             <a data-href="{{ route('lite.activity.transaction.delete', $activity->id)}}"
                                data-index="{{ getVal($transaction, ['id'], '') }}"

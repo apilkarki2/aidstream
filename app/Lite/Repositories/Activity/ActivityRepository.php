@@ -68,10 +68,10 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function update($activityId, array $data)
     {
         $activity                = $this->find($activityId);
-        $activity                = $this->resetWorkflow($activity);
         $data['organization_id'] = session('org_id');
+        $activity                = $this->resetWorkflow($activity->fill($data));
 
-        return $activity->update($data);
+        return $activity->save();
     }
 
     /**
@@ -80,10 +80,26 @@ class ActivityRepository implements ActivityRepositoryInterface
      * @param Activity $activity
      * @return Activity
      */
-    protected function resetWorkflow(Activity $activity)
+    public function resetWorkflow(Activity $activity)
     {
         $activity->activity_workflow = 0;
 
         return $activity;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteBudget($activityId, $index)
+    {
+        $activity = $this->find($activityId);
+        $budget   = $activity->budget;
+
+        unset($budget[$index]);
+
+        $activity->budget = array_values($budget);
+        $this->resetWorkflow($activity);
+
+        $activity->save();
     }
 }

@@ -5,8 +5,12 @@
                 {{count($activities)}}
                 </span>
         <div class="published-num">
-            <span>@lang('lite/activityDashboard.no_of_activities_published_to_iati'):</span> <a
-                    href="#">{{$noOfPublishedActivities}}</a>
+            <span>@lang('lite/activityDashboard.no_of_activities_published_to_iati'):</span>
+            @if($noOfPublishedActivities > 0)
+                <a href="{{ url('who-is-using/' . str_replace('/', '-', $orgIdentifier) . '?published=true') }}">{{ $noOfPublishedActivities }}</a>
+            @else
+                0
+            @endif
         </div>
     </div>
     <div class="col-sm-4">

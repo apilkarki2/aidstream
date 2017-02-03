@@ -89,6 +89,8 @@ class ActivityController extends LiteController
         $organisation = auth()->user()->organization;
         $orgId        = session('org_id');
 
+        $orgIdentifier = getVal($organisation->reporting_org, [0, 'reporting_organization_identifier']);
+
         if (Gate::denies('belongsToOrganization', $organisation)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
         }
@@ -98,7 +100,7 @@ class ActivityController extends LiteController
         $noOfPublishedActivities = $this->activityService->getNumberOfPublishedActivities($orgId);
         $lastPublishedToIATI     = $this->activityService->lastPublishedToIATI($orgId);
 
-        return view('lite.activity.index', compact('activities', 'form', 'stats', 'noOfPublishedActivities', 'lastPublishedToIATI'));
+        return view('lite.activity.index', compact('activities', 'form', 'stats', 'noOfPublishedActivities', 'lastPublishedToIATI', 'orgIdentifier'));
     }
 
     /**
@@ -168,7 +170,7 @@ class ActivityController extends LiteController
     public function show($activityId)
     {
         $activity = $this->activityService->find($activityId);
-        $count = [];
+        $count    = [];
 
         if (Gate::denies('ownership', $activity)) {
             return redirect()->route('lite.activity.index')->withResponse($this->getNoPrivilegesMessage());
@@ -197,8 +199,8 @@ class ActivityController extends LiteController
 
         $count['budget'] = ($activity->budget ? count($activity->budget) : 0);
 //        $count['transaction'] = ($disbursement ? count($disbursement) : 0) + ($expenditure ? count($expenditure) : 0) + ($incoming ? count($incoming) : 0);
-        $count['disbursement'] = $disbursement ? count($disbursement) : 0;
-        $count['expenditure'] = $expenditure ? count($expenditure) : 0;
+        $count['disbursement']   = $disbursement ? count($disbursement) : 0;
+        $count['expenditure']    = $expenditure ? count($expenditure) : 0;
         $count['incoming_funds'] = $incoming ? count($incoming) : 0;
 
         return view(
@@ -477,7 +479,7 @@ class ActivityController extends LiteController
     public function createTransaction($activityId, $typeCode)
     {
         $activity = $this->activityService->find($activityId);
-        $ids = [];
+        $ids      = [];
 
         if (Gate::denies('ownership', $activity)) {
             return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
@@ -540,9 +542,9 @@ class ActivityController extends LiteController
      */
     public function updateTransaction($activityId, $type, Request $request)
     {
-        $rawData = $request->except(['_token', 'ids']);
-        $version = session('version');
-        $ids     = $request->get('ids');
+        $rawData  = $request->except(['_token', 'ids']);
+        $version  = session('version');
+        $ids      = $request->get('ids');
         $activity = $this->activityService->find($activityId);
 
         if (Gate::denies('ownership', $activity)) {
@@ -616,7 +618,7 @@ class ActivityController extends LiteController
 
         $index = $request->get('index');
 
-        if ($this->transactionService->delete($index)) {
+        if ($this->transactionService->delete($activityId, $index)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
         }
 

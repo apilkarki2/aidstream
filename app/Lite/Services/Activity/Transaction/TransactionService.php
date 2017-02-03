@@ -160,12 +160,11 @@ class TransactionService
      * @return bool|null
      * @internal param $request
      */
-    public function delete($index)
+    public function delete($activityId, $index)
     {
         try {
-            $transactions = $this->find($index);
             $this->databaseManager->beginTransaction();
-            $transactions->delete();
+            $this->transactionRepository->delete($activityId, $index);
             $this->databaseManager->commit();
             $this->logger->info('Transaction successfully deleted.', $this->getContext());
 

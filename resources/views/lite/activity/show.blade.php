@@ -111,7 +111,7 @@
                 fixedTop();
             });
 
-            $('.activity__detail__block a').bind('click', function(event) {
+            $('.activity__detail__block a').bind('click', function (event) {
                 var $anchor = $(this);
                 $('html, body').stop().animate({
                     scrollTop: $($anchor.attr('href')).offset().top - 60

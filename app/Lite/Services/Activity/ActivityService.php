@@ -382,15 +382,10 @@ class ActivityService
     public function deleteBudget($activityId, $request)
     {
         try {
-            $activity = $this->find($activityId);
-            $budget   = $activity->budget;
-
-            unset($budget[$request->get('index')]);
-
-            $activity->budget = array_values($budget);
-
             $this->databaseManager->beginTransaction();
-            $activity->save();
+
+            $this->activityRepository->deleteBudget($activityId, $request->get('index'));
+
             $this->databaseManager->commit();
 
             $this->logger->info('Budget transaction successfully deleted.', $this->getContext());

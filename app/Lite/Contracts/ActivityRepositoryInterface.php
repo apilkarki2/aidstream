@@ -45,4 +45,13 @@ interface ActivityRepositoryInterface
      * @return bool
      */
     public function update($activityId, array $activity);
+
+    /**
+     * Delete a specific Budget from an Activity.
+     *
+     * @param $activityId
+     * @param $get
+     * @return mixed
+     */
+    public function deleteBudget($activityId, $get);
 }

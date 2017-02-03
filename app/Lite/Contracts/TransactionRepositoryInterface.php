@@ -49,4 +49,12 @@ interface TransactionRepositoryInterface
      * @return mixed
      */
     public function findByActivityId($id);
+
+    /**
+     * Deletes a transaction
+     *
+     * @param $index
+     * @return mixed
+     */
+    public function delete($id, $index);
 }

@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\Controllers\Complete\Activity\RecipientCountryController;
+use App\Http\Requests\Request;
 use App\Models\PerfectViewer\ActivitySnapshot;
 use App\Services\Activity\ActivityManager;
 use App\Services\PerfectViewer\PerfectViewerManager;
@@ -104,9 +106,14 @@ class WhoIsUsingController extends Controller
 
         $activity = $this->filterDescription($activity);
 
-        $transactions = array_reverse(array_sort(getVal($activity, [0, 'published_data', 'transactions'], []), function($value) {
-            return getVal($value, ['transaction', 'transaction_date', 0, 'date'], '');
-        }));
+        $transactions = array_reverse(
+            array_sort(
+                getVal($activity, [0, 'published_data', 'transactions'], []),
+                function ($value) {
+                    return getVal($value, ['transaction', 'transaction_date', 0, 'date'], '');
+                }
+            )
+        );
 
         return view('perfectViewer.activity-viewer', compact('organization', 'activity', 'user', 'recipientCountries', 'defaultFieldValues', 'transactions'));
     }
@@ -114,11 +121,13 @@ class WhoIsUsingController extends Controller
     /**
      * Returns data for Perfect Organization Viewer
      *
-     * @param $organizationId
+     * @param         $organizationId
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getDataForOrganization($organizationId)
+    public function showOrganization($organizationId, Request $request)
     {
+        $queryParamPublished  = $request->input('published');
         $organizationIdExists = $this->organizationQueryBuilder()->where('org_slug', $organizationId)->get();
 
         if (count($organizationIdExists) == 0) {
@@ -127,9 +136,21 @@ class WhoIsUsingController extends Controller
 
         $activitySnapshot   = $this->perfectViewerManager->getSnapshotWithOrgId($organizationIdExists[0]->org_id);
         $organizations      = json_decode($organizationIdExists[0], true);
-        $activities         = json_decode($activitySnapshot, true);
-        $recipientCountries = $this->getRecipientCountries($activities);
+        $allActivities      = json_decode($activitySnapshot, true);
+        $recipientCountries = $this->getRecipientCountries($allActivities);
         $user               = $this->user->getDataByOrgIdAndRoleId($organizationIdExists[0]->org_id, '1');
+
+        $activities = [];
+
+        if ($queryParamPublished) {
+            foreach ($allActivities as $key => $item) {
+                if (getVal($item, ['activity_in_registry'], null)) {
+                    $activities[] = $item;
+                }
+            }
+        } else {
+            $activities = $allActivities;
+        }
 
         return view('perfectViewer.organization-viewer', compact('activities', 'organizations', 'user', 'recipientCountries'));
     }
