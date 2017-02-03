@@ -15,7 +15,7 @@
                     <form action="{{ route('lite.published-files.bulk-publish') }}" method="POST">
                         <div class="publish-btn"><input type="submit" value="{{trans('global.publish_activities_to_iati')}}"></div>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <table class="table-header">
+                        <table class="panel__table table-header">
                             <thead>
                             <tr>
                                 <th width="30px"></th>

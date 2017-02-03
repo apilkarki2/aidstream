@@ -21,7 +21,7 @@
             </div>
             <div class="panel__body panel-users-settings">
                 @if(count($users) > 0)
-                    <table class="table-header">
+                    <table class="panel__table table-header">
                         <thead>
                         <tr>
                             <th>Name</th>

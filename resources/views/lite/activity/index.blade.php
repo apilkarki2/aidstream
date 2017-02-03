@@ -34,7 +34,7 @@
                             <option value="3">@lang('lite/activityDashboard.date')</option>
                         </select>
                     </div>
-                    <table class="table table-striped no-header-table" id="dataTable">
+                    <table class="panel__table no-header-table" id="dataTable">
                         <thead>
                         <tr>
                             <th class="hidden"></th>

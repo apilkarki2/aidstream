@@ -6912,7 +6912,7 @@ body > .skiptranslate iframe {
 .lite .inputfile + label:after {
   display: none; }
 
-.lite table {
+.lite .panel__table {
   border-collapse: collapse;
   border: 0;
   margin: 0 24px;
@@ -6920,65 +6920,65 @@ body > .skiptranslate iframe {
   width: -webkit-calc(100% - 46px) !important;
   width: -moz-calc(100% - 46px) !important;
   width: calc(100% - 46px) !important; }
-  .lite table thead tr {
+  .lite .panel__table thead tr {
     border: 0 !important; }
-    .lite table thead tr th {
+    .lite .panel__table thead tr th {
       background: #fff;
       border-bottom: 1px solid #d5eaf5;
       font: normal 13px Open-Sans-Bold;
       padding: 10px; }
-      .lite table thead tr th.action {
+      .lite .panel__table thead tr th.action {
         width: 30px; }
-  .lite table tr {
+  .lite .panel__table tr {
     background: #f8fdff !important;
     border: 1px solid #d5eaf5;
     border-bottom: 0; }
-    .lite table tr:last-child {
+    .lite .panel__table tr:last-child {
       border-bottom: 1px solid #d5eaf5; }
-    .lite table tr:first-of-type {
+    .lite .panel__table tr:first-of-type {
       border-top: 1px solid #d5eaf5; }
-    .lite table tr td {
+    .lite .panel__table tr td {
       border: 0 !important;
       min-height: inherit;
       padding: 4px 10px !important;
       vertical-align: top; }
-      .lite table tr td:before {
+      .lite .panel__table tr td:before {
         display: none; }
-      .lite table tr td:first-child {
+      .lite .panel__table tr td:first-child {
         border-left: 0 !important;
         display: none; }
-      .lite table tr td.activity_title {
+      .lite .panel__table tr td.activity_title {
         font: normal 14px Open-Sans-Regular;
         padding-top: 10px !important; }
-      .lite table tr td.updated-date {
+      .lite .panel__table tr td.updated-date {
         color: rgba(72, 72, 72, 0.7);
         font-size: 12px; }
-      .lite table tr td .view-more {
+      .lite .panel__table tr td .view-more {
         position: relative; }
-        .lite table tr td .view-more > a {
+        .lite .panel__table tr td .view-more > a {
           color: #484848;
           display: none;
           font-size: 24px;
           line-height: 16px; }
-        .lite table tr td .view-more:hover > a, .lite table tr td .view-more:focus > a {
+        .lite .panel__table tr td .view-more:hover > a, .lite .panel__table tr td .view-more:focus > a {
           color: #00A8FF;
           text-decoration: none; }
-    .lite table tr:hover {
+    .lite .panel__table tr:hover {
       background: #eefaff !important; }
-    .lite table tr:nth-child(even) {
+    .lite .panel__table tr:nth-child(even) {
       background: #fff !important; }
-      .lite table tr:nth-child(even):hover {
+      .lite .panel__table tr:nth-child(even):hover {
         background: #eefaff !important; }
-    .lite table tr:first-child td {
+    .lite .panel__table tr:first-child td {
       border-top: 1px solid #d5eaf5; }
-  .lite table .completed, .lite table .draft, .lite table .published, .lite table .verified {
+  .lite .panel__table .completed, .lite .panel__table .draft, .lite .panel__table .published, .lite .panel__table .verified {
     border: 0;
     color: #484848;
     display: block;
     font-size: 11px;
     padding: 0 0 0 14px;
     text-transform: uppercase; }
-    .lite table .completed:before, .lite table .draft:before, .lite table .published:before, .lite table .verified:before {
+    .lite .panel__table .completed:before, .lite .panel__table .draft:before, .lite .panel__table .published:before, .lite .panel__table .verified:before {
       left: 0;
       top: 38%; }
 
@@ -7521,24 +7521,24 @@ body > .skiptranslate iframe {
     padding-right: 36px; }
   .panel__activity__detail {
     padding-bottom: 100px; }
-  .lite table {
+  .lite .panel__table {
     margin: 0 36px;
     width: -webkit-calc(100% - 72px) !important;
     width: -moz-calc(100% - 72px) !important;
     width: calc(100% - 72px) !important; }
-    .lite table tr {
+    .lite .panel__table tr {
       border-left: 0;
       border-right: 0; }
-      .lite table tr td {
+      .lite .panel__table tr td {
         border-bottom: 1px solid #d5eaf5 !important;
         padding: 10px !important; }
-        .lite table tr td:first-child {
+        .lite .panel__table tr td:first-child {
           display: table-cell; }
-        .lite table tr td .view-more > a {
+        .lite .panel__table tr td .view-more > a {
           display: block; }
-        .lite table tr td.activity_edit {
+        .lite .panel__table tr td.activity_edit {
           width: 10px; }
-        .lite table tr td.activity_title {
+        .lite .panel__table tr td.activity_title {
           width: 60%; }
   .form__block {
     padding: 20px 38px 15px; }
