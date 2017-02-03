@@ -19,15 +19,15 @@
                     </div>
                 @endif
             </div>
-            <div class="panel-body panel-users-settings">
+            <div class="panel__body panel-users-settings">
                 @if(count($users) > 0)
-                    <table class="table table-striped">
+                    <table class="table-header">
                         <thead>
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Permission</th>
-                            <th></th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -38,7 +38,7 @@
                                     <p><em>{{$user->username}}</em></p>
                                 </td>
                                 <td> {{$user->email}} </td>
-                                <td>
+                                <td class="permission">
                                     @if($user->role_id == 1)
                                         {{ Form::select('permission',['1' => 'Administrator'],$user->role_id,['disabled']) }}
                                     @elseif(auth()->user()->role_id == 5 || auth()->user()->role_id == 1)

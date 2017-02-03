@@ -51,7 +51,7 @@
                         @foreach($activities as $key=>$activity)
                             <tr class="clickable-row" data-href="{{ route('lite.activity.show', [$activity->id]) }}">
                                 {{--<td>{{ $key + 1 }}</td>--}}
-                                <td><a href="{{ route('lite.activity.edit', [$activity->id]) }}"
+                                <td class="activity_edit"><a href="{{ route('lite.activity.edit', [$activity->id]) }}"
                                        class="edit-activity"></a></td>
                                 <td class="activity_title">
                                     {{ $activity->title ? $activity->title[0]['narrative'] : 'No Title' }}

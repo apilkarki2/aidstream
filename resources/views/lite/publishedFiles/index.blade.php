@@ -6,16 +6,16 @@
     <div class="col-xs-9 col-lg-9 content-wrapper published-wrapper">
         @include('includes.response')
         <div class="panel panel-default">
-            <div class="element-panel-heading">
-                <div>@lang('global.published_files')</div>
+            <div class="panel__heading">
+                <div class="panel__title">@lang('global.published_files')</div>
             </div>
-            <h2 class="panel-sub-heading">@lang('global.activities_published_files')</h2>
-            <div class="panel-body">
+            <h2 class="panel__sub__heading">@lang('global.activities_published_files')</h2>
+            <div class="panel__body">
                 @if (!$publishedFiles->isEmpty())
                     <form action="{{ route('lite.published-files.bulk-publish') }}" method="POST">
                         <div class="publish-btn"><input type="submit" value="{{trans('global.publish_activities_to_iati')}}"></div>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <table class="table table-striped">
+                        <table class="table-header">
                             <thead>
                             <tr>
                                 <th width="30px"></th>
@@ -23,7 +23,7 @@
                                 <th>@lang('lite/global.published_date')</th>
                                 <th width="200px">@lang('lite/global.registered_in_iati_registry')</th>
                                 <th>@lang('lite/global.preview_as')</th>
-                                <th>@lang('lite/global.action')</th>
+                                <th class="action">@lang('lite/global.action')</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -40,7 +40,7 @@
                                            target="_blank">@lang('lite/global.csv')</a></td>
                                     <td>
                                         @if($publishedFile->published_to_register == 0)
-                                            <a data-href="{{ route('lite.published-files.delete', [$publishedFile->id])}}" class="delete-lite-published-files" data-toggle="modal"
+                                            <a data-href="{{ route('lite.published-files.delete', [$publishedFile->id])}}" class="delete-activity" data-toggle="modal"
                                                data-target="#delete-published-files-modal"> @lang('lite/global.delete') </a>
                                         @endif
                                     </td>
