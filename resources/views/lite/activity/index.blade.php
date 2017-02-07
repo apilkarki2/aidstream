@@ -52,7 +52,7 @@
                             <tr class="clickable-row" data-href="{{ route('lite.activity.show', [$activity->id]) }}">
                                 {{--<td>{{ $key + 1 }}</td>--}}
                                 <td class="activity_edit"><a href="{{ route('lite.activity.edit', [$activity->id]) }}"
-                                       class="edit-activity"></a></td>
+                                                             class="edit-activity"></a></td>
                                 <td class="activity_title">
                                     {{ $activity->title ? $activity->title[0]['narrative'] : 'No Title' }}
                                     {{--<i class="{{ $activity->isImportedFromXml() ? 'imported-from-xml' : '' }}">icon</i>--}}
@@ -85,7 +85,8 @@
                                                 </li>
                                                 <li>
                                                     <a data-toggle="modal" data-target="#delete-modal" data-href="{{ route('lite.activity.delete') }}"
-                                                       data-index="{{ $activity->id }}" data-message="@lang('lite/global.confirm_delete')" class="delete-activity delete-confirm">@lang('lite/global.delete_activity')</a>
+                                                       data-index="{{ $activity->id }}" data-message="@lang('lite/global.confirm_delete')"
+                                                       class="delete-activity delete-confirm">@lang('lite/global.delete_activity')</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -118,9 +119,14 @@
 
             var searchPlaceholder = "{{trans('lite/activityDashboard.type_an_activity_title_to_search')}}";
             Lite.dataTable(searchPlaceholder);
-            setTimeout(function () {
-                Lite.budgetDetails();
-            }, 300);
+
+            var ajaxRequest = Lite.budgetDetails();
+
+            $('a').on('click', function (e) {
+                if (ajaxRequest && ajaxRequest.readyState != 4) {
+                    ajaxRequest.abort();
+                }
+            });
         });
     </script>
 @stop

@@ -51,7 +51,7 @@ var Lite = {
         });
     },
     budgetDetails: function () {
-        this.callAsync('/lite/budgetDetails', 'get').success(function (data) {
+        return this.callAsync('/lite/budgetDetails', 'get').success(function (data) {
             $('#totalBudget').html(data.totalBudget);
             $('#placeValue').html(data.totalBudgetPlaceValue);
             $('#maxBudget').html(data.maxBudget);

@@ -201,9 +201,9 @@ class SettingsService
             function ($user) {
                 $completedSteps = $this->completedStepsFor($user);
                 if ($user->userOnBoarding) {
-                    $user->userOnBoarding()->update(['has_logged_in_once' => false, 'completed_tour' => false, 'settings_completed_steps' => $completedSteps, 'display_hints' => true]);
+                    $user->userOnBoarding()->update(['has_logged_in_once' => false, 'completed_tour' => false, 'settings_completed_steps' => json_encode($completedSteps), 'display_hints' => true]);
                 } else {
-                    $user->userOnBoarding()->create(['has_logged_in_once' => false, 'settings_completed_steps' => $completedSteps]);
+                    $user->userOnBoarding()->create(['has_logged_in_once' => false, 'settings_completed_steps' => json_encode($completedSteps)]);
                 }
             }
         );
