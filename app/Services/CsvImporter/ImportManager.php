@@ -135,7 +135,9 @@ class ImportManager
         try {
             $file = new File($this->getStoredCsvPath($filename));
 
-            $this->processor->pushIntoQueue($file, $filename);
+            $activityIdentifiers = $this->getIdentifiers();
+
+            $this->processor->pushIntoQueue($file, $filename, $activityIdentifiers);
         } catch (Exception $exception) {
             $this->logger->error(
                 $exception->getMessage(),
@@ -155,8 +157,9 @@ class ImportManager
      */
     public function create($activities)
     {
-        $contents               = json_decode(file_get_contents($this->getFilePath(true)), true);
-        $organizationId         = $this->sessionManager->get('org_id');
+        $contents       = json_decode(file_get_contents($this->getFilePath(true)), true);
+        $organizationId = $this->sessionManager->get('org_id');
+
         $importedActivities     = [];
         $organizationIdentifier = getVal(
             $this->organizationRepo->getOrganization($organizationId)->toArray(),
@@ -170,7 +173,9 @@ class ImportManager
             $iati_identifier_text                                   = $organizationIdentifier . '-' . $activity['data']['identifier']['activity_identifier'];
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
 
-            $createdActivity = $this->activityRepo->createActivity($activity['data']);
+            $createdActivity = $this->addActivity($activity);
+
+            $createdActivity->transactions()->delete();
 
             if (array_key_exists('transaction', $activity['data'])) {
                 $this->createTransaction(getVal($activity['data'], ['transaction'], []), $createdActivity->id);
@@ -614,5 +619,42 @@ class ImportManager
         }
 
         return $activities;
+    }
+
+    /**
+     * Provides all the activity identifiers
+     *
+     * @return array
+     */
+    protected function getIdentifiers()
+    {
+        return array_flatten($this->activityRepo->getActivityIdentifiers($this->sessionManager->get('org_id'))->toArray());
+    }
+
+    /**
+     * Updates existing activities
+     *
+     * @param $activity
+     * @return mixed
+     */
+    protected function updateExistingActivity($activity)
+    {
+        return $this->activityRepo->updateActivityWithIdentifier($activity);
+    }
+
+    /**
+     * Updates or creates activities
+     *
+     * @param $activity
+     * @return \App\Models\Activity\Activity|mixed
+     */
+    protected function addActivity($activity)
+    {
+        if (getVal($activity, ['existence'])) {
+            return $this->updateExistingActivity(getVal($activity, ['data']));
+        } else {
+            return $this->activityRepo->createActivity($activity['data']);
+        }
+
     }
 }

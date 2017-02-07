@@ -157,3 +157,23 @@ $(document).ready(function () {
         }
     }
 });
+
+Importer = {
+    status: function () {
+        var override = true;
+
+        $('.override').on('change', function (e) {
+            override = !e.target.checked;
+        });
+
+        $('.override').trigger('change');
+
+        $('input[type="submit"]').on('click', function () {
+            if (!override) {
+                $('input.existence').remove();
+            }
+        });
+    }
+};
+
+Importer.status();
