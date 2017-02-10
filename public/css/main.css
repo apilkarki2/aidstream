@@ -9635,7 +9635,6 @@ body > .skiptranslate iframe {
     border-top: 1px dashed #A9C6DE !important;
     padding-top: 15px !important;
     width: -webkit-calc(100% - 30px);
-    width: -moz-calc(100% - 30px);
     width: calc(100% - 30px); }
     .lite .create-form .funding_organisations .added-new-block .remove_from_collection, .lite .create-form .implementing_organisations .added-new-block .remove_from_collection {
       top: 5px; }
@@ -9678,7 +9677,6 @@ body > .skiptranslate iframe {
   position: static;
   width: 218px;
   -webkit-transition: all 0.5s ease-in-out;
-     -moz-transition: all 0.5s ease-in-out;
        -o-transition: all 0.5s ease-in-out;
           transition: all 0.5s ease-in-out; }
 
@@ -9713,7 +9711,6 @@ body > .skiptranslate iframe {
   margin: 0 24px;
   table-layout: auto;
   width: -webkit-calc(100% - 46px) !important;
-  width: -moz-calc(100% - 46px) !important;
   width: calc(100% - 46px) !important; }
   .lite .panel__table thead tr {
     border: 0 !important; }
@@ -9818,7 +9815,6 @@ body > .skiptranslate iframe {
     bottom: auto;
     left: auto;
     -webkit-transition: all 0.5s ease-in-out;
-       -moz-transition: all 0.5s ease-in-out;
          -o-transition: all 0.5s ease-in-out;
             transition: all 0.5s ease-in-out;
     width: 226px; }
@@ -9892,14 +9888,12 @@ body > .skiptranslate iframe {
   overflow: hidden; }
   .panel__status .col-sm-4 {
     background-image: -webkit-radial-gradient(50% 0, circle, #f9fdff, #f0faff);
-    background-image: -moz-radial-gradient(50% 0, circle, #f9fdff, #f0faff);
     background-image: -o-radial-gradient(50% 0, circle, #f9fdff, #f0faff);
     background-image: radial-gradient(circle at 50% 0, #f9fdff, #f0faff);
     height: 198px;
     padding: 20px 26px; }
     .panel__status .col-sm-4:nth-child(even) {
       background-image: -webkit-radial-gradient(50% 0, circle, #f2fbff, #dff5ff);
-      background-image: -moz-radial-gradient(50% 0, circle, #f2fbff, #dff5ff);
       background-image: -o-radial-gradient(50% 0, circle, #f2fbff, #dff5ff);
       background-image: radial-gradient(circle at 50% 0, #f2fbff, #dff5ff); }
     .panel__status .col-sm-4 h2 {
@@ -9956,7 +9950,6 @@ body > .skiptranslate iframe {
   float: left;
   margin: 0 0 20px 24px;
   width: -webkit-calc(100% - 48px);
-  width: -moz-calc(100% - 48px);
   width: calc(100% - 48px); }
   .lite .dataTables_wrapper .dataTables_filter label {
     text-indent: -9999px;
@@ -10319,7 +10312,6 @@ body > .skiptranslate iframe {
   .lite .panel__table {
     margin: 0 36px;
     width: -webkit-calc(100% - 72px) !important;
-    width: -moz-calc(100% - 72px) !important;
     width: calc(100% - 72px) !important; }
     .lite .panel__table tr {
       border-left: 0;
@@ -10375,18 +10367,15 @@ body > .skiptranslate iframe {
   .panel__activity__more--info {
     width: 280px;
     height: -webkit-calc(100vh - 134px);
-    height: -moz-calc(100vh - 134px);
     height: calc(100vh - 134px);
     right: 2px; }
     .panel__activity__more--info.fixed {
       height: -webkit-calc(100vh - 64px);
-      height: -moz-calc(100vh - 64px);
       height: calc(100vh - 64px);
       position: fixed;
       top: 63px; }
   .panel__activity__detail {
     width: -webkit-calc(100% - 280px);
-    width: -moz-calc(100% - 280px);
     width: calc(100% - 280px); }
   .lite .create-form .col-md-9 {
     padding-right: 15px !important; }
