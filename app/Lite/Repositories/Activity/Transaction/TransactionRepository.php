@@ -103,14 +103,20 @@ class TransactionRepository implements TransactionRepositoryInterface
      * @param $activityId
      * @param $index
      * @return mixed
+     * @throws \Exception
      */
     public function delete($activityId, $index)
     {
         $activity = $this->activityRepository->find($activityId);
         $this->activityRepository->resetWorkflow($activity)->save();
 
-        $transactions = $this->find($index);
+        $transaction = $activity->transactions()->where('id', '=', $index)->first();
 
-        return $transactions->delete();
+        if ($transaction) {
+            return $transaction->delete();
+        } else {
+            throw new \Exception("You don't have correct privilege to delete transaction");
+        }
     }
 }
+

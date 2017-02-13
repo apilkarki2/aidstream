@@ -557,7 +557,7 @@ class ActivityController extends LiteController
             return redirect()->back()->with('errors', $this->validation->errors())->withInput($rawData);
         }
 
-        $this->transactionService->updateTransaction($ids, $rawData);
+        $this->transactionService->updateTransaction($activityId, $ids, $rawData);
 
         if ($this->transactionService->updateOrCreate($activityId, $type, $rawData, $version)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_updated')]]);
@@ -616,9 +616,9 @@ class ActivityController extends LiteController
 
         $this->authorize('delete_activity', $activity);
 
-        $index = $request->get('index');
+        $transactionId = $request->get('index');
 
-        if ($this->transactionService->delete($activityId, $index)) {
+        if ($this->transactionService->delete($activityId, $transactionId)) {
             return redirect()->route('lite.activity.show', $activityId)->withResponse(['type' => 'success', 'messages' => [trans('success.transaction_success_deleted')]]);
         }
 
@@ -635,3 +635,4 @@ class ActivityController extends LiteController
         return $this->activityService->getBudgetDetails();
     }
 }
+

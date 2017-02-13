@@ -5,6 +5,7 @@ use App\Lite\Services\FormCreator\Users;
 use App\Lite\Services\Users\UserService;
 use App\Lite\Services\Validation\ValidationService;
 use App\Models\Role;
+use App\Services\Organization\OrganizationManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -34,20 +35,26 @@ class UserController extends LiteController
      * @var UserService
      */
     protected $userService;
+    /**
+     * @var OrganizationManager
+     */
+    protected $organizationManager;
 
     /**
      * UserController constructor.
-     * @param UserService       $userService
-     * @param Users             $userForm
-     * @param ValidationService $validationService
+     * @param UserService         $userService
+     * @param Users               $userForm
+     * @param ValidationService   $validationService
+     * @param OrganizationManager $organizationManager
      */
-    public function __construct(UserService $userService, Users $userForm, ValidationService $validationService)
+    public function __construct(UserService $userService, Users $userForm, ValidationService $validationService, OrganizationManager $organizationManager)
     {
         $this->middleware('auth');
         $this->middleware('auth.admin', ['except' => ['index']]);
-        $this->userForm    = $userForm;
-        $this->validation  = $validationService;
-        $this->userService = $userService;
+        $this->userForm            = $userForm;
+        $this->validation          = $validationService;
+        $this->userService         = $userService;
+        $this->organizationManager = $organizationManager;
     }
 
     /**
@@ -108,6 +115,10 @@ class UserController extends LiteController
      */
     public function destroy($userId)
     {
+        if (!in_array($userId, $this->organizationManager->getOrganizationUsers(session('org_id')))) {
+            return redirect()->back()->withResponse($this->getNoPrivilegesMessage());
+        }
+
         if ($this->userService->delete($userId)) {
             return redirect()->back()->withResponse(['type' => 'success', 'code' => ['deleted', ['name' => trans('lite/global.user')]]]);
         }
@@ -123,6 +134,10 @@ class UserController extends LiteController
      */
     public function updatePermission($id)
     {
+        if (!in_array($id, $this->organizationManager->getOrganizationUsers(session('org_id')))) {
+            return false;
+        }
+
         $permission           = Input::get('permission');
         $availablePermissions = Role::lists('id')->toArray();
 
@@ -135,3 +150,4 @@ class UserController extends LiteController
         return false;
     }
 }
+
