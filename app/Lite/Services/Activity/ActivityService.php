@@ -116,20 +116,23 @@ class ActivityService
         try {
             $activityMappedData = $this->transform($this->getMapping($rawData, 'Activity', $version));
             $documentLinkData   = $this->transform($this->getMapping($rawData, 'DocumentLink', $version));
+            $settings           = $this->settingsService->find(session('org_id'))->toArray();
 
             $this->databaseManager->beginTransaction();
+            (!($defaultFieldValues = getVal((array) $settings, [0, 'default_field_values'], []))) ?: $activityMappedData['default_field_values'] = $defaultFieldValues;
+
             $activity = $this->activityRepository->save($activityMappedData);
             if ($documentLinkData) {
                 $this->documentLinkRepository->save($documentLinkData, $activity->id);
             }
             $this->databaseManager->commit();
 
-            $this->logger->info('Activity successfully saved.', $this->getContext());
+            $this->logger->info('Activity successfully saved . ', $this->getContext());
 
             return $activity;
         } catch (Exception $exception) {
             $this->databaseManager->rollback();
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+            $this->logger->error(sprintf('Error due to % s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
@@ -162,12 +165,12 @@ class ActivityService
             $this->databaseManager->beginTransaction();
             $activity = $this->activityRepository->delete($activityId);
             $this->databaseManager->commit();
-            $this->logger->info('Activity successfully deleted.', $this->getContext());
+            $this->logger->info('Activity successfully deleted . ', $this->getContext());
 
             return $activity;
         } catch (Exception $exception) {
             $this->databaseManager->rollback();
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+            $this->logger->error(sprintf('Error due to % s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
@@ -213,12 +216,12 @@ class ActivityService
                 $this->documentLinkRepository->update($documentLinkData, $activityId);
             }
             $this->databaseManager->commit();
-            $this->logger->info('Activity successfully updated.', $this->getContext());
+            $this->logger->info('Activity successfully updated . ', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
             $this->databaseManager->rollback();
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+            $this->logger->error(sprintf('Error due to % s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
@@ -317,7 +320,7 @@ class ActivityService
         }
 
         if ($publisherId) {
-            $publisherId = sprintf('%s-activities.xml', $publisherId);
+            $publisherId = sprintf(' % s - activities . xml', $publisherId);
         }
 
         return $publisherId;
@@ -361,12 +364,12 @@ class ActivityService
             $this->activityRepository->update($activityId, $activity);
             $this->databaseManager->commit();
 
-            $this->logger->info('Budget successfully added.', $this->getContext());
+            $this->logger->info('Budget successfully added . ', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
             $this->databaseManager->rollback();
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+            $this->logger->error(sprintf('Error due to % s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
@@ -388,12 +391,12 @@ class ActivityService
 
             $this->databaseManager->commit();
 
-            $this->logger->info('Budget transaction successfully deleted.', $this->getContext());
+            $this->logger->info('Budget transaction successfully deleted . ', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
             $this->databaseManager->rollback();
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+            $this->logger->error(sprintf('Error due to % s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }
@@ -433,12 +436,12 @@ class ActivityService
             $this->activityRepository->update($activityId, $activity);
             $this->databaseManager->commit();
 
-            $this->logger->info('Budget successfully updated.', $this->getContext());
+            $this->logger->info('Budget successfully updated . ', $this->getContext());
 
             return true;
         } catch (Exception $exception) {
             $this->databaseManager->rollback();
-            $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
+            $this->logger->error(sprintf('Error due to % s', $exception->getMessage()), $this->getContext($exception));
 
             return null;
         }

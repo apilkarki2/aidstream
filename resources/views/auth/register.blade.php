@@ -60,7 +60,7 @@
 
                         <div>
 
-                            {!! AsForm::select(['name' => 'systemVersion','label' => 'System Version','data' => $systemVersions]) !!}
+                            {{--{!! AsForm::select(['name' => 'systemVersion','label' => 'System Version','data' => $systemVersions]) !!}--}}
                             {{--<select name="systemVersion">--}}
                             {{----}}
                             {{--@foreach($systemVersions as $id => $version)--}}

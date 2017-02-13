@@ -8,14 +8,14 @@ var CreateActivity = {
             var count = $('.' + source + '> div.form-group').length;
             var proto = collection.data('prototype').replace(/__NAME__/g, count);
 
-            proto = $(proto).addClass('added-new-block');
-            $(parentContainer).append(proto);
-            // if (source == "funding_organisations" || source == "implementing_organisations") {
-            //     $(parentContainer).append(proto);
-            // } else {
-            //     proto = $(proto).addClass('added-new-block');
-            //     $(parentContainer).append(proto);
-            // }
+            // proto = $(proto).addClass('added-new-block');
+            // $(parentContainer).append(proto);
+            if (source == "funding_organisations" || source == "implementing_organisations") {
+                $(parentContainer).append(proto);
+            } else {
+                proto = $(proto).addClass('added-new-block');
+                $(parentContainer).append(proto);
+            }
 
             $('form select').select2();
             $("[type='date']").attr('type', 'text').addClass('datepicker').datetimepicker({timepicker: false, format: 'Y-m-d'});

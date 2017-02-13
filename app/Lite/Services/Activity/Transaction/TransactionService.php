@@ -156,15 +156,15 @@ class TransactionService
     /**
      * Deletes a transaction of current activity.
      *
-     * @param $index
+     * @param $activityId
+     * @param $transactionId
      * @return bool|null
-     * @internal param $request
      */
-    public function delete($activityId, $index)
+    public function delete($activityId, $transactionId)
     {
         try {
             $this->databaseManager->beginTransaction();
-            $this->transactionRepository->delete($activityId, $index);
+            $this->transactionRepository->delete($activityId, $transactionId);
             $this->databaseManager->commit();
             $this->logger->info('Transaction successfully deleted.', $this->getContext());
 
@@ -331,20 +331,21 @@ class TransactionService
         return $ids;
     }
 
-    public function updateTransaction(array $ids, $rawData)
+    public function updateTransaction($activityId, array $ids, $rawData)
     {
         $newIds = [];
 
         foreach ($rawData as $index => $value) {
-            foreach ($value as $id) {
-                $newIds[] = getVal($id, ['id'], '');
+            foreach ($value as $details) {
+                $newIds[] = getVal($details, ['id'], '');
             }
         }
 
         $diffId = array_diff($ids, $newIds);
 
         foreach ($diffId as $id) {
-            $this->delete($id);
+            $this->delete($activityId, $id);
         }
     }
 }
+
