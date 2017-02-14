@@ -69,6 +69,17 @@ class OrganizationController extends Controller
     }
 
     /**
+     * get all organizations
+     * @return \Illuminate\View\View
+     */
+    public function oldListOrganizations()
+    {
+        $organizations = (session('role_id') == 3) ? $this->adminManager->getOrganizations() : $this->groupManager->getGroupsByUserId(Auth::user()->id);
+
+        return view('superAdmin.oldListOrganization', compact('organizations'));
+    }
+
+    /**
      * add new organization by superAdmin
      * @param FormBuilder $formBuilder
      * @param null        $orgId

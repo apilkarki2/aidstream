@@ -21,7 +21,6 @@
                                     <th>Users</th>
                                     <th>Activities</th>
                                     <th width="180px">Action</th>
-                                    <th>Lite</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -56,17 +55,6 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td>
-                                            @if($organization->settings->version >= 2.02)
-                                                @if($organization->system_version_id == 1)
-                                                    <input type="checkbox" data-href="{{ route('admin.change.system_version', $organization->id) }}"
-                                                           data-message="Are you sure to switch to lite version?">
-                                                @else
-                                                    <input type="checkbox" checked data-href="{{ route('admin.change.system_version', $organization->id) }}"
-                                                           data-message="Are you sure to switch to core version?">
-                                                @endif
-                                            @endif
-                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -80,27 +68,6 @@
             @include('includes.superAdmin.side_bar_menu')
         </div>
     </div>
-    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="myModal">
-        <div class="modal-dialog modal-lg" role="document">     
-            <div class="modal-content">         
-                <div class="modal-header">         
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">@lang('lite/global.confirmation')</h4>
-                </div>
-                <form action="" method="POST" id="modal-form">
-                    {{ csrf_field() }}
-                    <input id="index" type="hidden" value="" name="index">
-                    <div class="modal-body">
-                        <p id="modal-message"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" id="modal-submit" class="btn btn-primary">@lang('lite/settings.yes')</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">@lang('lite/settings.no')</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('script')
@@ -108,7 +75,6 @@
         var masqueradeBtn = document.querySelectorAll('.masquerade');
 
         var preventClick = false;
-
         for (var i = 0; i < masqueradeBtn.length; i++) {
             var button = masqueradeBtn[i];
             button.onclick = function (event) {
@@ -118,25 +84,5 @@
                 preventClick = true;
             }
         }
-
-        var modal = $('#myModal');
-
-        $('input[type="checkbox"]').click(function (e) {
-            e.preventDefault();
-            if (e.target.checked) {
-                $('#modal-form').attr('action', $(this).attr('data-href'));
-                $('#index').attr('value', 2);
-                $('#modal-message').html($(this).attr('data-message'));
-                modal.modal("show");
-            }
-
-            if (!e.target.checked) {
-                $('#modal-form').attr('action', $(this).attr('data-href'));
-                $('#index').attr('value', 1);
-                $('#modal-message').html($(this).attr('data-message'));
-                modal.modal("show");
-            }
-        });
-
     </script>
 @stop
