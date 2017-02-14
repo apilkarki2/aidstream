@@ -7,6 +7,13 @@ $router->group(
             'admin/list-organization',
             [
                 'as'   => 'admin.list-organization',
+                'uses' => 'OrganizationController@oldListOrganizations'
+            ]
+        );
+        $router->get(
+            'admin/list-organization/lite-demo',
+            [
+                'as'   => 'admin.list-organization',
                 'uses' => 'OrganizationController@listOrganizations'
             ]
         );
@@ -118,8 +125,8 @@ $router->group(
         $router->post(
             'admin/change/system_version/{orgId}',
             [
-                'as'         => 'admin.change.system_version',
-                'uses'       => 'OrganizationController@changeSystemVersion'
+                'as'   => 'admin.change.system_version',
+                'uses' => 'OrganizationController@changeSystemVersion'
             ]
         );
     }
