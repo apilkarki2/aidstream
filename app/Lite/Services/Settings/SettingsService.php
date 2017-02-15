@@ -5,6 +5,7 @@ use App\Lite\Contracts\OrganisationRepositoryInterface;
 use App\Lite\Repositories\Settings\SettingsRepository;
 use App\Lite\Services\Data\Traits\TransformsData;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
+use App\Lite\Services\Users\UserService;
 use App\User;
 use Exception;
 use Illuminate\Database\DatabaseManager;
@@ -43,17 +44,23 @@ class SettingsService
      * @var DatabaseManager
      */
     protected $database;
+    /**
+     * @var UserService
+     */
+    protected $userService;
 
     /**
      * SettingsService constructor.
      * @param OrganisationRepositoryInterface $organisationRepository
      * @param SettingsRepositoryInterface     $settingsRepository
+     * @param UserService                     $userService
      * @param DatabaseManager                 $database
      * @param LoggerInterface                 $logger
      */
     public function __construct(
         OrganisationRepositoryInterface $organisationRepository,
         SettingsRepositoryInterface $settingsRepository,
+        UserService $userService,
         DatabaseManager $database,
         LoggerInterface $logger
     ) {
@@ -61,6 +68,7 @@ class SettingsService
         $this->settingsRepository     = $settingsRepository;
         $this->database               = $database;
         $this->logger                 = $logger;
+        $this->userService            = $userService;
     }
 
     /**
@@ -88,7 +96,7 @@ class SettingsService
      * @param $orgId
      * @param $rawData
      * @param $version
-     * @return array|null
+     * @return array|true
      */
     public function store($orgId, array $rawData, $version)
     {
@@ -115,13 +123,18 @@ class SettingsService
             $settings = $this->transform($this->getMapping($rawData, 'Settings', $version));
 
             $this->database->beginTransaction();
+            $isUsernameUpdated = $this->updateUserName($rawData);
             $this->settingsRepository->saveWithOrgId($orgId, getVal($settings, ['settings'], []));
             $this->organisationRepository->update($orgId, getVal($settings, ['organisation'], []));
             $this->database->commit();
 
             $this->logger->info('Settings successfully saved.', $this->getContext());
 
-            return $settings;
+            if ($isUsernameUpdated) {
+                return config('users.usernameUpdatedCode');
+            }
+
+            return true;
         } catch (Exception $exception) {
             $this->database->rollback();
             $this->logger->error(sprintf('Error due to %s', $exception->getMessage()), $this->getContext($exception));
@@ -211,7 +224,7 @@ class SettingsService
 
     /**
      * Returns the completed steps for onboarding before upgrading.
-     * 
+     *
      * @param User $user
      * @return array
      */
@@ -226,4 +239,26 @@ class SettingsService
 
         return $completedSteps;
     }
+
+    /**
+     * Update the username when organisation abbreviation is changed.
+     *
+     * @param $rawData
+     * @return bool
+     */
+    protected function updateUserName($rawData)
+    {
+        $newOrgAbbreviation = getVal($rawData, ['organisationNameAbbreviation']);
+        $organisation       = $this->organisationRepository->find(session('org_id'))->toArray();
+        $oldOrgAbbreviation = getVal($organisation, ['user_identifier']);
+
+        if (strtolower($newOrgAbbreviation) !== strtolower($oldOrgAbbreviation)) {
+            $this->userService->updateUsername($newOrgAbbreviation, $oldOrgAbbreviation, session('org_id'));
+
+            return true;
+        }
+
+        return false;
+    }
 }
+

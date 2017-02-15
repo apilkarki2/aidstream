@@ -3,6 +3,7 @@
 use App\Http\Controllers\Lite\LiteController;
 use App\Http\Requests\Request;
 use App\Lite\Services\Settings\SettingsService;
+use App\Lite\Services\Users\UserService;
 use App\Lite\Services\Validation\ValidationService;
 use Kris\LaravelFormBuilder\FormBuilder;
 
@@ -26,21 +27,27 @@ class SettingsController extends LiteController
      * @var ValidationService
      */
     protected $validationService;
+    /**
+     * @var UserService
+     */
+    protected $userService;
 
     /**
      * SettingsController constructor.
      *
      * @param FormBuilder       $formBuilder
      * @param SettingsService   $settingsService
+     * @param UserService       $userService
      * @param ValidationService $validationService
      */
-    public function __construct(FormBuilder $formBuilder, SettingsService $settingsService, ValidationService $validationService)
+    public function __construct(FormBuilder $formBuilder, SettingsService $settingsService, UserService $userService, ValidationService $validationService)
     {
         $this->middleware('auth');
         $this->middleware('auth.admin', ['only' => ['upgradeVersion']]);
         $this->formBuilder       = $formBuilder;
         $this->settingsService   = $settingsService;
         $this->validationService = $validationService;
+        $this->userService       = $userService;
     }
 
     /**
@@ -73,7 +80,9 @@ class SettingsController extends LiteController
         $version = session('version');
 
         $model = $this->settingsService->getSettingsModel($orgId, $version);
-        $form  = $this->formBuilder->create(
+        $users = $this->userService->all($orgId);
+
+        $form = $this->formBuilder->create(
             'App\Lite\Forms\V202\Settings',
             [
                 'method' => 'PUT',
@@ -86,7 +95,7 @@ class SettingsController extends LiteController
         $country            = getVal($model, ['country'], '');
         $agencies           = json_encode($form->getCodeList('OrganisationRegistrationAgency', 'Organization', false));
 
-        return view('lite.settings.index', compact('form', 'agencies', 'registrationAgency', 'country'));
+        return view('lite.settings.index', compact('form', 'agencies', 'registrationAgency', 'country', 'users'));
     }
 
     /**
@@ -107,7 +116,9 @@ class SettingsController extends LiteController
             return redirect()->back()->with('errors', $this->validationService->errors())->withInput($rawData);
         }
 
-        if ($this->settingsService->store($orgId, $rawData, $version)) {
+        if (($response = $this->settingsService->store($orgId, $rawData, $version)) === config('users.usernameUpdatedCode')) {
+            return redirect()->route('lite.settings.edit')->with('status', true);
+        } elseif ($response) {
             return redirect()->route('lite.settings.edit')->withResponse(['type' => 'success', 'messages' => ['Settings saved successfully.']]);
         }
 
@@ -133,5 +144,5 @@ class SettingsController extends LiteController
 
         return redirect()->route('welcome')->withResponse(['type' => 'success', 'messages' => [trans('success.aidstream_upgraded')]]);
     }
-
 }
+

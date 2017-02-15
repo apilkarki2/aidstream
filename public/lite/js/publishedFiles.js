@@ -8,7 +8,7 @@ var PublishedFiles = {
     init: function () {
         var form = $('#delete-published-file-form');
 
-        $('.delete-lite-published-files').on('click', function () {
+        $('.delete-activity').on('click', function () {
             var url = $(this).attr('data-href');
             PublishedFiles.loadForm(url, form);
         });

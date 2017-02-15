@@ -40,3 +40,29 @@ $('#country, #organisationRegistrationAgency, #organisationRegistrationNumber').
 
     $('#organisationIatiIdentifier').val(identifier).trigger('blur');
 });
+
+// auto generates abbreviation from organization name
+$("[name = 'organisationName']").on('change', function () {
+    var wordList = getWordList($(this).val());
+    var abbr = getAbbr(wordList);
+    $("[name = 'organisationNameAbbreviation']").val(abbr);
+
+    var ignoreList = ['and', 'of', 'the', 'an', 'a'];
+
+    function getWordList(text) {
+        var nameArray = text.split(/\ +/g);
+        return nameArray.filter(function (value) {
+            return ($.inArray(value.toLowerCase(), ignoreList) === -1 && value.length > 1);
+        })
+    }
+
+    function getAbbr(wordList) {
+        var abbr = '';
+        for (var i in wordList) {
+            var word = wordList[i];
+            abbr += word.substr(0, 1);
+        }
+        return abbr.toLowerCase();
+    }
+});
+

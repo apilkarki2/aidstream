@@ -149,5 +149,18 @@ class UserController extends LiteController
 
         return false;
     }
+
+    /**
+     * Sent email to the users of the organisation when user identifier is changed.
+     *
+     * @return mixed
+     */
+    public function notifyUsernameChanged()
+    {
+        $this->userService->notifyUsernameChanged(session('org_id'));
+        $response = ['type' => 'success', 'code' => ['sent', ['name' => 'Emails']]];
+
+        return redirect()->route('lite.settings.edit')->withResponse($response);
+    }
 }
 

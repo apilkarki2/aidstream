@@ -5,6 +5,7 @@ use App\Lite\Contracts\UserRepositoryInterface;
 use App\Lite\Repositories\Users\UserRepository;
 use App\Lite\Services\Traits\ProvidesLoggerContext;
 use Exception;
+use Illuminate\Contracts\Mail\Mailer;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -23,16 +24,22 @@ class UserService
      * @var LoggerInterface
      */
     protected $logger;
+    /**
+     * @var Mailer
+     */
+    protected $mailer;
 
     /**
      * UserService constructor.
      * @param UserRepositoryInterface $userRepository
      * @param LoggerInterface         $logger
+     * @param Mailer                  $mailer
      */
-    public function __construct(UserRepositoryInterface $userRepository, LoggerInterface $logger)
+    public function __construct(UserRepositoryInterface $userRepository, LoggerInterface $logger, Mailer $mailer)
     {
         $this->userRepository = $userRepository;
         $this->logger         = $logger;
+        $this->mailer         = $mailer;
     }
 
     /**
@@ -98,11 +105,7 @@ class UserService
         } catch (Exception $exception) {
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
-                [
-                    'user'     => auth()->user()->id,
-                    'userName' => auth()->user()->getNameAttribute,
-                    'trace'    => $exception->getTraceAsString()
-                ]
+                $this->getContext($exception)
             );
 
             return false;
@@ -124,18 +127,83 @@ class UserService
             $this->logger->info('User Permission has been updated successfully.', $this->getContext());
 
             return true;
-
         } catch (Exception $exception) {
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
-                [
-                    'user'     => auth()->user()->id,
-                    'userName' => auth()->user()->getNameAttribute,
-                    'trace'    => $exception->getTraceAsString()
-                ]
+                $this->getContext($exception)
             );
 
             return false;
+        }
+    }
+
+    /**
+     * Update the username of all users of the organisation when userIdentifier is changed.
+     *
+     * @param $newUserIdentifier
+     * @param $oldUserIdentifier
+     * @param $orgId
+     * @return bool
+     */
+    public function updateUsername($newUserIdentifier, $oldUserIdentifier, $orgId)
+    {
+        try {
+            $users = $this->all($orgId);
+
+            foreach ($users as $user) {
+                $oldUsername = $user->username;
+                $nameOnly    = substr($oldUsername, strlen($this->removeUnderScoreIfPresent($oldUserIdentifier)) + 1);
+                $this->userRepository->update($user->id, ['username' => $newUserIdentifier . '_' . $this->removeUnderScoreIfPresent($nameOnly)]);
+            }
+
+            $this->logger->info('Username has been updated successfully.', $this->getContext());
+
+            return true;
+        } catch (Exception $exception) {
+            $this->logger->error(
+                sprintf('Error due to %s', $exception->getMessage()),
+                $this->getContext($exception)
+            );
+
+            return false;
+        }
+    }
+
+    /**
+     *  Removes underscore from the string if present.
+     *
+     * @param $name
+     * @return mixed
+     */
+    public function removeUnderScoreIfPresent($name)
+    {
+        if (preg_match('/\_/', $name)) {
+            return preg_replace('/\_/', '', $name, 1);
+        };
+
+        return $name;
+    }
+
+    /**
+     * Sent email to the user if username is changed.
+     *
+     * @param $orgId
+     */
+    public function notifyUsernameChanged($orgId)
+    {
+        $users   = $this->all($orgId);
+        $orgName = auth()->user()->organization->name;
+
+        foreach ($users as $user) {
+            $view            = 'lite.emails.usernameChanged';
+            $callback        = function ($message) use ($user) {
+                $message->subject('AidStream Account Username changed');
+                $message->from(config('mail.from.address'), config('mail.from.name'));
+                $message->to($user->email);
+            };
+            $data            = $user->toArray();
+            $data['orgName'] = $orgName;
+            $this->mailer->send($view, $data, $callback);
         }
     }
 }

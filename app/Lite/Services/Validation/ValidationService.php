@@ -1,6 +1,7 @@
 <?php namespace App\Lite\Services\Validation;
 
 use App\Lite\Services\Validation\Rules\RulesProvider;
+use App\Lite\Services\Validation\Traits\RegisterValidationRules;
 use Illuminate\Validation\Factory;
 
 /**
@@ -9,6 +10,7 @@ use Illuminate\Validation\Factory;
  */
 class ValidationService
 {
+    use RegisterValidationRules;
     /**
      * @var
      */
@@ -49,6 +51,7 @@ class ValidationService
     {
         $this->factory       = $factory;
         $this->rulesProvider = $rulesProvider;
+        $this->customRules();
     }
 
     /**
@@ -84,3 +87,4 @@ class ValidationService
         }
     }
 }
+

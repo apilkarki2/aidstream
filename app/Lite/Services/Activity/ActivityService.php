@@ -320,7 +320,7 @@ class ActivityService
         }
 
         if ($publisherId) {
-            $publisherId = sprintf(' % s - activities . xml', $publisherId);
+            $publisherId = sprintf('%s-activities.xml', $publisherId);
         }
 
         return $publisherId;

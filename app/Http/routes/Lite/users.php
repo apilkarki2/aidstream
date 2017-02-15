@@ -45,6 +45,14 @@ $router->group(
                         'uses' => 'UserController@UpdatePermission'
                     ]
                 );
+
+                $router->post(
+                    '/lite/users/notify-user',
+                    [
+                        'as'   => 'lite.users.notify-user',
+                        'uses' => 'UserController@notifyUsernameChanged'
+                    ]
+                );
             }
         );
     }

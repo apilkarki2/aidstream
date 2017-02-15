@@ -27,7 +27,11 @@
                         <span class="iati-identifier">{{ $activity->identifier['activity_identifier'] }}</span>
                     </div>
                     <div class="pull-right activity-publish-state">
-                        <span class="pull-left published-in-iati">@lang('lite/global.published_in_iati')</span>
+                        @if($activity->published_to_registry)
+                            <span class="pull-left published-in-iati">@lang('lite/global.published_in_iati')</span>
+                        @else
+                            <span class="pull-left unpublished-in-iati">@lang('lite/global.not_published_in_iati')</span>
+                        @endif
                         <img src="{{asset('images/ic-iati-logo.png')}}" alt="IATI" width="27" height="25">
                     </div>
                 </div>

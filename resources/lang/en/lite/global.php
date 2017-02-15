@@ -49,6 +49,7 @@ return [
     'activity_detail'                 => 'Activity Detail',
     'back_to_activities_list'         => 'Back to activities list',
     'published_in_iati'               => 'Published in IATI',
+    'not_published_in_iati'           => 'Not Published in IATI',
     'settings'                        => 'Settings',
     'users'                           => 'Users',
     'published_files'                 => 'Published Files',

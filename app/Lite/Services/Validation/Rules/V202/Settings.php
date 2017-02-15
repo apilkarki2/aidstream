@@ -130,7 +130,7 @@ class Settings
             $organisationId[] = getVal($organisationIdentifier, ['user_identifier'], '');
         }
 
-        $this->settingsRules['organisationNameAbbreviation'] = sprintf('required|not_in:%s', implode(",", $organisationId));
+        $this->settingsRules['organisationNameAbbreviation'] = sprintf('required|no_spaces|not_in:%s', implode(",", $organisationId));
 
         return $this;
     }
@@ -140,8 +140,9 @@ class Settings
      */
     protected function messagesForOrganisationNameAbbreviation()
     {
-        $this->settingsMessages['organisationNameAbbreviation.required'] = trans('validation.required', ['attribute' => trans('lite/settings.organisation_name_abbreviation')]);
-        $this->settingsMessages['organisationNameAbbreviation.not_in']   = trans('validation.not_in', ['attribute' => trans('lite/settings.organisation_name_abbreviation')]);
+        $this->settingsMessages['organisationNameAbbreviation.required']  = trans('validation.required', ['attribute' => trans('lite/settings.organisation_name_abbreviation')]);
+        $this->settingsMessages['organisationNameAbbreviation.not_in']    = trans('validation.custom_unique', ['attribute' => trans('lite/settings.organisation_name_abbreviation')]);
+        $this->settingsMessages['organisationNameAbbreviation.no_spaces'] = trans('validation.spaces_not_allowed');
 
         return $this;
     }

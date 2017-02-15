@@ -88,6 +88,9 @@
             </div>
         </div>
     </div>
+    @if(session('status'))
+        @include('lite.settings.usernameUpdated')
+    @endif
 @stop
 
 @section('script')
@@ -99,7 +102,13 @@
     <script src="{{ asset('lite/js/settings.js') }}"></script>
 
     <script>
-        $(document).ready(function () {
+        @if(session('status'))
+                $('#usernameChanged').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+        @endif
+    $(document).ready(function () {
             $('#agree-upgrade').change(function () {
                 if (this.checked) {
                     $('#submit-upgrade').attr('disabled', false);

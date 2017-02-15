@@ -28,6 +28,12 @@ class Handler extends ExceptionHandler
         NotFoundHttpException::class
     ];
 
+
+    protected $systemVersionRedirectPath = [
+        1 => 'activity.index',
+        2 => 'lite.activity.index'
+    ];
+
     /**
      * Report or log an exception.
      *
@@ -54,11 +60,14 @@ class Handler extends ExceptionHandler
             if (auth()->check()) {
                 $route = 'activity.index';
 
-                if ($organization = auth()->user()->organization) {
-                    $route = $organization->system_version_id == 2 ? 'lite.activity.index' : 'activity.index';
+                if (($organization = auth()->user()->organization)) {
+                    $systemVersion = $organization->system_version_id;
+                    (!array_key_exists($systemVersion, $this->systemVersionRedirectPath)) ?: $route = $this->systemVersionRedirectPath[$systemVersion];
                 }
 
-                return redirect()->route($route)->withResponse(['type' => 'warning', 'code' => ['message', ['message' => '<b>404! Not Found</b><br>The requested url cannot be found in our system.']]]);
+                return redirect()->route($route)->withResponse(
+                    ['type' => 'warning', 'code' => ['message', ['message' => '<b>404! Not Found</b><br>The requested url cannot be found in our system.']]]
+                );
             }
 
             $message = '<b>404! Not Found</b><br><br>The requested url cannot be found in our system. <br><br> Please contact us at <a href="support@aidstream.org" target="_blank">support@aidstream.org</a>';
