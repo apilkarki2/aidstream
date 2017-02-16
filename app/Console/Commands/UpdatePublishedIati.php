@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Activity\Activity;
 use App\Models\ActivityPublished;
 use App\Models\Organization\Organization;
+use App\Models\PerfectViewer\ActivitySnapshot;
 use Illuminate\Console\Command;
 
 class UpdatePublishedIati extends Command
@@ -31,23 +32,23 @@ class UpdatePublishedIati extends Command
      */
     private $activity;
     /**
-     * @var Organization
+     * @var ActivitySnapshot
      */
-    private $organization;
+    private $activitySnapshot;
 
     /**
      * Create a new command instance.
      *
-     * @param ActivityPublished $activityPublished
-     * @param Activity          $activity
-     * @param Organization      $organization
+     * @param ActivityPublished    $activityPublished
+     * @param Activity             $activity
+     * @param ActivitySnapshot     $activitySnapshot
      */
-    public function __construct(ActivityPublished $activityPublished, Activity $activity, Organization $organization)
+    public function __construct(ActivityPublished $activityPublished, Activity $activity, ActivitySnapshot $activitySnapshot)
     {
         parent::__construct();
         $this->activityPublished = $activityPublished;
         $this->activity          = $activity;
-        $this->organization      = $organization;
+        $this->activitySnapshot = $activitySnapshot;
     }
 
     /**
@@ -59,6 +60,7 @@ class UpdatePublishedIati extends Command
     {
         $activityId = $this->getActivityId();
         $this->updateActivities($activityId);
+        $this->updateActivitySnapshotPublishedStatus($activityId);
     }
 
     protected function getActivityId()
@@ -77,9 +79,17 @@ class UpdatePublishedIati extends Command
 
     protected function updateActivities($activityId)
     {
-        foreach($activityId as $index => $id){
+        foreach ($activityId as $index => $id) {
             $this->activity->where('id', $id)->update(['published_to_registry' => 1]);
             dump('activity of id ' . $id . ' updated');
         }
+    }
+
+    protected function updateActivitySnapshotPublishedStatus($activityId)
+    {
+       foreach($activityId as $index => $id){
+           $this->activitySnapshot->where('activity_id', $id)->update(['activity_in_registry' => true]);
+           dump('activity_snapshot of activity id ' . $id . ' updated');
+       }
     }
 }
