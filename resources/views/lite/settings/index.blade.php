@@ -27,7 +27,7 @@
                             <div class="form-group upload-logo-block edit-profile-block edit-profile-form-block">
                                 <label class="control-label">Profile Picture</label>
                                 <div class="upload-logo">
-                                    {{ Form::file('profile_picture',['class'=>'inputfile form-control', 'id' => 'picture']) }}
+                                    {{ Form::file('organisation_logo',['class'=>'inputfile form-control', 'id' => 'picture']) }}
                                     <label for="file-logo">
                                         <div class="uploaded-logo">
                                             @if($loggedInUser->profile_picture)
@@ -100,7 +100,7 @@
         var country = "{!! $country !!}";
     </script>
     <script src="{{ asset('lite/js/settings.js') }}"></script>
-
+    <script src="{{ asset('js/chunk.js') }}"></script>
     <script>
         @if(session('status'))
                 $('#usernameChanged').modal({
@@ -108,7 +108,8 @@
             keyboard: false
         });
         @endif
-    $(document).ready(function () {
+        Chunk.displayPicture();
+        $(document).ready(function () {
             $('#agree-upgrade').change(function () {
                 if (this.checked) {
                     $('#submit-upgrade').attr('disabled', false);

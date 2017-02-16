@@ -78,7 +78,8 @@ class ProfileController extends LiteController
             [
                 'method' => 'PUT',
                 'model'  => $model,
-                'url'    => route('lite.user.profile.store')
+                'url'    => route('lite.user.profile.store'),
+                'files'  => true
             ]
         );
 

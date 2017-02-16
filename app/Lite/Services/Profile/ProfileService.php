@@ -97,8 +97,8 @@ class ProfileService
     public function store($orgId, $userId, array $rawData, $version)
     {
         try {
-            if (array_key_exists('picture', $rawData)) {
-                $file = $rawData['picture'];
+            if (array_key_exists('profile_picture', $rawData)) {
+                $file = $rawData['profile_picture'];
 
                 if (!file_exists(public_path('files/users'))) {
                     mkdir(public_path('files/users'), 0777, true);

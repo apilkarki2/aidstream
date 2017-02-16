@@ -101,9 +101,8 @@ class SettingsService
     public function store($orgId, array $rawData, $version)
     {
         try {
-
-            if (array_key_exists('picture', $rawData)) {
-                $file = $rawData['picture'];
+            if (array_key_exists('organisation_logo', $rawData)) {
+                $file = $rawData['organisation_logo'];
 
                 if (!file_exists(public_path('files/logos'))) {
                     mkdir(public_path('files/logos'));

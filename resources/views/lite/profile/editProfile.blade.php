@@ -22,7 +22,7 @@
                                 {!! form_until($form, 'timeZone') !!}
                             </div>
                             <div class="form-group col-sm-6 upload-logo-block edit-profile-block edit-profile-form-block">
-                                <label class="control-label">Profile Picture</label>
+                                <label class="control-label">@lang('lite/profile.profile_picture')</label>
                                 <div class="upload-logo">
                                     {{ Form::file('profile_picture',['class'=>'inputfile form-control', 'id' => 'picture']) }}
                                     <label for="file-logo">

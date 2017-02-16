@@ -448,7 +448,7 @@ class OrganizationRepository implements OrganizationRepositoryInterface
      */
     public function updateSystemVersion($orgId, $system_version)
     {
-        $organisation = $this->org->findOrFail($orgId);
+        $organisation                    = $this->org->findOrFail($orgId);
         $organisation->system_version_id = getVal($system_version, ['index'], 1);
 
         return $organisation->save();

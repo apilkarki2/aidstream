@@ -87,7 +87,8 @@ class SettingsController extends LiteController
             [
                 'method' => 'PUT',
                 'model'  => $model,
-                'url'    => route('lite.settings.store')
+                'url'    => route('lite.settings.store'),
+                'files'  => true
             ]
         );
 
