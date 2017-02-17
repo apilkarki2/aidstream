@@ -1,6 +1,7 @@
 <?php namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Session\TokenMismatchException;
@@ -8,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -25,7 +27,9 @@ class Handler extends ExceptionHandler
         ValidationException::class,
         TokenMismatchException::class,
         HttpResponseException::class,
-        NotFoundHttpException::class
+        NotFoundHttpException::class,
+        MethodNotAllowedHttpException::class,
+        QueryException::class
     ];
 
 
@@ -56,24 +60,25 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof NotFoundHttpException) {
-            if (auth()->check()) {
-                $route = 'activity.index';
+        $route = 'activity.index';
 
+        if ($e instanceof NotFoundHttpException || $e instanceof MethodNotAllowedHttpException) {
+            $message = $this->getMessage($e->getStatusCode());
+
+            if (auth()->check()) {
                 if (($organization = auth()->user()->organization)) {
                     $systemVersion = $organization->system_version_id;
                     (!array_key_exists($systemVersion, $this->systemVersionRedirectPath)) ?: $route = $this->systemVersionRedirectPath[$systemVersion];
                 }
-
-                return redirect()->route($route)->withResponse(
-                    ['type' => 'warning', 'code' => ['message', ['message' => '<b>404! Not Found</b><br>The requested url cannot be found in our system.']]]
-                );
             }
+            
+            return response()->view('errors.errors', compact('route', 'message'));
+        }
 
-            $message = '<b>404! Not Found</b><br><br>The requested url cannot be found in our system. <br><br> Please contact us at <a href="support@aidstream.org" target="_blank">support@aidstream.org</a>';
+        if ($e instanceof QueryException) {
+            $message = $this->getMessage('505');
 
-            return response()->view(sprintf('errors.%s', auth()->check() ? 'errors' : 'noAuthErrors'), compact('message'));
-//            return redirect()->to('/')->withResponse(['type' => 'warning', 'code' => ['message', ['message' => '<b>404! Not Found</b><br>The requested url cannot be found in our system.']]]);
+            return response()->view('errors.errors', compact('route', 'message'));
         }
 
         if ($e instanceof TokenMismatchException) {
@@ -100,8 +105,26 @@ class Handler extends ExceptionHandler
         }
 
         $this->log->error($e);
-        $message = 'Something went wrong. Please contact us at <a href="support@aidstream.org" target="_blank">support@aidstream.org</a>';
+        $message = $this->getMessage();
 
-        return response()->view(sprintf('errors.%s', auth()->check() ? 'errors' : 'noAuthErrors'), compact('message'));
+        return response()->view('errors.errors', compact('message', 'route'));
+    }
+
+    /**
+     * Returns exception message from the config file.
+     *
+     * @param null $code
+     * @return mixed
+     */
+    protected function getMessage($code = null)
+    {
+        if ($code) {
+            if (array_key_exists($code, config('exceptionMessages'))) {
+                return config(sprintf('exceptionMessages.%s', $code));
+            }
+        }
+
+        return config('exceptionMessages.default');
     }
 }
+
