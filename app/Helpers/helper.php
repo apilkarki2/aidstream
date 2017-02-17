@@ -1115,9 +1115,9 @@ function getSectorName(array $sector)
     $codeNameHelper = app()->make('App\Helpers\GetCodeName');
 
     if ($sector['sector_vocabulary'] == 1) {
-        return $codeNameHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], ''), -8);
+        return $codeNameHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_code'], ''), - 8);
     } elseif ($sector['sector_vocabulary'] == 2) {
-        return $codeNameHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_category_code'], ''), -5);
+        return $codeNameHelper->getCodeNameOnly('Sector', getVal($sector, ['sector_category_code'], ''), - 5);
     }
 
     return $codeNameHelper->getCodeNameOnly('SectorVocabulary', getVal($sector, ['sector_vocabulary']));
@@ -1192,4 +1192,33 @@ function trimReportingOrg(array $reportingOrg)
     $reportingOrg[0]['narrative'][0]['narrative'] = substr(getVal($reportingOrg, [0, 'narrative', 0, 'narrative']), 0, 100);
 
     return $reportingOrg;
+}
+
+/**
+ * Helper function for add money suffix such as M for millions.
+ *
+ * @param $money
+ * @return float|int|string
+ */
+function moneySuffix($money)
+{
+    if ($money > 9999999999999) {
+        $trillion = (float) number_format(round($money / 1000000000000, 2), 2) . ' T';
+
+        return $trillion;
+    }
+
+    if ($money > 9999999999) {
+        $billion = (float) number_format(round($money / 1000000000, 2), 2) . ' B';
+
+        return $billion;
+    }
+
+    if ($money > 9999999) {
+        $million = (float) number_format(round($million = $money / 1000000, 2), 2) . ' M';
+
+        return $million;
+    } else {
+        return (float) number_format(round($money, 2), 2);
+    }
 }
